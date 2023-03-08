@@ -2,10 +2,8 @@ POST http://localhost:8080/api/tiernament
 Content-Type: application/json
 
 {
-  "tiernamentId": "tmp",
-  "authorId": "12",
-  "name": "test3",
-  "description": "test3",
-  "date": "2023-02-23",
+  "authorId": "15",
+  "name": "test4",
+  "description": "test4",
   "entries": []
 }
