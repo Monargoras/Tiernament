@@ -6,20 +6,16 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-interface Repo : MongoRepository<Tiernament, String> {
+interface TiernamentRepo : MongoRepository<Tiernament, String> {
     fun findByTiernamentId(id: String): Tiernament?
 }
 
 @RestController
-@RequestMapping("/api")
-class ApiController(@Autowired val repo: Repo) {
-    @RequestMapping("/hello")
-    fun hello(): String {
-        return "Hello World!"
-    }
+@RequestMapping("/api/tiernament")
+class TiernamentApiController(@Autowired val repo: TiernamentRepo) {
 
     @GetMapping("/count")
-    fun getCount(): Int {
+    fun getTiernamentCount(): Int {
         return repo.findAll().count()
     }
 
@@ -30,9 +26,7 @@ class ApiController(@Autowired val repo: Repo) {
     }
 
     @PostMapping
-    fun postTiernament(): Tiernament {
-        val tiernament = Tiernament(tiernamentId = "1", authorId = "47", name = "test", description = "test",
-            date = java.util.Date(), entries = listOf())
+    fun postTiernament(@RequestBody tiernament: Tiernament): Tiernament {
         return repo.insert(tiernament)
     }
 

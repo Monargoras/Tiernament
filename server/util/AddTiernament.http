@@ -1,1 +1,11 @@
-POST http://localhost:8080/api
+POST http://localhost:8080/api/tiernament
+Content-Type: application/json
+
+{
+  "tiernamentId": "3",
+  "authorId": "12",
+  "name": "test3",
+  "description": "test3",
+  "date": "2019-01-01",
+  "entries": []
+}
