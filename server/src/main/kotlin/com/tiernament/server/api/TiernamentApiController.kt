@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 interface TiernamentRepo : MongoRepository<Tiernament, String> {
     fun findByTiernamentId(id: String): Tiernament?
@@ -26,7 +27,18 @@ class TiernamentApiController(@Autowired val repo: TiernamentRepo) {
     }
 
     @PostMapping
-    fun postTiernament(@RequestBody tiernament: Tiernament): Tiernament {
+    fun postTiernament(@RequestBody body: Tiernament): Tiernament {
+        // create uuid
+        val id = UUID.randomUUID().toString()
+        // create tiernament with serverside id and date
+        val tiernament = Tiernament(
+            tiernamentId = id,
+            authorId = body.authorId,
+            name = body.name,
+            description = body.description,
+            date = Date(),
+            entries = body.entries,
+        )
         return repo.insert(tiernament)
     }
 
