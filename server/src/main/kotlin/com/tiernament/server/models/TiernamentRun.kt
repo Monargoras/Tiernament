@@ -2,13 +2,11 @@ package com.tiernament.server.models
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import java.util.Date
 
 @Document(collection = "tiernamentRuns")
 data class TiernamentRun (
     @Id
-    @Field("id")
     val runId: String,
     val playerId: String,
     val tiernamentId: Int,
