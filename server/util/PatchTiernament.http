@@ -1,0 +1,11 @@
+PATCH http://localhost:8080/api/tiernament/0709b846-0f22-4c70-a295-f1a0eed68ea0
+Content-Type: application/json
+
+{
+  "tiernamentId": "0709b846-0f22-4c70-a295-f1a0eed68ea0",
+  "authorId": "15",
+  "name": "Tournament 1",
+  "description": "Tournament 1",
+  "date": "2023-03-08T21:27:45.341+00:00",
+  "entries": []
+}

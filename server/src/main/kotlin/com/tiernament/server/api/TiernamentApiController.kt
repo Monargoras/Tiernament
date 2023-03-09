@@ -44,9 +44,9 @@ class TiernamentApiController(@Autowired val repo: TiernamentRepo) {
     }
 
     @PatchMapping("/{id}")
-    fun updateTiernament(@PathVariable("id") id: String): Tiernament? {
+    fun updateTiernament(@PathVariable("id") id: String, @RequestBody tiernament: Tiernament): Tiernament? {
         return repo.findByTiernamentId(id = id)?.let {
-            repo.save(it.copy(name = "Update"))
+            repo.save(it.copy(name = tiernament.name, description = tiernament.description, entries = tiernament.entries))
         }
     }
 
