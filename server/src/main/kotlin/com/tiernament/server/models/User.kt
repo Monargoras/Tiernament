@@ -11,3 +11,7 @@ data class User(
     val tiernaments: List<Int>,
     val tiernamentRuns: List<Int>,
 )
+
+data class UserDraft(
+    val name: String,
+)

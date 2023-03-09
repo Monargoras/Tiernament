@@ -1,0 +1,9 @@
+PATCH http://localhost:8080/api/user/fe299cec-947e-476a-b116-6292c2be881a
+Content-Type: application/json
+
+{
+  "userId": "fe299cec-947e-476a-b116-6292c2be881a",
+  "name": "Monargoras",
+  "tiernaments": [],
+  "tiernamentRuns": []
+}

@@ -1,10 +1,12 @@
 package com.tiernament.server.api
 
 import com.tiernament.server.models.User
+import com.tiernament.server.models.UserDraft
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 interface UserRepo : MongoRepository<User, String> {
     fun findByUserId(id: String): User?
@@ -26,14 +28,23 @@ class UserApiController(@Autowired val repo: UserRepo) {
     }
 
     @PostMapping
-    fun postUser(@RequestBody user: User): User {
+    fun postUser(@RequestBody body: UserDraft): User {
+        // create uuid
+        val id = UUID.randomUUID().toString()
+        // create user with serverside id
+        val user = User(
+            userId = id,
+            name = body.name,
+            tiernaments = listOf(),
+            tiernamentRuns = listOf(),
+        )
         return repo.insert(user)
     }
 
     @PatchMapping("/{id}")
-    fun updateUser(@PathVariable("id") id: String): User? {
+    fun updateUser(@PathVariable("id") id: String, @RequestBody user: User): User? {
         return repo.findByUserId(id = id)?.let {
-            repo.save(it.copy(name = "Update"))
+            repo.save(it.copy(name = user.name, tiernaments = user.tiernaments, tiernamentRuns = user.tiernamentRuns))
         }
     }
 
