@@ -21,6 +21,11 @@ class TiernamentApiController(@Autowired val repo: TiernamentRepo) {
         return repo.findAll().count()
     }
 
+    @GetMapping
+    fun getTiernaments(): List<Tiernament> {
+        return repo.findAll()
+    }
+
     @GetMapping("/{id}")
     fun getTiernamentById(@PathVariable("id") id: String): ResponseEntity<Tiernament> {
         val tiernament = repo.findByTiernamentId(id)
