@@ -2,12 +2,11 @@ import React from 'react';
 import { Link, Outlet, useLoaderData } from 'react-router-dom';
 
 import { fetchTiernaments } from '../util/ApiRequests';
-import { TiernamentType} from '../util/types';
+import { TiernamentType } from '../util/types';
 
 export async function loader() {
     const res = await fetchTiernaments()
-    const data = await res.json()
-    return data
+    return await res.json()
 }
 
 export default function TiernamentPage() {

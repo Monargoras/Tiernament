@@ -1,13 +1,12 @@
 import React from 'react';
-import { LoaderFunctionArgs, useLoaderData} from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 
 import { fetchTiernamentById } from '../util/ApiRequests';
 import { TiernamentType } from '../util/types';
 
 export async function loader(params: { tiernamentId: string }) {
     const res = await fetchTiernamentById(params.tiernamentId)
-    const data = await res.json()
-    return data
+    return await res.json()
 }
 
 export default function Tiernament() {
