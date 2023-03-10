@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id
 
 data class TiernamentEntry (
     @Id
-    val entryId: Int,
+    val entryId: String,
     val name: String,
     val imageLink: String,
     val tier: Int,
