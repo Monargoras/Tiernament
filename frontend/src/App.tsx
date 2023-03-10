@@ -29,6 +29,22 @@ const router = createBrowserRouter([
     {
         path: 'tiernament/create',
         element: <p>Create</p>,
+    },
+    {
+        path: 'tiernament/edit/:tiernamentId',
+        element: <p>Edit</p>,
+    },
+    {
+        path: 'tiernament/search/:searchTerm',
+        element: <p>Search</p>,
+    },
+    {
+        path: 'account',
+        element: <p>Account</p>,
+    },
+    {
+        path: 'imprint',
+        element: <p>Imprint</p>,
     }
 ])
 
