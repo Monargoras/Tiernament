@@ -17,7 +17,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'tiernament',
-    element: <TiernamentPage/>,
+    element: <TiernamentPage />,
     errorElement: <ErrorPage />,
     loader: tiernamentLoader,
     children: [
