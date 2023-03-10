@@ -10,24 +10,26 @@ import { loader as tiernamentLoader } from './pages/TiernamentPage';
 import { loader as tiernamentIdLoader } from './components/Tiernament';
 
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <HomePage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: 'tiernament',
-    element: <TiernamentPage />,
-    errorElement: <ErrorPage />,
-    loader: tiernamentLoader,
-    children: [
-        {
-            path: ':tiernamentId',
-            element: <Tiernament />,
-            loader: (args) => tiernamentIdLoader(args.params as { tiernamentId: string }),
-        },
-    ],
-  },
+    {
+        path: '/',
+        element: <HomePage />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: 'tiernament',
+        element: <TiernamentPage/>,
+        errorElement: <ErrorPage/>,
+        loader: tiernamentLoader,
+    },
+    {
+        path: 'tiernament/:tiernamentId',
+        element: <Tiernament />,
+        loader: (args) => tiernamentIdLoader(args.params as { tiernamentId: string }),
+    },
+    {
+        path: 'tiernament/create',
+        element: <p>Create</p>,
+    }
 ])
 
 export default function App() {

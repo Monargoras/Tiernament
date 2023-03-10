@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Outlet, useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 
 import { fetchTiernaments } from '../util/ApiRequests';
 import { TiernamentType } from '../util/types';
@@ -17,7 +17,7 @@ export default function TiernamentPage() {
             {
                 tiernaments.map((tiernament: TiernamentType, index) => (
                     <p key={index}>
-                        <Link to={`${tiernament.tiernamentId}`}>
+                        <Link to={`/tiernament/${tiernament.tiernamentId}`}>
                             {tiernament.name}
                         </Link>
                     </p>
@@ -26,10 +26,6 @@ export default function TiernamentPage() {
             <button>
                 <Link to={'/'}>Home</Link>
             </button>
-            <button>
-                <Link to={'1'}>Tiernament</Link>
-            </button>
-            <Outlet />
         </div>
     )
 }
