@@ -1,13 +1,13 @@
-export type Tiernament = {
+export type TiernamentType = {
     tiernamentId: String,
     authorId: String,
     name: String,
     description: String,
     date: Date,
-    entries: TiernamentEntry[],
+    entries: TiernamentEntryType[],
 }
 
-export type TiernamentEntry = {
+export type TiernamentEntryType = {
     entryId: String,
     name: String,
     imageLink: String,

@@ -24,5 +24,4 @@ export const createRequest = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE
             }
             return res
         })
-        .catch((e) => console.log(e))
 }

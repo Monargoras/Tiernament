@@ -1,38 +1,35 @@
 import React from 'react';
-import { Outlet, useLoaderData, Link } from 'react-router-dom';
+import { Link, Outlet, useLoaderData } from 'react-router-dom';
 
 import { fetchTiernaments } from '../util/ApiRequests';
-import { Tiernament } from '../util/types';
+import { TiernamentType} from '../util/types';
 
 export async function loader() {
-    const tiernaments = fetchTiernaments()
-    return { tiernaments }
+    const res = await fetchTiernaments()
+    const data = await res.json()
+    return data
 }
 
 export default function TiernamentPage() {
-    // @ts-ignore
-    const { tiernaments } = useLoaderData();
+    const tiernaments = useLoaderData() as TiernamentType[];
     return (
         <div>
             <h1>Tiernament Page</h1>
-            <nav>
-                {
-                    tiernaments && tiernaments.length ? (
-                    <ul>
-                        {tiernaments.map((tiernament: Tiernament, index: number) => (
-                            <li key={index}>
-                                <Link to={`contacts/${tiernament.tiernamentId}`}>
-                                    tiernament.name
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>
-                        <i>No tiernaments</i>
+            {
+                tiernaments.map((tiernament: TiernamentType, index) => (
+                    <p key={index}>
+                        <Link to={`${tiernament.tiernamentId}`}>
+                            {tiernament.name}
+                        </Link>
                     </p>
-                )}
-            </nav>
+                ))
+            }
+            <button>
+                <Link to={'/'}>Home</Link>
+            </button>
+            <button>
+                <Link to={'1'}>Tiernament</Link>
+            </button>
             <Outlet />
         </div>
     )

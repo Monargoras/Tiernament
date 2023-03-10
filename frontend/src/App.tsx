@@ -7,6 +7,7 @@ import TiernamentPage from './pages/TiernamentPage';
 import HomePage from './pages/HomePage';
 import Tiernament from './components/Tiernament';
 import { loader as tiernamentLoader } from './pages/TiernamentPage';
+import { loader as tiernamentIdLoader } from './components/Tiernament';
 
 const router = createBrowserRouter([
   {
@@ -15,14 +16,15 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: 'tiernament/',
+    path: 'tiernament',
     element: <TiernamentPage/>,
     errorElement: <ErrorPage />,
     loader: tiernamentLoader,
     children: [
         {
             path: ':tiernamentId',
-            element: <Tiernament tiernamentId={'temp'}/>,
+            element: <Tiernament />,
+            loader: (args) => tiernamentIdLoader(args.params as { tiernamentId: string }),
         },
     ],
   },
