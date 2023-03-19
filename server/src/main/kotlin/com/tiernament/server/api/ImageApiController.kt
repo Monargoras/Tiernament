@@ -21,7 +21,7 @@ interface ImageRepo : MongoRepository<Image, String> {
 }
 
 @RestController
-@RequestMapping("/api/images")
+@RequestMapping("/api/image")
 class ImageApiController(@Autowired val repo: ImageRepo, @Autowired val gridFSBucket: GridFSBucket) {
 
     @GetMapping("/count")
