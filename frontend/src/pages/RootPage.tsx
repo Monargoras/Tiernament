@@ -21,7 +21,6 @@ export default function RootPage() {
   }
 
   const handleNavigate = (destination: string, closeNavMenu: boolean) => {
-    console.log(`${closeNavMenu ? AppBarRoutes[destination]: UserMenuRoutes[destination]}`)
     navigate(`${closeNavMenu ? AppBarRoutes[destination]: UserMenuRoutes[destination]}`)
     if (closeNavMenu) {
       handleCloseNavMenu()
