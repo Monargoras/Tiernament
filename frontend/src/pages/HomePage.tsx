@@ -1,14 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Button, Typography } from '@mui/material';
 
 
 export default function HomePage() {
+
+  const navigate = useNavigate()
+
   return (
     <div>
-      <h1>Home Page</h1>
-      <button>
-        <Link to={'/tiernament'}>Tiernament</Link>
-      </button>
+      <Typography variant={'h2'}>
+        Home Page
+      </Typography>
+      <Button variant={'contained'} onClick={() => navigate('/tiernament')}>
+        Tiernament
+      </Button>
     </div>
   )
 }
