@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/image
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="avatar"
+
+< ./testAssets/avatar.jpg
+
+--boundary--
