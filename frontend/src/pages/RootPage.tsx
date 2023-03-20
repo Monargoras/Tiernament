@@ -4,11 +4,14 @@ import {
 } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useTranslation } from 'react-i18next';
 
 import { AppBarRoutes, UserMenuRoutes } from '../App';
+import LanguageSelector from '../components/LanguageSelector';
 
 export default function RootPage() {
 
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
@@ -101,7 +104,7 @@ export default function RootPage() {
               >
                 {Object.keys(AppBarRoutes).map((page) => (
                   <MenuItem key={page} onClick={() => handleNavigate(page, true)}>
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography textAlign="center">{t(page)}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -113,12 +116,15 @@ export default function RootPage() {
                   onClick={() => handleNavigate(page, true)}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  {page}
+                  {t(page)}
                 </Button>
               ))}
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0, display: 'flex', flexDirection: 'row' }}>
+              <Box sx={{ marginRight: '10px' }}>
+                <LanguageSelector />
+              </Box>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -142,7 +148,7 @@ export default function RootPage() {
               >
                 {Object.keys(UserMenuRoutes).map((setting) => (
                   <MenuItem key={setting} onClick={() => handleNavigate(setting, false)}>
-                    <Typography textAlign="center">{setting}</Typography>
+                    <Typography textAlign="center">{t(setting)}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
