@@ -11,15 +11,15 @@ import { loader as tiernamentIdLoader } from './components/Tiernament';
 import RootPage from './pages/RootPage';
 
 export const AppBarRoutes: { [key: string]: string } = {
-  Create: '/tiernament/create',
-  About: '/about',
-  Imprint: '/imprint',
+  create: '/tiernament/create',
+  about: '/about',
+  imprint: '/imprint',
 }
 
 export const UserMenuRoutes: { [key: string]: string } = {
-  Profile: '/profile',
-  Settings: '/settings',
-  Logout: '/logout',
+  profile: '/profile',
+  settings: '/settings',
+  logout: '/logout',
 }
 
 const router = createBrowserRouter([
