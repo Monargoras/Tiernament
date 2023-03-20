@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLoaderData } from 'react-router-dom';
 
-import { fetchTiernamentById } from '../util/ApiRequests';
+import { fetchTiernamentById } from '../util/apiRequests';
 import { TiernamentType } from '../util/types';
 
 export async function loader(params: { tiernamentId: string }) {
