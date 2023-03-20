@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  AppBar, Toolbar, Box, Menu, MenuItem, Container, IconButton, Typography, Button, Tooltip, Avatar
+  AppBar, Toolbar, Box, Menu, MenuItem, Container, IconButton, Typography, Button, Tooltip, Avatar, useTheme
 } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -8,11 +8,13 @@ import { useTranslation } from 'react-i18next';
 
 import { AppBarRoutes, UserMenuRoutes } from '../App';
 import LanguageSelector from '../components/LanguageSelector';
+import ThemeModeToggle from '../components/ThemeModeToggle';
 
 export default function RootPage() {
 
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const theme = useTheme()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
 
@@ -42,7 +44,7 @@ export default function RootPage() {
 
   return (
     <>
-      <AppBar position={'static'}>
+      <AppBar position={'static'} enableColorOnDark>
         <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Box
@@ -75,17 +77,16 @@ export default function RootPage() {
                 alt={'Tiernament'}
               />
               <IconButton
-                size="large"
-                aria-label="menu"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
+                size='large'
+                aria-label='menu'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
                 onClick={handleOpenNavMenu}
-                color="inherit"
               >
                 <MenuIcon />
               </IconButton>
               <Menu
-                id="menu-appbar"
+                id='menu-appbar'
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: 'bottom',
@@ -104,7 +105,7 @@ export default function RootPage() {
               >
                 {Object.keys(AppBarRoutes).map((page) => (
                   <MenuItem key={page} onClick={() => handleNavigate(page, true)}>
-                    <Typography textAlign="center">{t(page)}</Typography>
+                    <Typography textAlign='center'>{t(page)}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -114,7 +115,7 @@ export default function RootPage() {
                 <Button
                   key={page}
                   onClick={() => handleNavigate(page, true)}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{ my: 2, color: theme.palette.text.primary, display: 'block' }}
                 >
                   {t(page)}
                 </Button>
@@ -123,16 +124,19 @@ export default function RootPage() {
 
             <Box sx={{ flexGrow: 0, display: 'flex', flexDirection: 'row' }}>
               <Box sx={{ marginRight: '10px' }}>
+                <ThemeModeToggle />
+              </Box>
+              <Box sx={{ marginRight: '10px' }}>
                 <LanguageSelector />
               </Box>
-              <Tooltip title="Open settings">
+              <Tooltip title={t('openSettings')}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
                 </IconButton>
               </Tooltip>
               <Menu
                 sx={{ mt: '45px' }}
-                id="menu-user"
+                id='menu-user'
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                   vertical: 'top',
@@ -148,7 +152,7 @@ export default function RootPage() {
               >
                 {Object.keys(UserMenuRoutes).map((setting) => (
                   <MenuItem key={setting} onClick={() => handleNavigate(setting, false)}>
-                    <Typography textAlign="center">{t(setting)}</Typography>
+                    <Typography textAlign='center'>{t(setting)}</Typography>
                   </MenuItem>
                 ))}
               </Menu>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { theme } from '../index';
 
 export default function LanguageSelector() {
 
@@ -17,7 +16,6 @@ export default function LanguageSelector() {
     <Box>
       <FormControl>
         <Select
-          sx={{ color: theme.palette.primary.contrastText }}
           value={i18n.language.substring(0,2)}
           onChange={handleChange}
           variant={'standard'}

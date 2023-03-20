@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 
 import './App.css';
 import ErrorPage from './pages/ErrorPage';
@@ -78,8 +79,41 @@ const router = createBrowserRouter([
   }
 ])
 
+export const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+
 export default function App() {
+  const [mode, setMode] = React.useState<'light' | 'dark'>('light');
+  const colorMode = React.useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+      },
+    }),
+    [],
+  );
+
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: mode,
+          primary: {
+            main: '#ff7043',
+          },
+          secondary: {
+            main: '#ffeb3b',
+          },
+        },
+      }),
+    [mode],
+  );
+
   return (
-    <RouterProvider router={router} />
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   )
 }
