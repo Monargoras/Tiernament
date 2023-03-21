@@ -13,7 +13,7 @@ data class Tiernament (
     val description: String,
     val date: Date,
     val entries: List<TiernamentEntry>,
-    // TODO add field presenting history of previous matches, e.g. the best entry in previous playthroughs
+    //TODO add field presenting history of previous matches, e.g. the best entry in previous playthroughs
 )
 
 data class TiernamentDraft (
