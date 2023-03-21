@@ -16,7 +16,7 @@ data class Tiernament (
     //TODO add field presenting history of previous matches, e.g. the best entry in previous playthroughs
 )
 
-data class TiernamentDraft (
+data class TiernamentDTO (
     val authorId: String,
     val name: String,
     val description: String,

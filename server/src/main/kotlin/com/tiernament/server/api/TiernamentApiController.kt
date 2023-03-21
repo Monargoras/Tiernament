@@ -1,7 +1,7 @@
 package com.tiernament.server.api
 
 import com.tiernament.server.models.Tiernament
-import com.tiernament.server.models.TiernamentDraft
+import com.tiernament.server.models.TiernamentDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.ResponseEntity
@@ -33,7 +33,7 @@ class TiernamentApiController(@Autowired val repo: TiernamentRepo) {
     }
 
     @PostMapping
-    fun postTiernament(@RequestBody body: TiernamentDraft): Tiernament {
+    fun postTiernament(@RequestBody body: TiernamentDTO): Tiernament {
         // create uuid
         val id = UUID.randomUUID().toString()
         // create tiernament with serverside id and date
