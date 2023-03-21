@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/tiernament
+POST http://localhost:8080/api/tiernament/private
 Content-Type: application/json
 
 {

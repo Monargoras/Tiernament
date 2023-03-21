@@ -13,8 +13,8 @@ interface TiernamentRepo : MongoRepository<Tiernament, String> {
 }
 
 @RestController
-@RequestMapping("/api/tiernament")
-class TiernamentApiController(@Autowired val repo: TiernamentRepo) {
+@RequestMapping("/api/tiernament/public")
+class PublicTiernamentApiController(@Autowired val repo: TiernamentRepo) {
 
     @GetMapping("/count")
     fun getTiernamentCount(): Int {
@@ -31,6 +31,11 @@ class TiernamentApiController(@Autowired val repo: TiernamentRepo) {
         val tiernament = repo.findByTiernamentId(id)
         return if (tiernament != null) ResponseEntity.ok(tiernament) else ResponseEntity.notFound().build()
     }
+}
+
+@RestController
+@RequestMapping("/api/tiernament/private")
+class PrivateTiernamentApiController(@Autowired val repo: TiernamentRepo) {
 
     @PostMapping
     fun postTiernament(@RequestBody body: TiernamentDTO): Tiernament {

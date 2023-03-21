@@ -1,0 +1,2 @@
+GET localhost:8080/api/user/count
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNb25hcmdvcmFzIiwiZXhwIjoxNjc5NTIwNjI5fQ.N2LcPHzQN1OZBlbsAkdAaLNL1J1xcsBsFi_aOBQDc2M
