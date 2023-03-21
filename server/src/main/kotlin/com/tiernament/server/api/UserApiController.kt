@@ -43,7 +43,7 @@ class UserDetailsService(private val repository: UserRepo, private val sessionRe
     }
 
     fun addSession(sessionId: String, userId: String) {
-        sessionRepo.insert(Session(sessionId, userId))
+        sessionRepo.insert(Session(sessionId, userId, Date()))
     }
 }
 
@@ -89,7 +89,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
                 val sessionId = UUID.randomUUID().toString()
                 val newRefreshToken = JwtTokenUtil().generateRefreshToken(it.userId, sessionId)
                 sessionRepo.delete(it)
-                sessionRepo.insert(Session(sessionId, it.userId))
+                sessionRepo.insert(Session(sessionId, it.userId, Date()))
                 response.addCookie(Cookie("Refresh", newRefreshToken).apply {
                     maxAge = 60 * 60 * 24 * 31
                     path = "/"
