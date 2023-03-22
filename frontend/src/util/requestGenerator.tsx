@@ -1,5 +1,5 @@
 import { updateToken } from '../redux/authSlice';
-import { useAppDispatch } from '../redux/hooks';
+import { store } from '../redux/store';
 
 export const backendIP = 'http://localhost:8080'
 
@@ -33,7 +33,7 @@ export const createRequest = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE
 }
 
 export const createRefreshRequest = () => {
-  const dispatch = useAppDispatch()
+  const dispatch = store.dispatch
 
   return fetch(
     `${backendIP}/api/user/refresh`,
