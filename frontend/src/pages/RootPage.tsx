@@ -9,12 +9,14 @@ import { useTranslation } from 'react-i18next';
 import { AppBarRoutes, UserMenuRoutes } from '../App';
 import LanguageSelector from '../components/LanguageSelector';
 import ThemeModeToggle from '../components/ThemeModeToggle';
+import { useAppSelector } from '../redux/hooks';
 
 export default function RootPage() {
 
   const { t } = useTranslation()
   const navigate = useNavigate()
   const theme = useTheme()
+  const authState = useAppSelector(state => state.auth)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
 
@@ -129,11 +131,20 @@ export default function RootPage() {
               <Box sx={{ marginRight: '10px' }}>
                 <LanguageSelector />
               </Box>
-              <Tooltip title={t('openSettings')}>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
-                </IconButton>
-              </Tooltip>
+              {
+                authState.isAuthenticated &&
+                <Tooltip title={t('openSettings')}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+                    <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg'/>
+                  </IconButton>
+                </Tooltip>
+              }
+              {
+                !authState.isAuthenticated &&
+                <Button
+                  onClick={() => navigate('/login')}
+                />
+              }
               <Menu
                 sx={{ mt: '45px' }}
                 id='menu-user'
