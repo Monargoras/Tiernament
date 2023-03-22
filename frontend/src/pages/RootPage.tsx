@@ -11,6 +11,7 @@ import LanguageSelector from '../components/LanguageSelector';
 import ThemeModeToggle from '../components/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
 
+
 export default function RootPage() {
 
   const { t } = useTranslation()
