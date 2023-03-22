@@ -8,6 +8,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './util/i18n'
+import { store } from './redux/store';
+import { Provider } from 'react-redux';
 
 
 const root = ReactDOM.createRoot(
@@ -15,7 +17,9 @@ const root = ReactDOM.createRoot(
 )
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 )
 
