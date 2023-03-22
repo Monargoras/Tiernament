@@ -1,17 +1,24 @@
 export type TiernamentType = {
-  tiernamentId: String,
-  authorId: String,
-  name: String,
-  description: String,
+  tiernamentId: string,
+  authorId: string,
+  name: string,
+  description: string,
   date: Date,
   entries: TiernamentEntryType[],
 }
 
 export type TiernamentEntryType = {
-  entryId: String,
-  name: String,
-  imageLink: String,
+  entryId: string,
+  name: string,
+  imageLink: string,
   tier: number,
   score: number,
   history: number[],
+}
+
+export type UserType = {
+  userId: string,
+  name: string,
+  tiernaments: string[],
+  tiernamentRuns: string[],
 }

@@ -3,7 +3,7 @@ package com.tiernament.server.api
 import com.tiernament.server.auth.JwtTokenUtil
 import com.tiernament.server.models.Session
 import com.tiernament.server.models.User
-import com.tiernament.server.models.UserDTO
+import com.tiernament.server.models.LoginDTO
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
@@ -63,7 +63,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
     }
 
     @PostMapping("/create")
-    fun postUser(@RequestBody body: UserDTO): User {
+    fun postUser(@RequestBody body: LoginDTO): User {
         // create uuid
         val id = UUID.randomUUID().toString()
         // encode password

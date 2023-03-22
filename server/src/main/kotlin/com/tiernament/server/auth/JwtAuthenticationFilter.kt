@@ -2,7 +2,7 @@ package com.tiernament.server.auth
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.tiernament.server.api.UserDetailsService
-import com.tiernament.server.models.UserDTO
+import com.tiernament.server.models.LoginDTO
 import com.tiernament.server.models.User
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.Cookie
@@ -28,7 +28,7 @@ class JwtAuthenticationFilter(
     }
 
     override fun attemptAuthentication(req: HttpServletRequest, response: HttpServletResponse): Authentication {
-        val credentials = ObjectMapper().readValue(req.inputStream, UserDTO::class.java)
+        val credentials = ObjectMapper().readValue(req.inputStream, LoginDTO::class.java)
         val auth = UsernamePasswordAuthenticationToken(
             credentials.name,
             credentials.password,

@@ -13,8 +13,8 @@ data class User (
     val name: String,
     private val password: String,
     private val authorities: MutableCollection<GrantedAuthority>,
-    val tiernaments: List<Int>,
-    val tiernamentRuns: List<Int>,
+    val tiernaments: List<String>,
+    val tiernamentRuns: List<String>,
 ) : UserDetails {
     override fun getAuthorities() = authorities
     override fun getPassword() = password
@@ -25,6 +25,13 @@ data class User (
     override fun isEnabled() = true
 }
 
-data class UserDTO
+data class LoginDTO
 @ConstructorProperties("name", "password")
 constructor(val name: String, val password: String)
+
+data class UserDTO (
+    val userId: String,
+    val name: String,
+    val tiernaments: List<String>,
+    val tiernamentRuns: List<String>,
+)
