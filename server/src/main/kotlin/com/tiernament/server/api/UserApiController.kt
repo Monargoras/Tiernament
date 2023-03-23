@@ -5,6 +5,7 @@ import com.tiernament.server.auth.JwtTokenUtil
 import com.tiernament.server.models.Session
 import com.tiernament.server.models.User
 import com.tiernament.server.models.LoginDTO
+import com.tiernament.server.models.UserDTO
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import net.minidev.json.JSONObject
@@ -34,15 +35,7 @@ interface SessionRepo : MongoRepository<Session, String> {
 class UserDetailsService(private val repository: UserRepo, private val sessionRepo: SessionRepo): org.springframework.security.core.userdetails.UserDetailsService {
     override fun loadUserByUsername(username: String): User {
         // Create a method in your repo to find a user by its username
-        val user = repository.findByName(username) ?: throw UsernameNotFoundException("$username not found")
-        return User(
-            user.userId,
-            user.name,
-            user.password,
-            Collections.singleton(SimpleGrantedAuthority("user")),
-            user.tiernaments,
-            user.tiernamentRuns,
-        )
+        return repository.findByName(username) ?: throw UsernameNotFoundException("$username not found")
     }
 
     fun addSession(sessionId: String, userId: String) {
@@ -63,9 +56,9 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
     }
 
     @GetMapping("/get/{id}", produces = ["application/json"])
-    fun getUserById(@PathVariable("id") id: String): ResponseEntity<User> {
+    fun getUserById(@PathVariable("id") id: String): ResponseEntity<UserDTO> {
         val user = repo.findByUserId(id)
-        return if (user != null) ResponseEntity.ok(user) else ResponseEntity.notFound().build()
+        return if (user != null) ResponseEntity.ok(UserDTO(user)) else ResponseEntity.notFound().build()
     }
 
     @PostMapping("/logout")
@@ -90,7 +83,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
 
     @PostMapping("/create", produces = ["application/json"])
     @Throws(Exception::class)
-    fun postUser(@RequestBody body: LoginDTO): ResponseEntity<User> {
+    fun postUser(@RequestBody body: LoginDTO): ResponseEntity<UserDTO> {
 
         // check if user already exists
         if(repo.findByName(body.name) != null) {
@@ -106,12 +99,14 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
         val user = User(
             userId = id,
             name = body.name,
+            avatarId= "",
             password = passwordEncoder.encode(body.password),
             authorities = Collections.singleton(SimpleGrantedAuthority("user")),
             tiernaments = listOf(),
             tiernamentRuns = listOf(),
         )
-        return ResponseEntity(repo.insert(user), HttpStatus.CREATED)
+        repo.insert(user)
+        return ResponseEntity(UserDTO(user), HttpStatus.CREATED)
     }
 
     @PostMapping("/refresh", produces = ["application/json"])
@@ -134,12 +129,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
                     // TODO remove
                     println("refreshing token for user ${user.name}")
                     JSONObject().apply {
-                        put("user", JSONObject().apply {
-                            put("name", user.name)
-                            put("userId", user.userId)
-                            put("tiernaments", user.tiernaments)
-                            put("tiernamentRuns", user.tiernamentRuns)
-                        })
+                        put("user", UserDTO(user))
                         put("token", newAccessToken)
                     }.let { resBody ->
                         return ResponseEntity(resBody, HttpStatus.OK)
@@ -151,10 +141,12 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
     }
 
     @PatchMapping("/{id}")
-    fun updateUser(@PathVariable("id") id: String, @RequestBody user: User): User? {
-        return repo.findByUserId(id = id)?.let {
-            repo.save(it.copy(name = user.name, tiernaments = user.tiernaments, tiernamentRuns = user.tiernamentRuns))
+    fun updateUser(@PathVariable("id") id: String, @RequestBody user: UserDTO): ResponseEntity<UserDTO> {
+        repo.findByUserId(id = id)?.let {
+            val newUser = repo.save(it.copy(name = user.name, avatarId = user.avatarId, tiernaments = user.tiernaments, tiernamentRuns = user.tiernamentRuns))
+            return ResponseEntity.ok(UserDTO(newUser))
         }
+        return ResponseEntity.badRequest().build()
     }
 
     @DeleteMapping("/{id}")

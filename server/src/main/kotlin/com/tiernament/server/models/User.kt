@@ -11,6 +11,7 @@ data class User (
     @Id
     val userId: String,
     val name: String,
+    val avatarId: String,
     private val password: String,
     private val authorities: MutableCollection<GrantedAuthority>,
     val tiernaments: List<String>,
@@ -32,6 +33,15 @@ constructor(val name: String, val password: String)
 data class UserDTO (
     val userId: String,
     val name: String,
+    val avatarId: String,
     val tiernaments: List<String>,
     val tiernamentRuns: List<String>,
-)
+) {
+    constructor(user: User) : this(
+        userId = user.userId,
+        name = user.name,
+        avatarId = user.avatarId,
+        tiernaments = user.tiernaments,
+        tiernamentRuns = user.tiernamentRuns,
+    )
+}

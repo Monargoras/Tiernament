@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.tiernament.server.api.UserDetailsService
 import com.tiernament.server.models.LoginDTO
 import com.tiernament.server.models.User
+import com.tiernament.server.models.UserDTO
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -53,12 +54,7 @@ class JwtAuthenticationFilter(
         // add user and token to response
         res.contentType = "application/json"
         JSONObject().apply {
-            put("user", JSONObject().apply {
-                put("userId", user.userId)
-                put("name", user.name)
-                put("tiernaments", user.tiernaments)
-                put("tiernamentRuns", user.tiernamentRuns)
-            })
+            put("user", UserDTO(user))
             put("token", accessToken)
         }.let {
             // write JSON user object to response

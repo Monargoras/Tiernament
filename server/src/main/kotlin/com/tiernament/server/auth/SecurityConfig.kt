@@ -29,7 +29,7 @@ class SecurityConfig(
         val authenticationManager = authManager(http)
         // Put your endpoint to create/sign, otherwise spring will secure it as
         // well you won't be able to do any request
-        //TODO maybe don't disable cors and csrf
+        // TODO maybe don't disable cors and csrf
         http.cors().and().csrf().disable().authorizeHttpRequests()
             .requestMatchers(
                 "/api/user/create",
@@ -37,6 +37,7 @@ class SecurityConfig(
                 "/api/user/refresh",
                 "/api/user/logout",
                 "/api/user/get/**",
+                "/api/image/get/**",
                 "/api/tiernament/public/**"
             )
             .permitAll().anyRequest().authenticated().and().csrf().disable()

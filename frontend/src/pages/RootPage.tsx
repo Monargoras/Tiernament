@@ -11,6 +11,7 @@ import LanguageSelector from '../components/general/LanguageSelector';
 import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
 import { createLogoutUserRequest } from '../apiRequests/userRequests';
+import {backendIP} from "../apiRequests/requestGenerator";
 
 
 export default function RootPage() {
@@ -142,7 +143,7 @@ export default function RootPage() {
                 authState.isAuthenticated && authState.user &&
                 <Tooltip title={t('openSettings')}>
                   <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                    <Avatar alt={authState.user.name}/>
+                    <Avatar alt={authState.user.name} src={`${backendIP}/api/image/get/${authState.user.avatarId}`}/>
                   </IconButton>
                 </Tooltip>
               }
