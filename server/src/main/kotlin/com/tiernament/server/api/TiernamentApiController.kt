@@ -13,7 +13,7 @@ interface TiernamentRepo : MongoRepository<Tiernament, String> {
 }
 
 @RestController
-@RequestMapping("/api/tiernament/public")
+@RequestMapping("/api/tiernament/get")
 class PublicTiernamentApiController(@Autowired val repo: TiernamentRepo) {
 
     @GetMapping("/count")
@@ -34,7 +34,7 @@ class PublicTiernamentApiController(@Autowired val repo: TiernamentRepo) {
 }
 
 @RestController
-@RequestMapping("/api/tiernament/private")
+@RequestMapping("/api/tiernament/edit")
 class PrivateTiernamentApiController(@Autowired val repo: TiernamentRepo) {
 
     @PostMapping

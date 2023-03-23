@@ -38,7 +38,7 @@ class SecurityConfig(
                 "/api/user/logout",
                 "/api/user/get/**",
                 "/api/image/get/**",
-                "/api/tiernament/public/**"
+                "/api/tiernament/get/**"
             )
             .permitAll().anyRequest().authenticated().and().csrf().disable()
             .authenticationManager(authenticationManager)
