@@ -7,6 +7,7 @@ import com.tiernament.server.models.User
 import com.tiernament.server.models.LoginDTO
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
+import net.minidev.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.HttpStatus
@@ -61,13 +62,13 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
         return repo.findAll().count()
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}", produces = ["application/json"])
     fun getUserById(@PathVariable("id") id: String): ResponseEntity<User> {
         val user = repo.findByUserId(id)
         return if (user != null) ResponseEntity.ok(user) else ResponseEntity.notFound().build()
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create", produces = ["application/json"])
     @Throws(Exception::class)
     fun postUser(@RequestBody body: LoginDTO): ResponseEntity<User> {
 
@@ -93,10 +94,9 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
         return ResponseEntity(repo.insert(user), HttpStatus.CREATED)
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/refresh", produces = ["application/json"])
     fun refreshUser(@CookieValue("Refresh") refreshToken: String, response: HttpServletResponse): ResponseEntity<*> {
         val jwtUtils = JwtTokenUtil()
-        println("refreshing token")
         if(jwtUtils.isTokenValid(refreshToken)) {
             sessionRepo.findBySessionId(jwtUtils.getSubject(refreshToken))?.let {
                 val newAccessToken = JwtTokenUtil().generateToken(it.userId)
@@ -109,7 +109,22 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
                     path = "/"
                     isHttpOnly = true
                 })
-                return ResponseEntity(newAccessToken, HttpStatus.OK)
+                val user = repo.findByUserId(it.userId)
+                if(user != null) {
+                    // TODO remove
+                    println("refreshing token for user ${user.name}")
+                    JSONObject().apply {
+                        put("user", JSONObject().apply {
+                            put("name", user.name)
+                            put("userId", user.userId)
+                            put("tiernaments", user.tiernaments)
+                            put("tiernamentRuns", user.tiernamentRuns)
+                        })
+                        put("token", newAccessToken)
+                    }.let { resBody ->
+                        return ResponseEntity(resBody, HttpStatus.OK)
+                    }
+                }
             }
         }
         return ResponseEntity("bErrorRefresh", HttpStatus.UNAUTHORIZED)

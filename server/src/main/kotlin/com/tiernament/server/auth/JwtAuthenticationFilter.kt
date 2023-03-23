@@ -50,9 +50,8 @@ class JwtAuthenticationFilter(
         userDetailsService.addSession(sessionId, user.userId)
         val refreshToken = jwtTokenUtil.generateRefreshToken(user.userId, sessionId)
 
-        // add user to response
+        // add user and token to response
         res.contentType = "application/json"
-        // create JSON user object
         JSONObject().apply {
             put("user", JSONObject().apply {
                 put("userId", user.userId)
@@ -72,7 +71,7 @@ class JwtAuthenticationFilter(
             isHttpOnly = true
         })
 
-        //TODO remove
+        // TODO remove
         println("Successful login for user $username")
     }
 

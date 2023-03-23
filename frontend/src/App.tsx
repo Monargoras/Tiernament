@@ -11,6 +11,7 @@ import { loader as tiernamentLoader } from './pages/TiernamentPage';
 import { loader as tiernamentIdLoader } from './components/tiernament/Tiernament';
 import RootPage from './pages/RootPage';
 import AuthenticationPage from './pages/AuthenticationPage';
+import { createRefreshRequest } from './apiRequests/userRequests';
 
 export const AppBarRoutes: { [key: string]: string } = {
   create: '/tiernament/create',
@@ -85,6 +86,8 @@ const router = createBrowserRouter([
 ])
 
 export const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
+
+createRefreshRequest()
 
 export default function App() {
   const [mode, setMode] = React.useState<'light' | 'dark'>('light')

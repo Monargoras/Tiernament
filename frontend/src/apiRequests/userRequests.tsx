@@ -1,6 +1,6 @@
 import { backendIP } from './requestGenerator';
 import { store } from '../redux/store';
-import { credError, login, updateToken } from '../redux/authSlice';
+import { credError, login } from '../redux/authSlice';
 import { sha256 } from 'js-sha256';
 
 export function loginUser(username: string, password: string) {
@@ -11,6 +11,7 @@ export function loginUser(username: string, password: string) {
     {
       method: 'POST',
       mode: 'cors',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -69,6 +70,8 @@ export function registerUser(username: string, password: string) {
 export const createRefreshRequest = () => {
   const dispatch = store.dispatch
 
+  console.log('refreshing token')
+
   fetch(
     `${backendIP}/api/user/refresh`,
     {
@@ -78,18 +81,21 @@ export const createRefreshRequest = () => {
     })
     .then((res) => {
       if(res.status === 500) {
-        alert('Server Error')
+        console.log('Server Error')
+        return
       }
       if(res.status === 401) {
-        alert('Unauthorized')
+        console.log('Unauthorized')
+        return
       }
       if(res.status === 403) {
-        alert('Forbidden')
+        console.log('Forbidden')
+        return
       }
       if(res) {
         res.json().then((data) => {
           if(res.ok)
-            dispatch(updateToken(data))
+            dispatch(login({ user: data.user, token: data.token }))
           else
             dispatch(credError(data))
         })
