@@ -6,7 +6,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTranslation } from 'react-i18next';
 
-import { AppBarRoutes, UserMenuRoutes } from '../App';
+import { AppBarRoutes } from '../App';
 import LanguageSelector from '../components/general/LanguageSelector';
 import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
@@ -30,13 +30,21 @@ export default function RootPage() {
     setAnchorElUser(event.currentTarget)
   }
 
-  const handleNavigate = (destination: string, closeNavMenu: boolean) => {
-    navigate(`${closeNavMenu ? AppBarRoutes[destination]: UserMenuRoutes[destination]}`)
-    if (closeNavMenu) {
-      handleCloseNavMenu()
-    } else {
-      handleCloseUserMenu()
+  const handleNavigate = (destination: string) => {
+    navigate(`${AppBarRoutes[destination]}`)
+    handleCloseNavMenu()
+  }
+
+  const handleSettings = () => {
+    navigate('/settings')
+    handleCloseUserMenu()
+  }
+
+  const handleProfile = () => {
+    if(authState.user) {
+      navigate(`/profile/${authState.user.name}`)
     }
+    handleCloseUserMenu()
   }
 
   const handleLogout = () => {
@@ -114,7 +122,7 @@ export default function RootPage() {
                 }}
               >
                 {Object.keys(AppBarRoutes).map((page) => (
-                  <MenuItem key={page} onClick={() => handleNavigate(page, true)}>
+                  <MenuItem key={page} onClick={() => handleNavigate(page)}>
                     <Typography textAlign='center'>{t(page)}</Typography>
                   </MenuItem>
                 ))}
@@ -124,7 +132,7 @@ export default function RootPage() {
               {Object.keys(AppBarRoutes).map((page) => (
                 <Button
                   key={page}
-                  onClick={() => handleNavigate(page, true)}
+                  onClick={() => handleNavigate(page)}
                   sx={{ my: 2, color: theme.palette.text.primary, display: 'block' }}
                 >
                   {t(page)}
@@ -172,11 +180,12 @@ export default function RootPage() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {Object.keys(UserMenuRoutes).map((setting) => (
-                  <MenuItem key={setting} onClick={() => handleNavigate(setting, false)}>
-                    <Typography textAlign='center'>{t(setting)}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem key={'profile'} onClick={() => handleProfile()}>
+                  <Typography textAlign='center'>{t('profile')}</Typography>
+                </MenuItem>
+                <MenuItem key={'settings'} onClick={() => handleSettings()}>
+                  <Typography textAlign='center'>{t('settings')}</Typography>
+                </MenuItem>
                 <MenuItem key={'logout'} onClick={() => handleLogout()}>
                   <Typography textAlign='center'>{t('logout')}</Typography>
                 </MenuItem>

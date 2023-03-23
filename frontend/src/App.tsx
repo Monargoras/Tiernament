@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 
@@ -12,16 +12,14 @@ import { loader as tiernamentIdLoader } from './components/tiernament/Tiernament
 import RootPage from './pages/RootPage';
 import AuthenticationPage from './pages/AuthenticationPage';
 import { createRefreshUserRequest } from './apiRequests/userRequests';
+import ProfilePage from './pages/ProfilePage';
+import { loader as profileLoader } from './pages/ProfilePage';
+import LoadingPage from './pages/LoadingPage';
 
 export const AppBarRoutes: { [key: string]: string } = {
   create: '/tiernament/create',
   about: '/about',
   imprint: '/imprint',
-}
-
-export const UserMenuRoutes: { [key: string]: string } = {
-  profile: '/profile',
-  settings: '/settings',
 }
 
 const router = createBrowserRouter([
@@ -65,8 +63,9 @@ const router = createBrowserRouter([
         element: <AuthenticationPage />,
       },
       {
-        path: 'profile',
-        element: <p>Profile</p>,
+        path: 'profile/:username',
+        element: <ProfilePage />,
+        loader: (args) => profileLoader(args.params as { username: string }),
       },
 {
         path: 'settings',
@@ -119,8 +118,10 @@ export default function App() {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <RouterProvider router={router} />
+        <Suspense fallback={<LoadingPage />}>
+          <CssBaseline />
+          <RouterProvider router={router} />
+        </Suspense>
       </ThemeProvider>
     </ColorModeContext.Provider>
   )

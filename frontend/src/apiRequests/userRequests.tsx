@@ -1,7 +1,12 @@
-import { backendIP } from './requestGenerator';
+import { backendIP, createRequest } from './requestGenerator';
 import { store } from '../redux/store';
-import {credError, login, logout} from '../redux/authSlice';
+import { credError, login, logout } from '../redux/authSlice';
 import { sha256 } from 'js-sha256';
+
+
+export function createGetUserRequest(username: string) {
+  return createRequest('GET', 'api/user/get', undefined, username)
+}
 
 export function createLoginUserRequest(username: string, password: string) {
   const dispatch = store.dispatch
