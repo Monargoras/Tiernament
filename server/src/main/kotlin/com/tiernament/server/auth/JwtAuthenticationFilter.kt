@@ -92,7 +92,7 @@ class JwtAuthenticationFilter(
 private data class BadCredentialsError(
     val timestamp: Long = Date().time,
     val status: Int = 401,
-    val message: String = "bErrorBadCreds",
+    val message: String = "errorCredInvalid",
 ) {
     override fun toString(): String {
         return ObjectMapper().writeValueAsString(this)
