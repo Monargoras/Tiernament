@@ -8,5 +8,16 @@
   "profile": "Profile",
   "settings": "Settings",
   "openSettings": "Open settings",
-  "logout": "Logout"
+  "login": "Login",
+  "logout": "Logout",
+  "register": "Register",
+  "username": "Username",
+  "password": "Password",
+  "createNewAccount": "Create new account",
+  "needAccount": "Need an account?",
+  "back": "Back",
+  "repeatPass": "Repeat password",
+  "errorCredInvalid": "Username or password invalid.",
+  "errorPassMatch": "Passwords do not match.",
+  "bErrorUserExists": "Username already exists."
 }

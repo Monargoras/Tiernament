@@ -8,5 +8,16 @@
   "profile": "Profil",
   "settings": "Einstellungen",
   "openSettings": "Einstellungen öffnen",
-  "logout": "Abmelden"
+  "login": "Anmelden",
+  "logout": "Abmelden",
+  "register": "Registrieren",
+  "username": "Benutzername",
+  "password": "Passwort",
+  "createNewAccount": "Neuen Account erstellen",
+  "needAccount": "Du brauchst einen Account?",
+  "back": "Zurück",
+  "repeatPass": "Passwort wiederholen",
+  "errorCredInvalid": "Benutzername oder Passwort ist ungültig.",
+  "errorPassMatch": "Passwörter stimmen nicht überein.",
+  "bErrorUserExists": "Benutzername ist bereits vergeben."
 }
