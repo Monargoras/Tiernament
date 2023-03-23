@@ -67,7 +67,15 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
     }
 
     @PostMapping("/create")
-    fun postUser(@RequestBody body: LoginDTO): User {
+    @Throws(Exception::class)
+    fun postUser(@RequestBody body: LoginDTO): ResponseEntity<User> {
+
+        // check if user already exists
+        if(repo.findByName(body.name) != null) {
+            // return code 403
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }
+
         // create uuid
         val id = UUID.randomUUID().toString()
         // encode password
@@ -81,7 +89,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
             tiernaments = listOf(),
             tiernamentRuns = listOf(),
         )
-        return repo.insert(user)
+        return ResponseEntity(repo.insert(user), HttpStatus.CREATED)
     }
 
     @PostMapping("/refresh")

@@ -1,10 +1,11 @@
-import {backendIP, createRequest} from './requestGenerator';
-import {store} from '../redux/store';
-import {credError, login, updateToken} from '../redux/authSlice';
-import {sha256} from 'js-sha256';
+import { backendIP } from './requestGenerator';
+import { store } from '../redux/store';
+import { credError, login, updateToken } from '../redux/authSlice';
+import { sha256 } from 'js-sha256';
 
 export function loginUser(username: string, password: string) {
   const dispatch = store.dispatch
+
   fetch(
     `${backendIP}/api/user/login`,
     {
@@ -18,10 +19,6 @@ export function loginUser(username: string, password: string) {
     .then((res) => {
       if(res.status === 500) {
         console.log('Server Error')
-        return
-      }
-      if(res.status === 401) {
-        console.log('Unauthorized')
         return
       }
       if(res.status === 403) {
@@ -42,16 +39,30 @@ export function loginUser(username: string, password: string) {
 
 export function registerUser(username: string, password: string) {
   const dispatch = store.dispatch
-  createRequest('POST', 'api/user/create', { name: username, password: sha256.update(password).hex() })
+
+  fetch(
+    `${backendIP}/api/user/create`,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: username, password: sha256.update(password).hex() })
+    })
     .then((res) => {
-      if(res) {
-        res.json().then((data) => {
-          if(res.ok)
-            loginUser(username, password)
-          else
-            dispatch(credError(data.message))
-        })
+      if(res.status === 500) {
+        console.log('Server Error')
+        return
       }
+      if(res.status === 403) {
+        dispatch(credError('bErrorUserExists'))
+        return
+      }
+      if(res.ok)
+        loginUser(username, password)
+      else
+        dispatch(credError('bErrorUserExists'))
     })
 }
 
