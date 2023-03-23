@@ -7,8 +7,12 @@ import org.springframework.stereotype.Component
 import java.security.Key
 import java.util.*
 
-const val EXPIRATION_ACCESS = 1000 * 60 * 60 * 24
+// 30 minutes from milliseconds
+const val EXPIRATION_ACCESS = 1000 * 60 * 30
+
+// 1 month from seconds
 const val EXPIRATION_REFRESH_SEC = 60 * 60 * 24 * 31
+// 1 month from milliseconds
 const val EXPIRATION_REFRESH = 1000 * 60 * 60 * 24 * 31L
 
 @Component
