@@ -11,7 +11,7 @@ import LanguageSelector from '../components/general/LanguageSelector';
 import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
 import { createLogoutUserRequest } from '../apiRequests/userRequests';
-import {backendIP} from "../apiRequests/requestGenerator";
+import { backendIP } from '../apiRequests/requestGenerator';
 
 
 export default function RootPage() {
