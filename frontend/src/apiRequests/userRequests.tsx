@@ -70,8 +70,6 @@ export function registerUser(username: string, password: string) {
 export const createRefreshRequest = () => {
   const dispatch = store.dispatch
 
-  console.log('refreshing token')
-
   fetch(
     `${backendIP}/api/user/refresh`,
     {
