@@ -67,7 +67,7 @@ class JwtAuthenticationFilter(
         }
 
         res.addCookie(Cookie("Refresh", refreshToken).apply {
-            maxAge = 60 * 60 * 24 * 31
+            maxAge = EXPIRATION_REFRESH_SEC
             path = "/"
             isHttpOnly = true
         })

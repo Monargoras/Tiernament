@@ -1,5 +1,6 @@
 package com.tiernament.server.api
 
+import com.tiernament.server.auth.EXPIRATION_REFRESH_SEC
 import com.tiernament.server.auth.JwtTokenUtil
 import com.tiernament.server.models.Session
 import com.tiernament.server.models.User
@@ -104,7 +105,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
                 sessionRepo.delete(it)
                 sessionRepo.insert(Session(sessionId, it.userId, Date()))
                 response.addCookie(Cookie("Refresh", newRefreshToken).apply {
-                    maxAge = 60 * 60 * 24 * 31
+                    maxAge = EXPIRATION_REFRESH_SEC
                     path = "/"
                     isHttpOnly = true
                 })
