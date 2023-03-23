@@ -31,7 +31,14 @@ class SecurityConfig(
         // well you won't be able to do any request
         //TODO maybe don't disable cors and csrf
         http.cors().and().csrf().disable().authorizeHttpRequests()
-            .requestMatchers("/api/user/create", "/api/user/login", "/api/user/refresh", "/api/tiernament/public/**")
+            .requestMatchers(
+                "/api/user/create",
+                "/api/user/login",
+                "/api/user/refresh",
+                "/api/user/logout",
+                "/api/user/get/**",
+                "/api/tiernament/public/**"
+            )
             .permitAll().anyRequest().authenticated().and().csrf().disable()
             .authenticationManager(authenticationManager)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

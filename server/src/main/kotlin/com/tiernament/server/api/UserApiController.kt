@@ -62,10 +62,29 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
         return repo.findAll().count()
     }
 
-    @GetMapping("/{id}", produces = ["application/json"])
+    @GetMapping("/get/{id}", produces = ["application/json"])
     fun getUserById(@PathVariable("id") id: String): ResponseEntity<User> {
         val user = repo.findByUserId(id)
         return if (user != null) ResponseEntity.ok(user) else ResponseEntity.notFound().build()
+    }
+
+    @PostMapping("/logout")
+    fun logoutUser(@CookieValue("Refresh") refresh: String, response: HttpServletResponse): ResponseEntity<Void> {
+        val jwtUtils = JwtTokenUtil()
+        if(jwtUtils.isTokenValid(refresh)) {
+            sessionRepo.findBySessionId(jwtUtils.getSubject(refresh))?.let {
+                sessionRepo.delete(it)
+            }
+            val cookie = Cookie("Refresh", "")
+            cookie.maxAge = 0
+            response.addCookie(cookie)
+
+            // TODO remove
+            println("logged out session ${jwtUtils.getSubject(refresh)}")
+
+            return ResponseEntity.ok().build()
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
     }
 
     @PostMapping("/create", produces = ["application/json"])
