@@ -6,10 +6,11 @@ import './App.css';
 import ErrorPage from './pages/ErrorPage';
 import TiernamentPage from './pages/TiernamentPage';
 import HomePage from './pages/HomePage';
-import Tiernament from './components/Tiernament';
+import Tiernament from './components/tiernament/Tiernament';
 import { loader as tiernamentLoader } from './pages/TiernamentPage';
-import { loader as tiernamentIdLoader } from './components/Tiernament';
+import { loader as tiernamentIdLoader } from './components/tiernament/Tiernament';
 import RootPage from './pages/RootPage';
+import AuthenticationPage from './pages/AuthenticationPage';
 
 export const AppBarRoutes: { [key: string]: string } = {
   create: '/tiernament/create',
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <p>Login</p>,
+        element: <AuthenticationPage />,
       },
       {
         path: 'profile',
@@ -83,18 +84,18 @@ const router = createBrowserRouter([
   }
 ])
 
-export const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+export const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
 
 export default function App() {
-  const [mode, setMode] = React.useState<'light' | 'dark'>('light');
+  const [mode, setMode] = React.useState<'light' | 'dark'>('light')
   const colorMode = React.useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))
       },
     }),
     [],
-  );
+  )
 
   const theme = React.useMemo(
     () =>
@@ -102,15 +103,15 @@ export default function App() {
         palette: {
           mode: mode,
           primary: {
-            main: '#ff7043',
+            main: '#2bbdc5',
           },
           secondary: {
-            main: '#ffeb3b',
+            main: '#ab47bc',
           },
         },
       }),
     [mode],
-  );
+  )
 
   return (
     <ColorModeContext.Provider value={colorMode}>

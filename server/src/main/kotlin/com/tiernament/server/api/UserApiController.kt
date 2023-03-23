@@ -25,6 +25,7 @@ interface UserRepo : MongoRepository<User, String> {
 
 interface SessionRepo : MongoRepository<Session, String> {
     fun findBySessionId(id: String): Session?
+    fun findByUserId(id: String): Session?
 }
 
 @Service
@@ -43,6 +44,9 @@ class UserDetailsService(private val repository: UserRepo, private val sessionRe
     }
 
     fun addSession(sessionId: String, userId: String) {
+        sessionRepo.findByUserId(userId)?.let {
+            sessionRepo.delete(it)
+        }
         sessionRepo.insert(Session(sessionId, userId, Date()))
     }
 }
@@ -83,6 +87,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
     @PostMapping("/refresh")
     fun refreshUser(@CookieValue("Refresh") refreshToken: String, response: HttpServletResponse): ResponseEntity<*> {
         val jwtUtils = JwtTokenUtil()
+        println("refreshing token")
         if(jwtUtils.isTokenValid(refreshToken)) {
             sessionRepo.findBySessionId(jwtUtils.getSubject(refreshToken))?.let {
                 val newAccessToken = JwtTokenUtil().generateToken(it.userId)
@@ -95,9 +100,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
                     path = "/"
                     isHttpOnly = true
                 })
-                response.addHeader("Authorization", newAccessToken)
-                response.addHeader("Access-Control-Expose-Headers", "Authorization")
-                return ResponseEntity("", HttpStatus.OK)
+                return ResponseEntity(newAccessToken, HttpStatus.OK)
             }
         }
         return ResponseEntity("bErrorRefresh", HttpStatus.UNAUTHORIZED)

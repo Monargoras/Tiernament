@@ -7,8 +7,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useTranslation } from 'react-i18next';
 
 import { AppBarRoutes, UserMenuRoutes } from '../App';
-import LanguageSelector from '../components/LanguageSelector';
-import ThemeModeToggle from '../components/ThemeModeToggle';
+import LanguageSelector from '../components/general/LanguageSelector';
+import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
 
 
@@ -133,10 +133,10 @@ export default function RootPage() {
                 <LanguageSelector />
               </Box>
               {
-                authState.isAuthenticated &&
+                authState.isAuthenticated && authState.user &&
                 <Tooltip title={t('openSettings')}>
                   <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                    <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg'/>
+                    <Avatar alt={authState.user.name}/>
                   </IconButton>
                 </Tooltip>
               }
@@ -144,7 +144,10 @@ export default function RootPage() {
                 !authState.isAuthenticated &&
                 <Button
                   onClick={() => navigate('/login')}
-                />
+                  sx={{ p: 0, color: theme.palette.text.primary, display: 'block' }}
+                >
+                  {t('login')}
+                </Button>
               }
               <Menu
                 sx={{ mt: '45px' }}

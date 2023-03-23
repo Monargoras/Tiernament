@@ -5,12 +5,14 @@ interface AuthState {
   isAuthenticated: boolean,
   user: UserType | undefined,
   token: string | undefined,
+  error: string | undefined,
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
   user: undefined,
   token: undefined,
+  error: undefined,
 }
 
 export const authSlice = createSlice({
@@ -21,6 +23,7 @@ export const authSlice = createSlice({
       state.isAuthenticated = true
       state.user = action.payload.user
       state.token = action.payload.token
+      state.error = undefined
     },
     updateToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload
@@ -29,10 +32,17 @@ export const authSlice = createSlice({
       state.isAuthenticated = false
       state.user = undefined
       state.token = undefined
+      state.error = undefined
     },
+    credError: (state, action: PayloadAction<string | undefined>) => {
+      state.isAuthenticated = false
+      state.user = undefined
+      state.token = undefined
+      state.error = action.payload
+    }
   }
 })
 
-export const { login, updateToken, logout } = authSlice.actions
+export const { login, updateToken, logout, credError } = authSlice.actions
 
 export default authSlice.reducer

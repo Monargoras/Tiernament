@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLoaderData } from 'react-router-dom';
 
-import { fetchTiernaments } from '../util/apiRequests';
+import { fetchTiernaments } from '../apiRequests/tiernamentRequests';
 import { TiernamentType } from '../util/types';
 
 export async function loader() {

@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import net.minidev.json.JSONObject
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -43,18 +44,36 @@ class JwtAuthenticationFilter(
     ) {
         val username = (auth.principal as User).username
         val accessToken: String = jwtTokenUtil.generateToken(username)
-        res.addHeader("Authorization", accessToken)
-        res.addHeader("Access-Control-Expose-Headers", "Authorization")
 
         val user = userDetailsService.loadUserByUsername(username)
         val sessionId = UUID.randomUUID().toString()
         userDetailsService.addSession(sessionId, user.userId)
         val refreshToken = jwtTokenUtil.generateRefreshToken(user.userId, sessionId)
+
+        // add user to response
+        res.contentType = "application/json"
+        // create JSON user object
+        JSONObject().apply {
+            put("user", JSONObject().apply {
+                put("userId", user.userId)
+                put("name", user.name)
+                put("tiernaments", user.tiernaments)
+                put("tiernamentRuns", user.tiernamentRuns)
+            })
+            put("token", accessToken)
+        }.let {
+            // write JSON user object to response
+            res.writer.append(it.toString())
+        }
+
         res.addCookie(Cookie("Refresh", refreshToken).apply {
             maxAge = 60 * 60 * 24 * 31
             path = "/"
             isHttpOnly = true
         })
+
+        //TODO remove
+        println("Successful login for user $username")
     }
 
     override fun unsuccessfulAuthentication(
