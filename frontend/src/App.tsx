@@ -67,7 +67,7 @@ const router = createBrowserRouter([
         element: <ProfilePage />,
         loader: (args) => profileLoader(args.params as { username: string }),
       },
-{
+      {
         path: 'settings',
         element: <p>Settings</p>,
       },

@@ -37,10 +37,4 @@ export const generalStyles = {
     border: 1,
     borderColor: '#9e9e9e'
   },
-  centerEverything: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    textAlign: 'center',
-  },
 }

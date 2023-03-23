@@ -5,11 +5,11 @@ import { generalStyles } from '../util/styles';
 export default function LoadingPage() {
 
   return (
-    <Box sx={{...generalStyles.centerEverything, paddingTop: '150px'}}>
+    <Box sx={generalStyles.backgroundContainer}>
       <Typography variant={'h5'} sx={{padding: '10px'}}>
         Loading site...
       </Typography>
-      <LinearProgress color={'primary'} sx={{width: '25%', margin: 'auto'}} />
+      <LinearProgress color={'primary'} sx={{width: '25%', marginX: 'auto'}} />
     </Box>
   )
 }
