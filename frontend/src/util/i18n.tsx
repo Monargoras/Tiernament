@@ -8,6 +8,7 @@ export default i18next
   .use(HttpApi)
   .use(LanguageDetector)
   .init({
+    lng: localStorage.getItem('i18nextLng') || 'en',
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,

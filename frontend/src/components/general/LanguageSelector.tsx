@@ -9,7 +9,9 @@ export default function LanguageSelector() {
   const languages: readonly string[] = i18n.options.supportedLngs ? i18n.options.supportedLngs.slice(0, i18n.options.supportedLngs.length - 1) : []
 
   const handleChange = (event: SelectChangeEvent) => {
-    i18n.changeLanguage(event.target.value).then(() => {})
+    i18n.changeLanguage(event.target.value).then(() => {
+      localStorage.setItem('i18nextLng', event.target.value)
+    })
   }
 
   return (
