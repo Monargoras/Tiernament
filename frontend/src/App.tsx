@@ -11,7 +11,7 @@ import { loader as tiernamentLoader } from './pages/TiernamentPage';
 import { loader as tiernamentIdLoader } from './components/tiernament/Tiernament';
 import RootPage from './pages/RootPage';
 import AuthenticationPage from './pages/AuthenticationPage';
-import { createRefreshRequest } from './apiRequests/userRequests';
+import { createRefreshUserRequest } from './apiRequests/userRequests';
 
 export const AppBarRoutes: { [key: string]: string } = {
   create: '/tiernament/create',
@@ -22,7 +22,6 @@ export const AppBarRoutes: { [key: string]: string } = {
 export const UserMenuRoutes: { [key: string]: string } = {
   profile: '/profile',
   settings: '/settings',
-  logout: '/logout',
 }
 
 const router = createBrowserRouter([
@@ -74,10 +73,6 @@ const router = createBrowserRouter([
         element: <p>Settings</p>,
       },
       {
-        path: 'logout',
-        element: <p>Logout</p>,
-      },
-      {
         path: 'imprint',
         element: <p>Imprint</p>,
       }
@@ -87,7 +82,7 @@ const router = createBrowserRouter([
 
 export const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
 
-createRefreshRequest()
+createRefreshUserRequest()
 
 const initialMode = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
 

@@ -10,6 +10,7 @@ import { AppBarRoutes, UserMenuRoutes } from '../App';
 import LanguageSelector from '../components/general/LanguageSelector';
 import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
+import { createLogoutUserRequest } from '../apiRequests/userRequests';
 
 
 export default function RootPage() {
@@ -35,6 +36,11 @@ export default function RootPage() {
     } else {
       handleCloseUserMenu()
     }
+  }
+
+  const handleLogout = () => {
+    createLogoutUserRequest()
+    handleCloseUserMenu()
   }
 
   const handleCloseNavMenu = () => {
@@ -170,6 +176,9 @@ export default function RootPage() {
                     <Typography textAlign='center'>{t(setting)}</Typography>
                   </MenuItem>
                 ))}
+                <MenuItem key={'logout'} onClick={() => handleLogout()}>
+                  <Typography textAlign='center'>{t('logout')}</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           </Toolbar>

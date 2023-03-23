@@ -1,9 +1,9 @@
 import { backendIP } from './requestGenerator';
 import { store } from '../redux/store';
-import { credError, login } from '../redux/authSlice';
+import {credError, login, logout} from '../redux/authSlice';
 import { sha256 } from 'js-sha256';
 
-export function loginUser(username: string, password: string) {
+export function createLoginUserRequest(username: string, password: string) {
   const dispatch = store.dispatch
 
   fetch(
@@ -38,7 +38,7 @@ export function loginUser(username: string, password: string) {
     })
 }
 
-export function registerUser(username: string, password: string) {
+export function createRegisterUserRequest(username: string, password: string) {
   const dispatch = store.dispatch
 
   fetch(
@@ -61,13 +61,13 @@ export function registerUser(username: string, password: string) {
         return
       }
       if(res.ok)
-        loginUser(username, password)
+        createLoginUserRequest(username, password)
       else
         dispatch(credError('bErrorUserExists'))
     })
 }
 
-export const createRefreshRequest = () => {
+export const createRefreshUserRequest = () => {
   const dispatch = store.dispatch
 
   fetch(
@@ -98,5 +98,29 @@ export const createRefreshRequest = () => {
             dispatch(credError(data))
         })
       }
+    })
+}
+
+export const createLogoutUserRequest = () => {
+  const dispatch = store.dispatch
+
+  fetch(
+    `${backendIP}/api/user/logout`,
+    {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+    })
+    .then((res) => {
+      if(res.status === 500) {
+        console.log('Server Error')
+      }
+      if(res.status === 401) {
+        console.log('Unauthorized')
+      }
+      if(res.status === 403) {
+        console.log('Forbidden')
+      }
+      dispatch(logout())
     })
 }

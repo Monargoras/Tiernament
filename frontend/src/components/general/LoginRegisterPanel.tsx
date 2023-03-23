@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { useTranslation } from 'react-i18next';
 import { generalStyles } from '../../util/styles';
 import { credError } from '../../redux/authSlice';
-import { loginUser, registerUser } from '../../apiRequests/userRequests';
+import { createLoginUserRequest, createRegisterUserRequest } from '../../apiRequests/userRequests';
 
 export default function LoginRegisterPanel() {
 
@@ -35,9 +35,9 @@ export default function LoginRegisterPanel() {
       dispatch(credError(undefined))
     }
     if(mode === 'login') {
-      loginUser(username, password)
+      createLoginUserRequest(username, password)
     } else {
-      registerUser(username, password)
+      createRegisterUserRequest(username, password)
     }
   }
 
