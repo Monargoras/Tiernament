@@ -55,9 +55,9 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
         return repo.findAll().count()
     }
 
-    @GetMapping("/get/{id}", produces = ["application/json"])
-    fun getUserById(@PathVariable("id") id: String): ResponseEntity<UserDTO> {
-        val user = repo.findByUserId(id)
+    @GetMapping("/get/{username}", produces = ["application/json"])
+    fun getUserById(@PathVariable("username") username: String): ResponseEntity<UserDTO> {
+        val user = repo.findByName(username)
         return if (user != null) ResponseEntity.ok(UserDTO(user)) else ResponseEntity.notFound().build()
     }
 
@@ -114,18 +114,19 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
         val jwtUtils = JwtTokenUtil()
         if(jwtUtils.isTokenValid(refreshToken)) {
             sessionRepo.findBySessionId(jwtUtils.getSubject(refreshToken))?.let {
-                val newAccessToken = JwtTokenUtil().generateToken(it.userId)
-                val sessionId = UUID.randomUUID().toString()
-                val newRefreshToken = JwtTokenUtil().generateRefreshToken(it.userId, sessionId)
-                sessionRepo.delete(it)
-                sessionRepo.insert(Session(sessionId, it.userId, Date()))
-                response.addCookie(Cookie("Refresh", newRefreshToken).apply {
-                    maxAge = EXPIRATION_REFRESH_SEC
-                    path = "/"
-                    isHttpOnly = true
-                })
                 val user = repo.findByUserId(it.userId)
                 if(user != null) {
+                    val newAccessToken = JwtTokenUtil().generateToken(user.name)
+                    val sessionId = UUID.randomUUID().toString()
+                    val newRefreshToken = JwtTokenUtil().generateRefreshToken(it.userId, sessionId)
+                    sessionRepo.delete(it)
+                    sessionRepo.insert(Session(sessionId, it.userId, Date()))
+                    response.addCookie(Cookie("Refresh", newRefreshToken).apply {
+                        maxAge = EXPIRATION_REFRESH_SEC
+                        path = "/"
+                        isHttpOnly = true
+                    })
+
                     // TODO remove
                     println("refreshing token for user ${user.name}")
                     JSONObject().apply {
