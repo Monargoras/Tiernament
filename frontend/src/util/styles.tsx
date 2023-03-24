@@ -7,7 +7,7 @@ export const utils = {
 
 export const generalStyles = {
   backgroundContainer: {
-    minHeight: '92vh',
+    minHeight: '90vh',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
