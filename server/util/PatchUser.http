@@ -1,9 +1,12 @@
-PATCH http://localhost:8080/api/user/fe299cec-947e-476a-b116-6292c2be881a
+PATCH http://localhost:8080/api/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNb25hcmdvcmFzIiwiZXhwIjoxNjc5NjUyOTg5fQ.S4k3tnvpDvQL2iOP0htsK810eV2UKav1LO0-YWI-QoU
 Content-Type: application/json
 
 {
-  "userId": "fe299cec-947e-476a-b116-6292c2be881a",
+  "userId": "3ffbd227-df31-435a-92d9-c493b318682c",
   "name": "Monargoras",
+  "displayName": "Monargoras",
+  "avatarId": "641701e93268de71c5a909d2",
   "tiernaments": [],
   "tiernamentRuns": []
 }
