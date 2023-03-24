@@ -1,11 +1,29 @@
 import { backendIP, createRequest } from './requestGenerator';
 import { store } from '../redux/store';
-import { credError, login, logout } from '../redux/authSlice';
+import { credError, login, logout, updateUser } from '../redux/authSlice';
 import { sha256 } from 'js-sha256';
+import { UserType } from '../util/types';
 
 
 export function createGetUserRequest(username: string) {
   return createRequest('GET', 'api/user/get', undefined, username)
+}
+
+export function createPatchUserRequest(data: UserType) {
+  const dispatch = store.dispatch
+
+  return createRequest('PATCH', 'api/user', data)
+    .then((res) => {
+      if(res.ok)
+        res.json()
+          .then((data) => {
+            if(res.ok) {
+              dispatch(updateUser(data))
+              return res
+            }
+          })
+      return res
+    })
 }
 
 export function createLoginUserRequest(username: string, password: string) {
