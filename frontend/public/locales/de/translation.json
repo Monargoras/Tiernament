@@ -19,5 +19,7 @@
   "repeatPass": "Passwort wiederholen",
   "errorCredInvalid": "Benutzername oder Passwort ist ungültig.",
   "errorPassMatch": "Passwörter stimmen nicht überein.",
-  "bErrorUserExists": "Benutzername ist bereits vergeben."
+  "bErrorUserExists": "Benutzername ist bereits vergeben.",
+  "changeImage": "Bild ändern",
+  "editName": "Name ändern"
 }

@@ -19,5 +19,7 @@
   "repeatPass": "Repeat password",
   "errorCredInvalid": "Username or password invalid.",
   "errorPassMatch": "Passwords do not match.",
-  "bErrorUserExists": "Username already exists."
+  "bErrorUserExists": "Username already exists.",
+  "changeImage": "Change image",
+  "editName": "Edit name"
 }
