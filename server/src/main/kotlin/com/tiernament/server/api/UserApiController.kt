@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -99,6 +100,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
         val user = User(
             userId = id,
             name = body.name,
+            displayName = body.name,
             avatarId= "",
             password = passwordEncoder.encode(body.password),
             authorities = Collections.singleton(SimpleGrantedAuthority("user")),
@@ -141,10 +143,10 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
         return ResponseEntity("bErrorRefresh", HttpStatus.UNAUTHORIZED)
     }
 
-    @PatchMapping("/{id}")
-    fun updateUser(@PathVariable("id") id: String, @RequestBody user: UserDTO): ResponseEntity<UserDTO> {
-        repo.findByUserId(id = id)?.let {
-            val newUser = repo.save(it.copy(name = user.name, avatarId = user.avatarId, tiernaments = user.tiernaments, tiernamentRuns = user.tiernamentRuns))
+    @PatchMapping()
+    fun updateUser(@RequestBody user: UserDTO, @AuthenticationPrincipal curUser: User): ResponseEntity<UserDTO> {
+        repo.findByUserId(id = curUser.userId)?.let {
+            val newUser = repo.save(it.copy(displayName = user.displayName, avatarId = user.avatarId, tiernaments = user.tiernaments, tiernamentRuns = user.tiernamentRuns))
             return ResponseEntity.ok(UserDTO(newUser))
         }
         return ResponseEntity.badRequest().build()

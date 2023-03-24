@@ -19,6 +19,7 @@ export type TiernamentEntryType = {
 export type UserType = {
   userId: string,
   name: string,
+  displayName: string,
   avatarId: string,
   tiernaments: string[],
   tiernamentRuns: string[],
