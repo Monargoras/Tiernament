@@ -76,14 +76,12 @@ export function createRegisterUserRequest(username: string, password: string) {
         console.log('Server Error')
         return
       }
-      if(res.status === 403) {
+      if(res.status === 409) {
         dispatch(credError('bErrorUserExists'))
         return
       }
       if(res.ok)
         createLoginUserRequest(username, password)
-      else
-        dispatch(credError('bErrorUserExists'))
     })
 }
 

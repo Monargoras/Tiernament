@@ -94,7 +94,7 @@ class UserApiController(@Autowired val repo: UserRepo,
         // check if user already exists
         if(repo.findByName(body.name) != null) {
             // return code 403
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+            return ResponseEntity.status(HttpStatus.CONFLICT).build()
         }
 
         // create uuid
