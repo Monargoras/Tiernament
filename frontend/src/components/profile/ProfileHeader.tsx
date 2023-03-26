@@ -96,6 +96,12 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
                           value={name}
                           onChange={handleNameUpdate}
                           sx={{marginLeft: '20px'}}
+                          onKeyDown={
+                            event => {
+                              if (event.key === "Enter") {
+                                handleNameChangeSubmit()
+                              }
+                            }}
                       />
                       <IconButton onClick={handleNameChangeSubmit}>
                           <Check color={'primary'}/>
