@@ -9,7 +9,6 @@ export const createRequest = (method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE
     `${backendIP}/${apiEndpoint}${argument}`,
     {
       method: method,
-      mode: 'cors',
       headers: {
         ...store.getState().auth.token && {'Authorization': `Bearer ${store.getState().auth.token}`},
         ...body && {'Content-Type': 'application/json'},

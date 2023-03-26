@@ -32,7 +32,6 @@ export function createLoginUserRequest(username: string, password: string) {
     `${backendIP}/api/user/login`,
     {
       method: 'POST',
-      mode: 'cors',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +66,6 @@ export function createRegisterUserRequest(username: string, password: string) {
     `${backendIP}/api/user/create`,
     {
       method: 'POST',
-      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -96,7 +94,6 @@ export const createRefreshUserRequest = () => {
     `${backendIP}/api/user/refresh`,
     {
       method: 'POST',
-      mode: 'cors',
       credentials: 'include',
     })
     .then((res) => {
@@ -130,7 +127,6 @@ export const createLogoutUserRequest = () => {
     `${backendIP}/api/user/logout`,
     {
       method: 'POST',
-      mode: 'cors',
       credentials: 'include',
     })
     .then((res) => {
