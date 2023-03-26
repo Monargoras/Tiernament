@@ -44,9 +44,9 @@ export default function ProfilePage() {
     if(authState && authState.user) {
       const newUser = {...authState.user}
       newUser.displayName = name
-      createPatchUserRequest(newUser).then(res => {
-        if(res.ok) {
-          setUserState(newUser)
+      createPatchUserRequest(newUser).then(data => {
+        if(data) {
+          setUserState(data)
           setEditName(false)
           return
         }

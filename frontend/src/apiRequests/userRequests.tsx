@@ -15,14 +15,13 @@ export function createPatchUserRequest(data: UserType) {
   return createRequest('PATCH', 'api/user', data)
     .then((res) => {
       if(res.ok)
-        res.json()
+        return res.json()
           .then((data) => {
             if(res.ok) {
               dispatch(updateUser(data))
-              return res
+              return data
             }
           })
-      return res
     })
 }
 
