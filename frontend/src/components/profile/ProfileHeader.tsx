@@ -35,6 +35,12 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
               }
             })
           })
+        } else {
+          if(res.status === 413) {
+            res.json().then((data) => {
+              alert(t(data.message))
+            })
+          }
         }
       })
   }

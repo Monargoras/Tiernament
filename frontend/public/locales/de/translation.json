@@ -21,5 +21,6 @@
   "errorPassMatch": "Passwörter stimmen nicht überein.",
   "bErrorUserExists": "Benutzername ist bereits vergeben.",
   "changeImage": "Bild ändern",
-  "editName": "Name ändern"
+  "editName": "Name ändern",
+  "bFileTooLarge": "Datei ist zu groß."
 }
