@@ -1,17 +1,16 @@
 import React from 'react';
 import {
-  AppBar, Toolbar, Box, Menu, MenuItem, Container, IconButton, Typography, Button, Tooltip, Avatar, useTheme
+  AppBar, Toolbar, Box, Menu, MenuItem, Container, IconButton, Typography, Button, Tooltip, useTheme
 } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTranslation } from 'react-i18next';
-
 import { AppBarRoutes } from '../App';
 import LanguageSelector from '../components/general/LanguageSelector';
 import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
 import { createLogoutUserRequest } from '../apiRequests/userRequests';
-import { backendIP } from '../apiRequests/requestGenerator';
+import UserAvatar from '../components/profile/UserAvatar';
 
 
 export default function RootPage() {
@@ -151,7 +150,7 @@ export default function RootPage() {
                 authState.isAuthenticated && authState.user &&
                 <Tooltip title={t('openSettings')}>
                   <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                    <Avatar alt={authState.user.name} src={`${backendIP}/api/image/get/${authState.user.avatarId}`}/>
+                    <UserAvatar userName={authState.user.displayName} avatarId={authState.user.avatarId}/>
                   </IconButton>
                 </Tooltip>
               }
