@@ -3,10 +3,11 @@ import { UserType } from '../../util/types';
 import { useAppSelector } from '../../redux/hooks';
 import { useTranslation } from 'react-i18next';
 import { createPatchUserRequest } from '../../apiRequests/userRequests';
-import { Avatar, Badge, Box, IconButton, Paper, TextField, Tooltip, Typography } from '@mui/material';
+import { Badge, Box, IconButton, Paper, TextField, Tooltip, Typography } from '@mui/material';
 import { Check, Edit, Undo } from '@mui/icons-material';
 import { generalStyles } from '../../util/styles';
-import { backendIP } from '../../apiRequests/requestGenerator';
+import { createPostImageRequest } from '../../apiRequests/imageRequests';
+import UserAvatar from './UserAvatar';
 
 interface ProfileHeaderProps {
   user: UserType
@@ -21,8 +22,21 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
   const [name, setName] = React.useState(props.user.displayName)
   const [editName, setEditName] = React.useState(false)
 
-  const handleImageChange = () => {
-    console.log('Change image')
+  const handleImageChange = (imageFile: File) => {
+    createPostImageRequest(imageFile)
+      .then((res) => {
+        if(res.ok) {
+          res.json().then((data) => {
+            const newUser = {...props.user}
+            newUser.avatarId = data.id
+            createPatchUserRequest(newUser).then(data => {
+              if(data) {
+                props.setUserState(data)
+              }
+            })
+          })
+        }
+      })
   }
 
   const switchNameEditMode = () => {
@@ -66,8 +80,21 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
                     }
                 >
                     <Tooltip title={t('changeImage')}>
-                        <IconButton onClick={handleImageChange} sx={{p: 0}}>
-                            <Avatar alt={props.user.name} src={`${backendIP}/api/image/get/${props.user.avatarId}`}/>
+                        <IconButton sx={{p: 0}} component={'label'}>
+                            <UserAvatar userName={props.user.displayName} avatarId={props.user.avatarId}/>
+                            <input
+                                type={'file'}
+                                accept={'image/*'}
+                                multiple={false}
+                                hidden
+                                onChange={
+                                  event => {
+                                    if(event.target.files) {
+                                      handleImageChange(event.target.files![0])
+                                    }
+                                  }
+                                }
+                            />
                         </IconButton>
                     </Tooltip>
                 </Badge>
@@ -116,7 +143,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
         {
           !props.privateView &&
             <Box sx={generalStyles.flexWrapBox}>
-                <Avatar alt={props.user.displayName} src={`${backendIP}/api/image/get/${props.user.avatarId}`}/>
+                <UserAvatar userName={props.user.displayName} avatarId={props.user.avatarId}/>
                 <Typography variant={'h4'} sx={{marginLeft: '20px'}}>
                   {props.user.displayName}
                 </Typography>

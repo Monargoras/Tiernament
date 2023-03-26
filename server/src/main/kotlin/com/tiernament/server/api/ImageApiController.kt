@@ -4,6 +4,7 @@ import com.mongodb.client.gridfs.GridFSBucket
 import com.mongodb.client.gridfs.model.GridFSUploadOptions
 import com.tiernament.server.models.Image
 import com.tiernament.server.models.User
+import net.minidev.json.JSONObject
 import org.bson.Document
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +21,7 @@ import java.util.*
 
 interface ImageRepo : MongoRepository<Image, String> {
     fun findByImageId(id: String): Image?
+    fun deleteImageByImageId(id: String)
 }
 
 @RestController
@@ -31,11 +33,6 @@ class ImageApiController(@Autowired val repo: ImageRepo, @Autowired val gridFSBu
         return repo.findAll().count()
     }
 
-    @GetMapping("/get")
-    fun getImages(): List<Image> {
-        return repo.findAll()
-    }
-
     @GetMapping("/get/{id}", produces = [MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE])
     fun getImageById(@PathVariable("id") id: String): ResponseEntity<ByteArray> {
         repo.findByImageId(id)?.let {
@@ -44,30 +41,23 @@ class ImageApiController(@Autowired val repo: ImageRepo, @Autowired val gridFSBu
                 return ResponseEntity.ok(fos.toByteArray())
             }
         }
-        return ResponseEntity.badRequest().build()
+        return ResponseEntity.notFound().build()
     }
 
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun postImage(@RequestPart("image") image: MultipartFile, @AuthenticationPrincipal user: User): ResponseEntity<String> {
+    fun postImage(@RequestPart("image") image: MultipartFile, @AuthenticationPrincipal user: User): ResponseEntity<JSONObject> {
         val options = GridFSUploadOptions()
             .chunkSizeBytes(358400)
             .metadata(Document("type", "image"))
         val id = gridFSBucket.uploadFromStream(image.originalFilename ?: image.name, image.inputStream, options)
 
-        // TODO add user Id from authorization later
         repo.insert(Image(imageId = id.toString(), userId=user.userId , name = image.originalFilename ?: image.name))
 
-        return ResponseEntity.ok(id.toString())
-    }
-
-    @PatchMapping("/{id}")
-    fun updateImage(@PathVariable("id") id: String, @RequestPart("image") image: MultipartFile, @AuthenticationPrincipal user: User): ResponseEntity<String>? {
-        repo.findByImageId(id = id)?.let {
-            repo.delete(it)
-            gridFSBucket.delete(ObjectId(it.imageId))
-            return postImage(image, user)
+        JSONObject().apply {
+            put("id", id.toString())
+        }.let { json ->
+            return ResponseEntity.ok(json)
         }
-        return ResponseEntity.badRequest().build()
     }
 
     @DeleteMapping("/{id}")
