@@ -97,10 +97,6 @@ export const createRefreshUserRequest = () => {
       credentials: 'include',
     })
     .then((res) => {
-      if(res.status === 500) {
-        console.log('Server Error')
-        return
-      }
       if(res.status === 401) {
         console.log('Unauthorized')
         return
@@ -109,12 +105,16 @@ export const createRefreshUserRequest = () => {
         console.log('Forbidden')
         return
       }
+      if(res.status === 500) {
+        console.log('Server Error')
+        return
+      }
       if(res) {
         res.json().then((data) => {
           if(res.ok)
             dispatch(login({ user: data.user, token: data.token }))
           else
-            dispatch(credError(data))
+            dispatch(credError(data.message))
         })
       }
     })

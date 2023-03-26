@@ -1,5 +1,6 @@
 package com.tiernament.server.api
 
+import com.mongodb.client.gridfs.GridFSBucket
 import com.tiernament.server.auth.EXPIRATION_REFRESH_SEC
 import com.tiernament.server.auth.JwtTokenUtil
 import com.tiernament.server.models.Session
@@ -9,6 +10,7 @@ import com.tiernament.server.models.UserDTO
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import net.minidev.json.JSONObject
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.HttpStatus
@@ -49,8 +51,11 @@ class UserDetailsService(private val repository: UserRepo, private val sessionRe
 
 @RestController
 @RequestMapping("/api/user")
-class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRepo: SessionRepo) {
-
+class UserApiController(@Autowired val repo: UserRepo,
+                        @Autowired val sessionRepo: SessionRepo,
+                        @Autowired val imageRepo: ImageRepo,
+                        @Autowired val gridFSBucket: GridFSBucket
+) {
     @GetMapping("/count")
     fun getUserCount(): Int {
         return repo.findAll().count()
@@ -112,7 +117,7 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
     }
 
     @PostMapping("/refresh", produces = ["application/json"])
-    fun refreshUser(@CookieValue("Refresh") refreshToken: String, response: HttpServletResponse): ResponseEntity<*> {
+    fun refreshUser(@CookieValue("Refresh") refreshToken: String, response: HttpServletResponse): ResponseEntity<JSONObject> {
         val jwtUtils = JwtTokenUtil()
         if(jwtUtils.isTokenValid(refreshToken)) {
             sessionRepo.findBySessionId(jwtUtils.getSubject(refreshToken))?.let {
@@ -140,13 +145,21 @@ class UserApiController(@Autowired val repo: UserRepo, @Autowired val sessionRep
                 }
             }
         }
-        return ResponseEntity("bErrorRefresh", HttpStatus.UNAUTHORIZED)
+        JSONObject().apply {
+            put("message", "bErrorRefresh")
+        }.let { resBody ->
+            return ResponseEntity(resBody, HttpStatus.UNAUTHORIZED)
+        }
     }
 
     @PatchMapping()
     fun updateUser(@RequestBody user: UserDTO, @AuthenticationPrincipal curUser: User): ResponseEntity<UserDTO> {
         repo.findByUserId(id = curUser.userId)?.let {
             val newUser = repo.save(it.copy(displayName = user.displayName, avatarId = user.avatarId, tiernaments = user.tiernaments, tiernamentRuns = user.tiernamentRuns))
+            if(curUser.avatarId != "" && curUser.avatarId != user.avatarId) {
+                imageRepo.deleteImageByImageId(curUser.avatarId)
+                gridFSBucket.delete(ObjectId(curUser.avatarId))
+            }
             return ResponseEntity.ok(UserDTO(newUser))
         }
         return ResponseEntity.badRequest().build()
