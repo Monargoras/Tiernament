@@ -8,6 +8,7 @@ import { Check, Edit, Undo } from '@mui/icons-material';
 import { generalStyles } from '../../util/styles';
 import { createPostImageRequest } from '../../apiRequests/imageRequests';
 import UserAvatar from './UserAvatar';
+import ErrorSnackbar from '../general/ErrorSnackbar';
 
 interface ProfileHeaderProps {
   user: UserType
@@ -21,6 +22,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
   const { t } = useTranslation()
   const [name, setName] = React.useState(props.user.displayName)
   const [editName, setEditName] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState('')
 
   const handleImageChange = (imageFile: File) => {
     createPostImageRequest(imageFile)
@@ -38,7 +40,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
         } else {
           if(res.status === 413) {
             res.json().then((data) => {
-              alert(t(data.message))
+              setErrorMessage(data.message)
             })
           }
         }
@@ -156,6 +158,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
             </Box>
         }
       </Paper>
+      <ErrorSnackbar errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>
     </Box>
   )
 }
