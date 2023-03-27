@@ -1,3 +1,11 @@
+export type TiernamentTitleType = {
+  tiernamentId: string,
+  authorId: string,
+  name: string,
+  description: string,
+  date: Date,
+}
+
 export type TiernamentType = {
   tiernamentId: string,
   authorId: string,

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLoaderData } from 'react-router-dom';
 
 import { fetchTiernaments } from '../apiRequests/tiernamentRequests';
-import { TiernamentType } from '../util/types';
+import { TiernamentTitleType } from '../util/types';
 
 export async function loader() {
   const res = await fetchTiernaments()
@@ -10,12 +10,12 @@ export async function loader() {
 }
 
 export default function TiernamentPage() {
-  const tiernaments = useLoaderData() as TiernamentType[];
+  const tiernaments = useLoaderData() as TiernamentTitleType[];
   return (
     <div>
       <h1>Tiernament Page</h1>
       {
-        tiernaments.map((tiernament: TiernamentType, index) => (
+        tiernaments.map((tiernament: TiernamentTitleType, index) => (
           <p key={index}>
             <Link to={`/tiernament/${tiernament.tiernamentId}`}>
               {tiernament.name}

@@ -2,6 +2,7 @@ package com.tiernament.server.api
 
 import com.tiernament.server.models.Tiernament
 import com.tiernament.server.models.TiernamentDTO
+import com.tiernament.server.models.TiernamentTitleDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.ResponseEntity
@@ -22,8 +23,8 @@ class PublicTiernamentApiController(@Autowired val repo: TiernamentRepo) {
     }
 
     @GetMapping
-    fun getTiernaments(): List<Tiernament> {
-        return repo.findAll()
+    fun getTiernaments(): List<TiernamentTitleDTO> {
+        return repo.findAll().map { TiernamentTitleDTO(it) }
     }
 
     @GetMapping("/{id}")
