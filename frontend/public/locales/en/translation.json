@@ -21,6 +21,6 @@
   "errorPassMatch": "Passwords do not match.",
   "bErrorUserExists": "Username already exists.",
   "changeImage": "Change image",
-  "editName": "Edit name",
+  "editName": "Edit display name",
   "bFileTooLarge": "File size exceeds limit."
 }
