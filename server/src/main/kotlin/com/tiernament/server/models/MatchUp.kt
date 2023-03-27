@@ -7,5 +7,5 @@ data class MatchUp (
     val matchUpId: String,
     val entryA: TiernamentEntry,
     val entryB: TiernamentEntry,
-    val winner: TiernamentEntry,
+    val winnerId: String,
 )

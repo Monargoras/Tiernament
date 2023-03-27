@@ -19,9 +19,23 @@ export type TiernamentEntryType = {
   entryId: string,
   name: string,
   imageLink: string,
-  tier: number,
-  score: number,
-  history: number[],
+  placementHistory: number[],
+}
+
+export type TiernamentRunType = {
+  runId: String,
+  playerId: String,
+  tiernamentId: number,
+  date: Date,
+  matchUps: MatchUp[],
+  winner: TiernamentEntryType,
+}
+
+export type MatchUp = {
+  matchUpId: string,
+  entry1: TiernamentEntryType,
+  entry2: TiernamentEntryType,
+  winnerId: string,
 }
 
 export type UserType = {

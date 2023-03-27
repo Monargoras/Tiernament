@@ -7,7 +7,5 @@ data class TiernamentEntry (
     val entryId: String,
     val name: String,
     val imageLink: String,
-    val tier: Int,
-    val score: Int,
-    val history: List<Int>,
+    val placementHistory: List<Int>,
 )
