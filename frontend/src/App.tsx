@@ -1,8 +1,6 @@
-import React, {Suspense} from 'react';
+import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-
-import './App.css';
 import ErrorPage from './pages/ErrorPage';
 import TiernamentPage from './pages/TiernamentPage';
 import HomePage from './pages/HomePage';
