@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { createTheme, CssBaseline, PaletteColor, ThemeProvider } from '@mui/material';
 import ErrorPage from './pages/ErrorPage';
 import TiernamentPage from './pages/TiernamentPage';
 import HomePage from './pages/HomePage';
@@ -13,6 +13,15 @@ import { createRefreshUserRequest } from './apiRequests/userRequests';
 import ProfilePage from './pages/ProfilePage';
 import { loader as profileLoader } from './pages/ProfilePage';
 import LoadingPage from './pages/LoadingPage';
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    tertiary: PaletteColor;
+  }
+  interface PaletteOptions {
+    tertiary: PaletteColor;
+  }
+}
 
 export const AppBarRoutes: { [key: string]: string } = {
   create: '/tiernament/create',
@@ -97,6 +106,8 @@ export default function App() {
     [],
   )
 
+  const { palette } = createTheme()
+
   const theme = React.useMemo(
     () =>
       createTheme({
@@ -108,6 +119,11 @@ export default function App() {
           secondary: {
             main: '#ab47bc',
           },
+          tertiary: palette.augmentColor({
+            color: {
+              main: '#fcd54a',
+            }
+          }),
         },
       }),
     [mode],
