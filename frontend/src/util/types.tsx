@@ -27,15 +27,30 @@ export type TiernamentRunType = {
   playerId: String,
   tiernamentId: number,
   date: Date,
-  matchUps: MatchUpType[],
-  winner: TiernamentEntryType | undefined,
+  entries: { [id: string]: TiernamentRunEntryType },
+  matchUpsStage1: MatchUpType[],
+  matchUpsStage2: MatchUpType[] | undefined,
+  matchUpsPlayOffs: MatchUpType[],
+  winner: TiernamentRunEntryType | undefined,
 }
 
 export type MatchUpType = {
   matchUpId: string,
-  entry1: TiernamentEntryType,
-  entry2: TiernamentEntryType,
-  winnerId: string,
+  entryAId: string,
+  entryBId: string,
+  winner: 'A' | 'B' | undefined,
+}
+
+export type TiernamentRunEntryType = {
+  entryId: string,
+  name: string,
+  imageLink: string,
+  placementHistory: number[],
+  eliminated: boolean,
+  winsStage1: number,
+  winsStage2: number | undefined,
+  lossesStage1: number,
+  lossesStage2: number | undefined,
 }
 
 export type UserType = {

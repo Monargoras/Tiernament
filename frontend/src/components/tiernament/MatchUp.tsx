@@ -1,11 +1,13 @@
 import React from 'react';
-import { MatchUpType } from '../../util/types';
+import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
 import { generalStyles } from '../../util/styles';
 import { Divider, Paper, Typography, useTheme } from '@mui/material';
 
 interface MatchUpProps {
   id: string,
   matchUp: MatchUpType,
+  entryA: TiernamentRunEntryType,
+  entryB: TiernamentRunEntryType,
 }
 
 export default function MatchUp(props: MatchUpProps) {
@@ -15,19 +17,19 @@ export default function MatchUp(props: MatchUpProps) {
   return (
     <Paper id={props.id} sx={generalStyles.tiernamentMatchUp}>
       <Typography
-        color={props.matchUp.winnerId === props.matchUp.entry1.entryId ? theme.palette.tertiary.main :
-          props.matchUp.winnerId !== '' ? theme.palette.error.light : theme.palette.text.primary}
-        fontWeight={props.matchUp.winnerId === props.matchUp.entry1.entryId ? 'bold' : 'normal'}
+        color={props.matchUp.winner === 'A' ? theme.palette.tertiary.main :
+          props.matchUp.winner === 'B' ? theme.palette.error.light : theme.palette.text.primary}
+        fontWeight={props.matchUp.winner === 'A' ? 'bold' : 'normal'}
       >
-        {props.matchUp.entry1.name}
+        {props.entryA.name}
       </Typography>
-      <Divider sx={{backgroundColor: props.matchUp.winnerId !== '' ? theme.palette.tertiary.main : theme.palette.text.secondary}}/>
+      <Divider sx={{backgroundColor: props.matchUp.winner ? theme.palette.tertiary.main : theme.palette.text.secondary}}/>
       <Typography
-        color={props.matchUp.winnerId === props.matchUp.entry2.entryId ? theme.palette.tertiary.main :
-          props.matchUp.winnerId !== '' ? theme.palette.error.light : theme.palette.text.primary}
-        fontWeight={props.matchUp.winnerId === props.matchUp.entry2.entryId ? 'bold' : 'normal'}
+        color={props.matchUp.winner === 'B' ? theme.palette.tertiary.main :
+          props.matchUp.winner === 'A' ? theme.palette.error.light : theme.palette.text.primary}
+        fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
       >
-        {props.matchUp.entry2.name}
+        {props.entryB.name}
       </Typography>
     </Paper>
   )
