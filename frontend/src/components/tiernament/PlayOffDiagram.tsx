@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Grid, Typography, useTheme } from '@mui/material';
+import { Box, Grid, useTheme } from '@mui/material';
 import { generalStyles } from '../../util/styles';
-import Xarrow from 'react-xarrows';
+import Xarrow, {xarrowPropsType} from 'react-xarrows';
 import { MatchUpType } from '../../util/types';
 import MatchUp from './MatchUp';
 
@@ -45,6 +45,16 @@ export default function PlayOffDiagram() {
 
   const quarterFinals = ['quarter1', 'quarter2', 'quarter3', 'quarter4']
   const semiFinals = ['semi1', 'semi2']
+  const final = 'final'
+  const arrowProps: xarrowPropsType = {
+    start: '',
+    end: '',
+    color: theme.palette.tertiary.main,
+    showHead: false,
+    showTail: false,
+    strokeWidth: 2,
+    path: 'grid',
+  }
 
   return (
     <Grid container>
@@ -52,12 +62,7 @@ export default function PlayOffDiagram() {
         {
           quarterFinals.map((entry) => (
             <Box key={entry}>
-              <Box id={entry}
-                   sx={{display: 'flex', flexDirection: 'column', textAlign: 'center', justifyContent: 'center',
-                     border: 'solid', borderColor: '#ff0000', borderWidth: '2px', width: '100px', height: '50px'}}
-              >
-                <Typography>{entry}</Typography>
-              </Box>
+              <MatchUp id={entry} matchUp={placeholderMatchUpWinner} />
             </Box>
           ))
         }
@@ -70,15 +75,15 @@ export default function PlayOffDiagram() {
             </Box>
           ))
         }
-        <Xarrow start={'quarter1'} end={'semi1'} color={theme.palette.tertiary.main} showHead={false} showTail={false} strokeWidth={2} path={'grid'} />
-        <Xarrow start={'quarter2'} end={'semi1'} color={theme.palette.tertiary.main} showHead={false} showTail={false} strokeWidth={2} path={'grid'} />
-        <Xarrow start={'quarter3'} end={'semi2'} color={theme.palette.tertiary.main} showHead={false} showTail={false} strokeWidth={2} path={'grid'} />
-        <Xarrow start={'quarter4'} end={'semi2'} color={theme.palette.tertiary.main} showHead={false} showTail={false} strokeWidth={2} path={'grid'} />
+        <Xarrow {...arrowProps} start={quarterFinals[0]} end={semiFinals[0]} />
+        <Xarrow {...arrowProps} start={quarterFinals[1]} end={semiFinals[0]} />
+        <Xarrow {...arrowProps} start={quarterFinals[2]} end={semiFinals[1]} />
+        <Xarrow {...arrowProps} start={quarterFinals[3]} end={semiFinals[1]} />
       </Grid>
       <Grid item xs={4} id={'final-column'} sx={generalStyles.tiernamentPlayoffColumn}>
         <MatchUp id={'final'} matchUp={placeholderMatchUpNoWinner} />
-        <Xarrow start={'semi1'} end={'final'} color={theme.palette.tertiary.main} showHead={false} showTail={false} strokeWidth={2} path={'grid'} />
-        <Xarrow start={'semi2'} end={'final'} color={theme.palette.tertiary.main} showHead={false} showTail={false} strokeWidth={2} path={'grid'} />
+        <Xarrow {...arrowProps} start={semiFinals[0]} end={final} />
+        <Xarrow {...arrowProps} start={semiFinals[1]} end={final} />
       </Grid>
     </Grid>
   )
