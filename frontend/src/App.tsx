@@ -88,9 +88,9 @@ const router = createBrowserRouter([
 
 export const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
 
-createRefreshUserRequest()
+createRefreshUserRequest().then(() => {})
 
-const initialMode = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
+const initialMode = localStorage.getItem('theme') === 'light' ? 'light' : 'dark'
 
 export default function App() {
   const [mode, setMode] = React.useState<'light' | 'dark'>(initialMode)

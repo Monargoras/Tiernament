@@ -1,6 +1,7 @@
 package com.tiernament.server.auth
 
 import com.tiernament.server.api.UserDetailsService
+import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
@@ -30,9 +31,16 @@ class JwtAuthorizationFilter(
             chain.doFilter(req, res)
             return
         }
-        getAuthentication(header.substring(7))?.also {
-            SecurityContextHolder.getContext().authentication = it
+
+        try {
+            getAuthentication(header.substring(7))?.also {
+                SecurityContextHolder.getContext().authentication = it
+            }
+        } catch (e: ExpiredJwtException) {
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.message)
+            return
         }
+
         chain.doFilter(req, res)
     }
 

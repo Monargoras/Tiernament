@@ -12,7 +12,7 @@ export function createGetUserRequest(username: string) {
 export function createPatchUserRequest(data: UserType) {
   const dispatch = store.dispatch
 
-  return createRequest('PATCH', 'api/user', data)
+  return createRequest('PATCH', 'api/user', data, undefined, true)
     .then((res) => {
       if(res.ok)
         return res.json()
@@ -85,10 +85,10 @@ export function createRegisterUserRequest(username: string, password: string) {
     })
 }
 
-export const createRefreshUserRequest = () => {
+export const createRefreshUserRequest = async (): Promise<string | undefined> => {
   const dispatch = store.dispatch
 
-  fetch(
+  return fetch(
     `${backendIP}/api/user/refresh`,
     {
       method: 'POST',
@@ -97,22 +97,25 @@ export const createRefreshUserRequest = () => {
     .then((res) => {
       if(res.status === 401) {
         console.log('Unauthorized')
-        return
+        return undefined
       }
       if(res.status === 403) {
         console.log('Forbidden')
-        return
+        return undefined
       }
       if(res.status === 500) {
         console.log('Server Error')
-        return
+        return undefined
       }
       if(res) {
-        res.json().then((data) => {
-          if(res.ok)
-            dispatch(login({ user: data.user, token: data.token }))
+        return res.json().then((data) => {
+          if(res.ok) {
+            dispatch(login({user: data.user, token: data.token}))
+            return data.token
+          }
           else
             dispatch(credError(data.message))
+          return undefined
         })
       }
     })
