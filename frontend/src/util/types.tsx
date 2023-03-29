@@ -27,11 +27,11 @@ export type TiernamentRunType = {
   playerId: String,
   tiernamentId: number,
   date: Date,
-  matchUps: MatchUp[],
-  winner: TiernamentEntryType,
+  matchUps: MatchUpType[],
+  winner: TiernamentEntryType | undefined,
 }
 
-export type MatchUp = {
+export type MatchUpType = {
   matchUpId: string,
   entry1: TiernamentEntryType,
   entry2: TiernamentEntryType,

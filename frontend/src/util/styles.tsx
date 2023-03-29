@@ -44,4 +44,13 @@ export const generalStyles = {
     alignItems: 'center',
     height: '70dvh',
   },
+  tiernamentMatchUp: {
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'center',
+    justifyContent: 'center',
+    padding: '10px',
+    minWidth: '100px',
+    minHeight: '50px'
+  }
 }
