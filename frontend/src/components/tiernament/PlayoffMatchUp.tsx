@@ -1,6 +1,7 @@
 import React from 'react';
 import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
-import { Divider, Paper, Typography, useTheme } from '@mui/material';
+import { Box, Divider, Paper, Typography, useTheme } from '@mui/material';
+import CustomAvatar from '../profile/CustomAvatar';
 
 interface PlayoffMatchUpProps {
   id: string,
@@ -20,8 +21,6 @@ export default function PlayoffMatchUp(props: PlayoffMatchUpProps) {
       textAlign: 'center',
       justifyContent: 'center',
       padding: '10px',
-      minWidth: '100px',
-      minHeight: '50px',
       elevation: 4,
       boxShadow: `0px 0px 0px 1px ${theme.palette.text.secondary}`,
     },
@@ -29,21 +28,27 @@ export default function PlayoffMatchUp(props: PlayoffMatchUpProps) {
 
   return (
     <Paper id={props.id} sx={styles.tiernamentPlayoffMatchUp}>
-      <Typography
-        color={props.matchUp.winner === 'A' ? theme.palette.tertiary.main :
-          props.matchUp.winner === 'B' ? theme.palette.error.light : theme.palette.text.primary}
-        fontWeight={props.matchUp.winner === 'A' ? 'bold' : 'normal'}
-      >
-        {props.entryA.name}
-      </Typography>
+      <Box sx={{display: 'flex', flexDirection: 'row', px: '5px'}}>
+        <CustomAvatar userName={props.entryA.name} imageId={props.entryA.imageId} size={{height: 25, width: 25}} />
+        <Typography
+          color={props.matchUp.winner === 'A' ? theme.palette.tertiary.main :
+            props.matchUp.winner === 'B' ? theme.palette.error.light : theme.palette.text.primary}
+          fontWeight={props.matchUp.winner === 'A' ? 'bold' : 'normal'}
+        >
+          {props.entryA.name}
+        </Typography>
+      </Box>
       <Divider sx={{backgroundColor: props.matchUp.winner ? theme.palette.tertiary.main : theme.palette.text.secondary}}/>
-      <Typography
-        color={props.matchUp.winner === 'B' ? theme.palette.tertiary.main :
-          props.matchUp.winner === 'A' ? theme.palette.error.light : theme.palette.text.primary}
-        fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
-      >
-        {props.entryB.name}
-      </Typography>
+      <Box sx={{display: 'flex', flexDirection: 'row', px: '5px'}}>
+        <CustomAvatar userName={props.entryB.name} imageId={props.entryB.imageId} size={{height: 25, width: 25}} />
+        <Typography
+          color={props.matchUp.winner === 'B' ? theme.palette.tertiary.main :
+            props.matchUp.winner === 'A' ? theme.palette.error.light : theme.palette.text.primary}
+          fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
+        >
+          {props.entryB.name}
+        </Typography>
+      </Box>
     </Paper>
   )
 }
