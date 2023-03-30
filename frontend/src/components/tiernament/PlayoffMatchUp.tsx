@@ -28,7 +28,7 @@ export default function PlayoffMatchUp(props: PlayoffMatchUpProps) {
 
   return (
     <Paper id={props.id} sx={styles.tiernamentPlayoffMatchUp}>
-      <Box sx={{display: 'flex', flexDirection: 'row', px: '5px'}}>
+      <Box sx={{display: 'flex', flexDirection: 'row', px: '5px', pb: '5px'}}>
         <CustomAvatar userName={props.entryA.name} imageId={props.entryA.imageId} size={{height: 25, width: 25}} />
         <Typography
           color={props.matchUp.winner === 'A' ? theme.palette.tertiary.main :
@@ -39,7 +39,7 @@ export default function PlayoffMatchUp(props: PlayoffMatchUpProps) {
         </Typography>
       </Box>
       <Divider sx={{backgroundColor: props.matchUp.winner ? theme.palette.tertiary.main : theme.palette.text.secondary}}/>
-      <Box sx={{display: 'flex', flexDirection: 'row', px: '5px'}}>
+      <Box sx={{display: 'flex', flexDirection: 'row', px: '5px', pt: '5px'}}>
         <CustomAvatar userName={props.entryB.name} imageId={props.entryB.imageId} size={{height: 25, width: 25}} />
         <Typography
           color={props.matchUp.winner === 'B' ? theme.palette.tertiary.main :
