@@ -44,13 +44,24 @@ export const generalStyles = {
     alignItems: 'center',
     height: '70dvh',
   },
-  tiernamentMatchUp: {
+  tiernamentPlayoffMatchUp: {
     display: 'flex',
     flexDirection: 'column',
     textAlign: 'center',
     justifyContent: 'center',
     padding: '10px',
     minWidth: '100px',
-    minHeight: '50px'
-  }
+    minHeight: '50px',
+    elevation: 4,
+    boxShadow: '0px 0px 0px 1px #ffffff',
+  },
+  tiernamentSwissMatchUp: {
+    display: 'flex',
+    flexDirection: 'row',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 4,
+    boxShadow: '0px 0px 0px 1px #454545',
+  },
 }

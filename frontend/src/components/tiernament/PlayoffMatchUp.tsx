@@ -3,19 +3,19 @@ import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
 import { generalStyles } from '../../util/styles';
 import { Divider, Paper, Typography, useTheme } from '@mui/material';
 
-interface MatchUpProps {
+interface PlayoffMatchUpProps {
   id: string,
   matchUp: MatchUpType,
   entryA: TiernamentRunEntryType,
   entryB: TiernamentRunEntryType,
 }
 
-export default function MatchUp(props: MatchUpProps) {
+export default function PlayoffMatchUp(props: PlayoffMatchUpProps) {
 
   const theme = useTheme()
 
   return (
-    <Paper id={props.id} sx={generalStyles.tiernamentMatchUp}>
+    <Paper id={props.id} sx={generalStyles.tiernamentPlayoffMatchUp}>
       <Typography
         color={props.matchUp.winner === 'A' ? theme.palette.tertiary.main :
           props.matchUp.winner === 'B' ? theme.palette.error.light : theme.palette.text.primary}

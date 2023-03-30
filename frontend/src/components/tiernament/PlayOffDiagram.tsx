@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Grid, useTheme } from '@mui/material';
 import { generalStyles } from '../../util/styles';
 import Xarrow, { xarrowPropsType } from 'react-xarrows';
-import MatchUp from './MatchUp';
+import PlayoffMatchUp from './PlayoffMatchUp';
 import { placeholderEntryA, placeholderEntryB, placeholderMatchUpNoWinner, placeholderMatchUpWinner } from '../../util/placeholderData';
 
 
@@ -29,7 +29,7 @@ export default function PlayOffDiagram() {
         {
           quarterFinals.map((entry) => (
             <Box key={entry}>
-              <MatchUp id={entry} matchUp={placeholderMatchUpWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
+              <PlayoffMatchUp id={entry} matchUp={placeholderMatchUpWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
             </Box>
           ))
         }
@@ -38,7 +38,7 @@ export default function PlayOffDiagram() {
         {
           semiFinals.map((entry) => (
             <Box key={entry}>
-              <MatchUp id={entry} matchUp={placeholderMatchUpWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
+              <PlayoffMatchUp id={entry} matchUp={placeholderMatchUpWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
             </Box>
           ))
         }
@@ -48,7 +48,7 @@ export default function PlayOffDiagram() {
         <Xarrow {...arrowProps} start={quarterFinals[3]} end={semiFinals[1]} />
       </Grid>
       <Grid item xs={4} id={'final-column'} sx={generalStyles.tiernamentPlayoffColumn}>
-        <MatchUp id={'final'} matchUp={placeholderMatchUpNoWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
+        <PlayoffMatchUp id={'final'} matchUp={placeholderMatchUpNoWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
         <Xarrow {...arrowProps} start={semiFinals[0]} end={final} />
         <Xarrow {...arrowProps} start={semiFinals[1]} end={final} />
       </Grid>

@@ -2,7 +2,7 @@ import React from 'react';
 import { useLoaderData } from 'react-router-dom';
 import { fetchTiernamentById } from '../../apiRequests/tiernamentRequests';
 import { TiernamentType } from '../../util/types';
-import PlayOffDiagram from './PlayOffDiagram';
+import PlayView from './PlayView';
 
 export async function loader(params: { tiernamentId: string }) {
   const res = await fetchTiernamentById(params.tiernamentId)
@@ -16,7 +16,7 @@ export default function Tiernament() {
     <div>
       <h3>Tiernament</h3>
       <p>{tiernament.name}</p>
-      <PlayOffDiagram />
+      <PlayView />
     </div>
   )
 }
