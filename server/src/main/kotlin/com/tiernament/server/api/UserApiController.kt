@@ -7,6 +7,7 @@ import com.tiernament.server.models.Session
 import com.tiernament.server.models.User
 import com.tiernament.server.models.LoginDTO
 import com.tiernament.server.models.UserDTO
+import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import net.minidev.json.JSONObject
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -119,36 +121,47 @@ class UserApiController(@Autowired val repo: UserRepo,
     @PostMapping("/refresh", produces = ["application/json"])
     fun refreshUser(@CookieValue("Refresh") refreshToken: String, response: HttpServletResponse): ResponseEntity<JSONObject> {
         val jwtUtils = JwtTokenUtil()
-        if(jwtUtils.isTokenValid(refreshToken)) {
-            sessionRepo.findBySessionId(jwtUtils.getSubject(refreshToken))?.let {
-                val user = repo.findByUserId(it.userId)
-                if(user != null) {
-                    val newAccessToken = JwtTokenUtil().generateToken(user.name)
-                    val sessionId = UUID.randomUUID().toString()
-                    val newRefreshToken = JwtTokenUtil().generateRefreshToken(it.userId, sessionId)
-                    sessionRepo.delete(it)
-                    sessionRepo.insert(Session(sessionId, it.userId, Date()))
-                    response.addCookie(Cookie("Refresh", newRefreshToken).apply {
-                        maxAge = EXPIRATION_REFRESH_SEC
-                        path = "/"
-                        isHttpOnly = true
-                    })
 
-                    // TODO remove
-                    println("refreshing token for user ${user.name}")
-                    JSONObject().apply {
-                        put("user", UserDTO(user))
-                        put("token", newAccessToken)
-                    }.let { resBody ->
-                        return ResponseEntity(resBody, HttpStatus.OK)
+        try {
+            val isValid = jwtUtils.isTokenValid(refreshToken)
+            if(isValid) {
+                sessionRepo.findBySessionId(jwtUtils.getSubject(refreshToken))?.let {
+                    val user = repo.findByUserId(it.userId)
+                    if(user != null) {
+                        val newAccessToken = JwtTokenUtil().generateToken(user.name)
+                        val sessionId = UUID.randomUUID().toString()
+                        val newRefreshToken = JwtTokenUtil().generateRefreshToken(it.userId, sessionId)
+                        sessionRepo.delete(it)
+                        sessionRepo.insert(Session(sessionId, it.userId, Date()))
+                        response.addCookie(Cookie("Refresh", newRefreshToken).apply {
+                            maxAge = EXPIRATION_REFRESH_SEC
+                            path = "/"
+                            isHttpOnly = true
+                        })
+
+                        // TODO remove
+                        println("refreshing token for user ${user.name}")
+
+                        JSONObject().apply {
+                            put("user", UserDTO(user))
+                            put("token", newAccessToken)
+                        }.let { resBody ->
+                            return ResponseEntity(resBody, HttpStatus.OK)
+                        }
                     }
                 }
             }
-        }
-        JSONObject().apply {
-            put("message", "bErrorRefresh")
-        }.let { resBody ->
-            return ResponseEntity(resBody, HttpStatus.UNAUTHORIZED)
+            JSONObject().apply {
+                put("message", "bErrorRefresh")
+            }.let { resBody ->
+                return ResponseEntity(resBody, HttpStatus.UNAUTHORIZED)
+            }
+        } catch (e: ExpiredJwtException) {
+            JSONObject().apply {
+                put("message", "bErrorRefresh")
+            }.let { resBody ->
+                return ResponseEntity(resBody, HttpStatus.UNAUTHORIZED)
+            }
         }
     }
 
