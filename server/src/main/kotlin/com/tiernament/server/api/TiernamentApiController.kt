@@ -3,9 +3,11 @@ package com.tiernament.server.api
 import com.tiernament.server.models.Tiernament
 import com.tiernament.server.models.TiernamentDTO
 import com.tiernament.server.models.TiernamentTitleDTO
+import com.tiernament.server.models.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -39,13 +41,13 @@ class PublicTiernamentApiController(@Autowired val repo: TiernamentRepo) {
 class PrivateTiernamentApiController(@Autowired val repo: TiernamentRepo) {
 
     @PostMapping
-    fun postTiernament(@RequestBody body: TiernamentDTO): Tiernament {
+    fun postTiernament(@RequestBody body: TiernamentDTO, @AuthenticationPrincipal curUser: User): Tiernament {
         // create uuid
         val id = UUID.randomUUID().toString()
         // create tiernament with serverside id and date
         val tiernament = Tiernament(
             tiernamentId = id,
-            authorId = body.authorId,
+            authorId = curUser.userId,
             name = body.name,
             imageId = body.imageId,
             description = body.description,

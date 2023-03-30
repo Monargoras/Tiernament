@@ -1,9 +1,10 @@
-POST http://localhost:8080/api/tiernament/private
+POST http://localhost:8080/api/tiernament/edit
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNb25hcmdvcmFzIiwiZXhwIjoxNjgwMjEzNjQxfQ.2ZZuhm4t2nv7RlW32f8k1dQZsLqF5sDi2RTgpV4wo-4
 
 {
-  "authorId": "15",
-  "name": "test4",
-  "description": "test4",
+  "name": "A cool Tiernament",
+  "imageId": "",
+  "description": "This is a cool Tiernament with a lot of cool items competing",
   "entries": []
 }

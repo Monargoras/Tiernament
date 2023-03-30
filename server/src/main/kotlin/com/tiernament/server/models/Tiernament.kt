@@ -36,7 +36,6 @@ data class TiernamentTitleDTO (
 }
 
 data class TiernamentDTO (
-    val authorId: String,
     val name: String,
     val imageId: String,
     val description: String,
