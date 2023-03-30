@@ -11,6 +11,9 @@ data class TiernamentRun (
     val playerId: String,
     val tiernamentId: Int,
     val date: Date,
-    val matchUps: List<MatchUp>,
-    val winner: TiernamentEntry,
+    val entries: Map<String, TiernamentRunEntry>,
+    val matchUpsStage1: List<MatchUp>,
+    val matchUpsStage2: List<MatchUp>?,
+    val matchUpsPlayoffs: List<MatchUp>,
+    val winner: TiernamentRunEntry?,
 )

@@ -30,7 +30,7 @@ export type TiernamentRunType = {
   entries: { [id: string]: TiernamentRunEntryType },
   matchUpsStage1: MatchUpType[],
   matchUpsStage2: MatchUpType[] | undefined,
-  matchUpsPlayOffs: MatchUpType[],
+  matchUpsPlayoffs: MatchUpType[],
   winner: TiernamentRunEntryType | undefined,
 }
 

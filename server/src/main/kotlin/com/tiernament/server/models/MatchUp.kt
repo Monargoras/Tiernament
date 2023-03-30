@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id
 data class MatchUp (
     @Id
     val matchUpId: String,
-    val entryA: TiernamentEntry,
-    val entryB: TiernamentEntry,
+    val entryAId: String,
+    val entryBId: String,
     val winnerId: String,
 )
