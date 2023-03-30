@@ -47,6 +47,7 @@ class PrivateTiernamentApiController(@Autowired val repo: TiernamentRepo) {
             tiernamentId = id,
             authorId = body.authorId,
             name = body.name,
+            imageId = body.imageId,
             description = body.description,
             date = Date(),
             entries = body.entries,
