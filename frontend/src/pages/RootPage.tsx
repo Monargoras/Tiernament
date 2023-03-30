@@ -10,7 +10,7 @@ import LanguageSelector from '../components/general/LanguageSelector';
 import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
 import { createLogoutUserRequest } from '../apiRequests/userRequests';
-import UserAvatar from '../components/profile/UserAvatar';
+import CustomAvatar from '../components/profile/CustomAvatar';
 
 
 export default function RootPage() {
@@ -150,7 +150,7 @@ export default function RootPage() {
                 authState.isAuthenticated && authState.user &&
                 <Tooltip title={t('openSettings')}>
                   <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                    <UserAvatar userName={authState.user.displayName} avatarId={authState.user.avatarId}/>
+                    <CustomAvatar userName={authState.user.displayName} imageId={authState.user.avatarId}/>
                   </IconButton>
                 </Tooltip>
               }

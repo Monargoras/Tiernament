@@ -31,3 +31,7 @@ export function createPostImageRequest(image: File, newToken?: string): Promise<
       return res
     })
 }
+
+export function getImageLink(imageId: string) {
+  return `${backendIP}/api/image/get/${imageId}`
+}

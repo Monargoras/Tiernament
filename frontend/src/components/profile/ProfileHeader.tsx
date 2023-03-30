@@ -7,7 +7,7 @@ import { Badge, Box, IconButton, Paper, TextField, Tooltip, Typography } from '@
 import { Check, Edit, Undo } from '@mui/icons-material';
 import { generalStyles } from '../../util/styles';
 import { createPostImageRequest } from '../../apiRequests/imageRequests';
-import UserAvatar from './UserAvatar';
+import CustomAvatar from './CustomAvatar';
 import ErrorSnackbar from '../general/ErrorSnackbar';
 
 interface ProfileHeaderProps {
@@ -89,7 +89,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
                 >
                     <Tooltip title={t('changeImage')}>
                         <IconButton sx={{p: 0}} component={'label'}>
-                            <UserAvatar userName={props.user.displayName} avatarId={props.user.avatarId}/>
+                            <CustomAvatar userName={props.user.displayName} imageId={props.user.avatarId}/>
                             <input
                                 type={'file'}
                                 accept={'image/*'}
@@ -151,7 +151,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
         {
           !props.privateView &&
             <Box sx={generalStyles.flexWrapBox}>
-                <UserAvatar userName={props.user.displayName} avatarId={props.user.avatarId}/>
+                <CustomAvatar userName={props.user.displayName} imageId={props.user.avatarId}/>
                 <Typography variant={'h4'} sx={{marginLeft: '20px'}}>
                   {props.user.displayName}
                 </Typography>
