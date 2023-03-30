@@ -2,8 +2,16 @@ export type TiernamentTitleType = {
   tiernamentId: string,
   authorId: string,
   name: string,
+  imageId: string,
   description: string,
   date: Date,
+}
+
+export type TiernamentDTO = {
+  name: string,
+  imageId: string,
+  description: string,
+  entries: TiernamentEntryType[],
 }
 
 export type TiernamentType = {
