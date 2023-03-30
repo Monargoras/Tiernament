@@ -1,6 +1,5 @@
 import React from 'react';
 import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
-import { generalStyles } from '../../util/styles';
 import { Divider, Paper, Typography, useTheme } from '@mui/material';
 
 interface PlayoffMatchUpProps {
@@ -14,8 +13,22 @@ export default function PlayoffMatchUp(props: PlayoffMatchUpProps) {
 
   const theme = useTheme()
 
+  const styles = {
+    tiernamentPlayoffMatchUp: {
+      display: 'flex',
+      flexDirection: 'column',
+      textAlign: 'center',
+      justifyContent: 'center',
+      padding: '10px',
+      minWidth: '100px',
+      minHeight: '50px',
+      elevation: 4,
+      boxShadow: `0px 0px 0px 1px ${theme.palette.text.secondary}`,
+    },
+  }
+
   return (
-    <Paper id={props.id} sx={generalStyles.tiernamentPlayoffMatchUp}>
+    <Paper id={props.id} sx={styles.tiernamentPlayoffMatchUp}>
       <Typography
         color={props.matchUp.winner === 'A' ? theme.palette.tertiary.main :
           props.matchUp.winner === 'B' ? theme.palette.error.light : theme.palette.text.primary}

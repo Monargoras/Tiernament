@@ -1,7 +1,6 @@
 import React from 'react';
-import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
-import { generalStyles } from '../../util/styles';
-import { alpha, Box, Divider, Paper, Typography, useTheme } from '@mui/material';
+import {MatchUpType, TiernamentRunEntryType} from '../../util/types';
+import { alpha, Box, Grid, Paper, Typography, useTheme } from '@mui/material';
 import CustomAvatar from '../profile/CustomAvatar';
 
 
@@ -15,54 +14,79 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
 
   const theme = useTheme()
 
-  const swissMatchUpStyles = {
-    entryBoxA: {
-      height: '100%',
-      width: '100%',
+  const styles = {
+    tiernamentSwissMatchUp: {
       display: 'flex',
       flexDirection: 'row',
+      textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
+      elevation: 4,
+      boxShadow: `0px 0px 0px 1px ${theme.palette.text.primary}`,
+    },
+    entryBoxA: {
+      padding: '5px',
       backgroundColor: props.matchUp.winner === 'A' ? alpha(theme.palette.tertiary.main, 0.5) :
         props.matchUp.winner === 'B' ? alpha(theme.palette.error.light, 0.5) : theme.palette.background.paper,
-      padding: '5px',
     },
     entryBoxB: {
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      padding: '5px',
       backgroundColor: props.matchUp.winner === 'B' ? alpha(theme.palette.tertiary.main, 0.5) :
         props.matchUp.winner === 'A' ? alpha(theme.palette.error.light, 0.5) : theme.palette.background.paper,
-      padding: '5px',
     },
-    image: {
-      maxHeight: '25px',
-      maxWidth: '25px',
+    divider: {
+      borderStyle: 'solid',
+      borderColor: theme.palette.text.primary,
+      borderWidth: '0 0 0 1px'
     },
+    alignLeft: {
+      display: 'flex',
+      textAlign: 'left',
+      justifyContent: 'left',
+    },
+    alignRight: {
+      display: 'flex',
+      textAlign: 'right',
+      justifyContent: 'right',
+    }
   }
 
   return (
-    <Paper sx={generalStyles.tiernamentSwissMatchUp}>
-      <Box sx={swissMatchUpStyles.entryBoxA}>
-        <Typography
-          fontWeight={props.matchUp.winner === 'A' ? 'bold' : 'normal'}
-        >
-          {props.entryA.name}
-        </Typography>
-        <CustomAvatar userName={props.entryA.name} imageId={props.entryA.imageId} size={{height: 25, width: 25}} />
-      </Box>
-      <Divider orientation={'vertical'} flexItem />
-      <Box sx={swissMatchUpStyles.entryBoxB}>
-        <CustomAvatar userName={props.entryB ? props.entryB.name : '-'} imageId={props.entryB ? props.entryB.imageId : ''} size={{height: 25, width: 25}} />
-        <Typography
-          fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
-        >
-          {props.entryB ? props.entryB.name : 'DEFAULT'}
-        </Typography>
-      </Box>
+    <Paper sx={styles.tiernamentSwissMatchUp}>
+      <Grid container spacing={0}>
+        <Grid item xs={6}>
+          <Box sx={styles.entryBoxA}>
+            <Grid container spacing={2}>
+              <Grid item xs={6} sx={styles.alignRight}>
+                <Typography
+                  fontWeight={props.matchUp.winner === 'A' ? 'bold' : 'normal'}
+                >
+                  {props.entryA.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={6} sx={styles.alignLeft}>
+                <CustomAvatar userName={props.entryA.name} imageId={props.entryA.imageId} size={{height: 25, width: 25}} />
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+        <Grid item xs={6} sx={styles.divider}>
+          <Box sx={styles.entryBoxB}>
+            <Grid container spacing={2}>
+              <Grid item xs={6} sx={styles.alignRight}>
+                <CustomAvatar userName={props.entryB ? props.entryB.name : '-'} imageId={props.entryB ? props.entryB.imageId : ''} size={{height: 25, width: 25}} />
+              </Grid>
+              <Grid item xs={6} sx={styles.alignLeft}>
+                <Typography
+                  fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
+                >
+                  {props.entryB ? props.entryB.name : 'DEFAULT'}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+      </Grid>
     </Paper>
   )
 }
