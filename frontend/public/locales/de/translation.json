@@ -22,5 +22,8 @@
   "bErrorUserExists": "Benutzername ist bereits vergeben.",
   "changeImage": "Bild ändern",
   "editName": "Öffentlichen Namen ändern",
-  "bFileTooLarge": "Datei ist zu groß."
+  "bFileTooLarge": "Datei ist zu groß.",
+  "stage1": "Schweizer System - Abschnitt 1",
+  "stage2": "Schweizer System - Abschnitt 2",
+  "playoffs": "Endrunde"
 }

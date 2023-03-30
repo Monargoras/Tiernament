@@ -22,5 +22,8 @@
   "bErrorUserExists": "Username already exists.",
   "changeImage": "Change image",
   "editName": "Edit display name",
-  "bFileTooLarge": "File size exceeds limit."
+  "bFileTooLarge": "File size exceeds limit.",
+  "stage1": "Swiss System - Stage 1",
+  "stage2": "Swiss System - Stage 2",
+  "playoffs": "Playoffs"
 }
