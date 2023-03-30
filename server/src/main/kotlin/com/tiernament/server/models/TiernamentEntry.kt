@@ -6,6 +6,6 @@ data class TiernamentEntry (
     @Id
     val entryId: String,
     val name: String,
-    val imageLink: String,
+    val imageId: String,
     val placementHistory: List<Int>,
 )

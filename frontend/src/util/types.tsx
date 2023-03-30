@@ -10,6 +10,7 @@ export type TiernamentType = {
   tiernamentId: string,
   authorId: string,
   name: string,
+  imageId: string,
   description: string,
   date: Date,
   entries: TiernamentEntryType[],
@@ -18,7 +19,7 @@ export type TiernamentType = {
 export type TiernamentEntryType = {
   entryId: string,
   name: string,
-  imageLink: string,
+  imageId: string,
   placementHistory: number[],
 }
 
@@ -44,7 +45,7 @@ export type MatchUpType = {
 export type TiernamentRunEntryType = {
   entryId: string,
   name: string,
-  imageLink: string,
+  imageId: string,
   placementHistory: number[],
   eliminated: boolean,
   winsStage1: number,

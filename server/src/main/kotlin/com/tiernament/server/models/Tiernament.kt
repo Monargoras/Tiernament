@@ -10,6 +10,7 @@ data class Tiernament (
     val tiernamentId: String,
     val authorId: String,
     val name: String,
+    val imageId: String,
     val description: String,
     val date: Date,
     val entries: List<TiernamentEntry>,
@@ -20,6 +21,7 @@ data class TiernamentTitleDTO (
     val tiernamentId: String,
     val authorId: String,
     val name: String,
+    val imageId: String,
     val description: String,
     val date: Date,
 ) {
@@ -27,6 +29,7 @@ data class TiernamentTitleDTO (
         tiernamentId = tiernament.tiernamentId,
         authorId = tiernament.authorId,
         name = tiernament.name,
+        imageId = tiernament.imageId,
         description = tiernament.description,
         date = tiernament.date,
     )
@@ -35,6 +38,7 @@ data class TiernamentTitleDTO (
 data class TiernamentDTO (
     val authorId: String,
     val name: String,
+    val imageId: String,
     val description: String,
     val entries: List<TiernamentEntry>,
 )
