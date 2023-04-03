@@ -3,7 +3,7 @@ import { useLoaderData } from 'react-router-dom';
 import { fetchTiernamentById } from '../../apiRequests/tiernamentRequests';
 import { TiernamentType } from '../../util/types';
 import PlayView from './PlayView';
-import {Box, Button, Typography} from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 export async function loader(params: { tiernamentId: string }) {
   const res = await fetchTiernamentById(params.tiernamentId)
@@ -30,7 +30,7 @@ export default function Tiernament() {
             <Typography variant={'body1'}>Entries:&nbsp;&nbsp;</Typography>
             {
               tiernament.entries.map(entry => {
-                return <Typography variant={'body1'}>{entry.name}&nbsp;&nbsp;</Typography>
+                return <Typography key={entry.entryId} variant={'body1'}>{entry.name}&nbsp;&nbsp;</Typography>
               })
             }
           </Box>
@@ -41,7 +41,7 @@ export default function Tiernament() {
       }
       {
         playView &&
-        <PlayView/>
+        <PlayView tiernament={tiernament} />
       }
     </div>
   )

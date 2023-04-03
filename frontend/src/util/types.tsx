@@ -45,6 +45,8 @@ export type TiernamentRunType = {
 
 export type MatchUpType = {
   matchUpId: string,
+  round: number,
+  bracket: 'lower' | 'middle' | 'upper',
   entryAId: string,
   entryBId: string,
   winner: 'A' | 'B' | undefined,

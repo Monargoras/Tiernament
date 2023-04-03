@@ -170,6 +170,8 @@ export const placeholderEntryB: TiernamentRunEntryType = {
 
 export const placeholderMatchUpWinner: MatchUpType = {
   matchUpId: '1',
+  round: 1,
+  bracket: 'middle',
   entryAId: '1',
   entryBId: '2',
   winner: 'A',
@@ -177,6 +179,8 @@ export const placeholderMatchUpWinner: MatchUpType = {
 
 export const placeholderMatchUpNoWinner: MatchUpType = {
   matchUpId: '1',
+  round: 1,
+  bracket: 'middle',
   entryAId: '1',
   entryBId: '2',
   winner: undefined,
