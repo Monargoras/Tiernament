@@ -32,20 +32,16 @@ interface UserRepo : MongoRepository<User, String> {
 
 interface SessionRepo : MongoRepository<Session, String> {
     fun findBySessionId(id: String): Session?
-    fun findByUserId(id: String): Session?
+    fun findByUserId(id: String): List<Session>?
 }
 
 @Service
 class UserDetailsService(private val repository: UserRepo, private val sessionRepo: SessionRepo): org.springframework.security.core.userdetails.UserDetailsService {
     override fun loadUserByUsername(username: String): User {
-        // Create a method in your repo to find a user by its username
         return repository.findByName(username) ?: throw UsernameNotFoundException("$username not found")
     }
 
     fun addSession(sessionId: String, userId: String) {
-        sessionRepo.findByUserId(userId)?.let {
-            sessionRepo.delete(it)
-        }
         sessionRepo.insert(Session(sessionId, userId, Date()))
     }
 }
@@ -85,6 +81,22 @@ class UserApiController(@Autowired val repo: UserRepo,
             println("logged out session ${jwtUtils.getSubject(refresh)}")
         } else {
             response.status = 400
+        }
+    }
+
+    @PostMapping("/logoutAll")
+    fun logoutAllUser(@CookieValue("Refresh") refresh: String): ResponseEntity<Unit> {
+        val jwtUtils = JwtTokenUtil()
+        return if(jwtUtils.isTokenValid(refresh)) {
+            sessionRepo.findByUserId(jwtUtils.getSubject(refresh))?.let {
+                sessionRepo.deleteAll(it)
+            }
+
+            // TODO remove
+            println("logged out all sessions for user ${jwtUtils.getSubject(refresh)}")
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.status(400).build()
         }
     }
 
