@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { MatchUpType, TiernamentRunEntryType, TiernamentRunType, TiernamentType } from '../../util/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppSelector } from '../../redux/hooks';
-import TiernamentRound from './TiernamentRound';
+import TiernamentStage from './TiernamentStage';
 
 const CustomAccordion = styled(Accordion)(() => {
   return {
@@ -29,6 +29,7 @@ function createTiernamentRun (tiernament: TiernamentType, needTwoStages: boolean
         imageId: obj.imageId,
         placementHistory: obj.placementHistory,
         eliminated: false,
+        advanced: false,
         winsStage1: 0,
         winsStage2: needTwoStages ? 0 : undefined,
         lossesStage1: 0,
@@ -88,7 +89,7 @@ export default function PlayView(props: PlayViewProps) {
 
   const handleRoundEnd = (newRun: TiernamentRunType, stage: 1 | 2): MatchUpType[] => {
     const newMatchUps: MatchUpType[] = []
-    const entries = Object.values(newRun.entries)
+    const entries = Object.values(newRun.entries).filter(entry => !entry.eliminated && !entry.advanced)
     const upperBracketEntries = entries.filter(entry => {
       if(stage === 2 && entry.winsStage2 && entry.lossesStage2) return entry.winsStage2 > entry.lossesStage2
       return entry.winsStage1 > entry.lossesStage1
@@ -114,9 +115,15 @@ export default function PlayView(props: PlayViewProps) {
       matchUp.winner = newWinner
       const winner = newRun.entries[matchUp.winner === 'A' ? matchUp.entryAId : matchUp.entryBId]
       winner.winsStage1++
+      if(winner.winsStage1 >= 3) {
+        winner.advanced = true
+      }
       if(matchUp.entryBId) {
         const loser = newRun.entries[matchUp.winner === 'B' ? matchUp.entryAId : matchUp.entryBId]
         loser.lossesStage1++
+        if(loser.lossesStage1 >= 3) {
+          loser.eliminated = true
+        }
       }
       if(currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound <= 5) {
         const newMatchUps = handleRoundEnd(newRun, 1)
@@ -124,6 +131,7 @@ export default function PlayView(props: PlayViewProps) {
         setNextRound((prev) => prev + 1)
       } else if(currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound > 5) {
         // TODO handle stage 2
+        // generate new match ups, reset advanced attribute
         console.log('stage 2')
       }
       setCurrentRun({ ...currentRun })
@@ -152,7 +160,7 @@ export default function PlayView(props: PlayViewProps) {
 
               return (
                 matchUps.length > 0 &&
-                <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdateStage1} />
+                <TiernamentStage key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdateStage1} stage={1} />
               )
             })
           }
@@ -176,7 +184,7 @@ export default function PlayView(props: PlayViewProps) {
 
                   return (
                     matchUps.length > 0 &&
-                    <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdateStage2} />
+                    <TiernamentStage key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdateStage2} stage={2} />
                   )
                 }
               })

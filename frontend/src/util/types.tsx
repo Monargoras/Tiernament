@@ -58,6 +58,7 @@ export type TiernamentRunEntryType = {
   imageId: string,
   placementHistory: number[],
   eliminated: boolean,
+  advanced: boolean,
   winsStage1: number,
   winsStage2: number | undefined,
   lossesStage1: number,

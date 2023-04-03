@@ -1,17 +1,18 @@
 import React from 'react';
 import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
-import {Box, IconButton, Typography, useTheme} from '@mui/material';
+import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import SwissMatchUp from './SwissMatchUp';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 
-interface TiernamentRoundProps {
+interface TiernamentStageProps {
   matchUps: MatchUpType[],
   entries: { [id: string]: TiernamentRunEntryType },
   handleMatchUpUpdate: (matchUpId: string, newWinner: 'A' | 'B') => void,
+  stage: 1 | 2,
 }
 
-export default function TiernamentRound(props: TiernamentRoundProps) {
+export default function TiernamentStage(props: TiernamentStageProps) {
 
   const theme = useTheme()
 
