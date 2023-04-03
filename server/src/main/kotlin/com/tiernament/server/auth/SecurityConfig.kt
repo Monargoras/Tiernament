@@ -35,7 +35,6 @@ class SecurityConfig(
                 "/api/user/create",
                 "/api/user/login",
                 "/api/user/refresh",
-                "/api/user/logout",
                 "/api/user/get/**",
                 "/api/image/get/**",
                 "/api/tiernament/get/**"
