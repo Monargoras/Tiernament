@@ -8,6 +8,7 @@ interface SwissMatchUpProps {
   matchUp: MatchUpType,
   entryA: TiernamentRunEntryType,
   entryB: TiernamentRunEntryType | undefined,
+  handleMatchUpUpdate: (matchUpId: string, newWinner: 'A' | 'B') => void,
 }
 
 export default function SwissMatchUp(props: SwissMatchUpProps) {
@@ -15,24 +16,17 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
   const theme = useTheme()
 
   const styles = {
-    tiernamentSwissMatchUp: {
-      display: 'flex',
-      flexDirection: 'row',
-      textAlign: 'center',
-      justifyContent: 'center',
-      alignItems: 'center',
-      elevation: 4,
-      boxShadow: `0px 0px 0px 1px ${theme.palette.text.primary}`,
-    },
     entryBoxA: {
       padding: '5px',
       backgroundColor: props.matchUp.winner === 'A' ? alpha(theme.palette.tertiary.main, 0.5) :
-        props.matchUp.winner === 'B' ? alpha(theme.palette.error.light, 0.5) : theme.palette.background.paper,
+        props.matchUp.winner === 'B' ? alpha(theme.palette.error.main, 0.5) : theme.palette.background.paper,
+      cursor: props.matchUp.winner === undefined ? 'pointer' : 'default',
     },
     entryBoxB: {
       padding: '5px',
       backgroundColor: props.matchUp.winner === 'B' ? alpha(theme.palette.tertiary.main, 0.5) :
-        props.matchUp.winner === 'A' ? alpha(theme.palette.error.light, 0.5) : theme.palette.background.paper,
+        props.matchUp.winner === 'A' ? alpha(theme.palette.error.main, 0.5) : theme.palette.background.paper,
+      cursor: props.matchUp.winner === undefined ? 'pointer' : 'default',
     },
     divider: {
       borderStyle: 'solid',
@@ -40,11 +34,13 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
       borderWidth: '0 0 0 1px'
     },
     alignLeft: {
+      paddingLeft: '5px',
       display: 'flex',
       textAlign: 'left',
       justifyContent: 'left',
     },
     alignRight: {
+      paddingRight: '5px',
       display: 'flex',
       textAlign: 'right',
       justifyContent: 'right',
@@ -52,41 +48,39 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
   }
 
   return (
-    <Paper sx={styles.tiernamentSwissMatchUp}>
-      <Grid container spacing={0}>
-        <Grid item xs={6}>
-          <Box sx={styles.entryBoxA}>
-            <Grid container spacing={2}>
-              <Grid item xs={6} sx={styles.alignRight}>
-                <Typography
-                  fontWeight={props.matchUp.winner === 'A' ? 'bold' : 'normal'}
-                >
-                  {props.entryA.name}
-                </Typography>
-              </Grid>
-              <Grid item xs={6} sx={styles.alignLeft}>
-                <CustomAvatar userName={props.entryA.name} imageId={props.entryA.imageId} size={{height: 25, width: 25}} />
-              </Grid>
+    <Grid container spacing={0}>
+      <Grid item xs={6}>
+        <Box sx={styles.entryBoxA} onClick={() => props.handleMatchUpUpdate(props.matchUp.matchUpId, 'A')}>
+          <Grid container spacing={0}>
+            <Grid item xs={6} sx={styles.alignRight}>
+              <Typography
+                fontWeight={props.matchUp.winner === 'A' ? 'bold' : 'normal'}
+              >
+                {props.entryA.name}
+              </Typography>
             </Grid>
-          </Box>
-        </Grid>
-        <Grid item xs={6} sx={styles.divider}>
-          <Box sx={styles.entryBoxB}>
-            <Grid container spacing={2}>
-              <Grid item xs={6} sx={styles.alignRight}>
-                <CustomAvatar userName={props.entryB ? props.entryB.name : '-'} imageId={props.entryB ? props.entryB.imageId : ''} size={{height: 25, width: 25}} />
-              </Grid>
-              <Grid item xs={6} sx={styles.alignLeft}>
-                <Typography
-                  fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
-                >
-                  {props.entryB ? props.entryB.name : 'DEFAULT'}
-                </Typography>
-              </Grid>
+            <Grid item xs={6} sx={styles.alignLeft}>
+              <CustomAvatar userName={props.entryA.name} imageId={props.entryA.imageId} size={{height: 25, width: 25}} />
             </Grid>
-          </Box>
-        </Grid>
+          </Grid>
+        </Box>
       </Grid>
-    </Paper>
+      <Grid item xs={6} sx={styles.divider}>
+        <Box sx={styles.entryBoxB} onClick={() => props.handleMatchUpUpdate(props.matchUp.matchUpId, 'B')}>
+          <Grid container spacing={0}>
+            <Grid item xs={6} sx={styles.alignRight}>
+              <CustomAvatar userName={props.entryB ? props.entryB.name : '-'} imageId={props.entryB ? props.entryB.imageId : ''} size={{height: 25, width: 25}} />
+            </Grid>
+            <Grid item xs={6} sx={styles.alignLeft}>
+              <Typography
+                fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
+              >
+                {props.entryB ? props.entryB.name : 'DEFAULT'}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+      </Grid>
+    </Grid>
   )
 }

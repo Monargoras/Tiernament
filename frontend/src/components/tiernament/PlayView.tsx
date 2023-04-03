@@ -79,6 +79,23 @@ export default function PlayView(props: PlayViewProps) {
   const [stage1Expanded, setStage1Expanded] = React.useState(true)
   const [stage2Expanded, setStage2Expanded] = React.useState(false)
 
+  const handleMatchUpUpdate = (matchUpId: string, newWinner: 'A' | 'B') => {
+    let newRun = { ...currentRun }
+    let matchUp = newRun.matchUpsStage1.find(mU => mU.matchUpId === matchUpId)
+    if (matchUp && matchUp.winner === undefined) {
+      matchUp.winner = newWinner
+      const winner = newRun.entries[matchUp.winner === 'A' ? matchUp.entryAId : matchUp.entryBId]
+      winner.winsStage1++
+      const loser = newRun.entries[matchUp.winner === 'B' ? matchUp.entryAId : matchUp.entryBId]
+      loser.lossesStage1++
+      if (currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0) {
+        // handle next round
+        console.log('next round')
+      }
+      setCurrentRun({ ...currentRun })
+    }
+  }
+
   return (
     <Box>
       <Accordion expanded={stage1Expanded} onChange={() => setStage1Expanded((prev) => !prev)}>
@@ -96,7 +113,7 @@ export default function PlayView(props: PlayViewProps) {
 
               return (
                 matchUps.length > 0 &&
-                <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} />
+                <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdate} />
               )
             })
           }
@@ -120,7 +137,7 @@ export default function PlayView(props: PlayViewProps) {
 
                   return (
                     matchUps.length > 0 &&
-                    <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries}/>
+                    <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdate} />
                   )
                 }
               })
