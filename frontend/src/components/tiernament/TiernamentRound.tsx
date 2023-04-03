@@ -1,7 +1,8 @@
 import React from 'react';
 import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
-import { Box, Typography, useTheme } from '@mui/material';
+import {Box, IconButton, Typography, useTheme} from '@mui/material';
 import SwissMatchUp from './SwissMatchUp';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 
 interface TiernamentRoundProps {
@@ -20,6 +21,7 @@ export default function TiernamentRound(props: TiernamentRoundProps) {
       borderStyle: 'solid',
       borderColor: theme.palette.text.primary,
       borderWidth: '1px 1px 1px 1px',
+      marginY: 'auto',
     }
   }
 
@@ -27,61 +29,71 @@ export default function TiernamentRound(props: TiernamentRoundProps) {
   const middleBracket = props.matchUps.filter(matchUp => matchUp.bracket === 'middle')
   const upperBracket = props.matchUps.filter(matchUp => matchUp.bracket === 'upper')
 
+  const [expanded, setExpanded] = React.useState(true)
+
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
-      <Typography variant={'h6'} color={theme.palette.primary.main} sx={{mb: '10px'}}>
-        Round {props.matchUps[0].round}
-      </Typography>
-      <Box sx={{display: 'flex', justifyContent: 'space-evenly'}}>
-        {
-          lowerBracket.length > 0 &&
-          <Box sx={styles.bracketBox}>
-            {
-              lowerBracket.map(matchUp => (
-                <SwissMatchUp
-                  key={matchUp.matchUpId}
-                  matchUp={matchUp}
-                  entryA={props.entries[matchUp.entryAId]}
-                  entryB={props.entries[matchUp.entryBId]}
-                  handleMatchUpUpdate={props.handleMatchUpUpdate}
-                />
-              ))
-            }
-          </Box>
-        }
-        {
-          middleBracket.length > 0 &&
-          <Box sx={styles.bracketBox}>
-            {
-              middleBracket.map(matchUp => (
-                <SwissMatchUp
-                  key={matchUp.matchUpId}
-                  matchUp={matchUp}
-                  entryA={props.entries[matchUp.entryAId]}
-                  entryB={props.entries[matchUp.entryBId]}
-                  handleMatchUpUpdate={props.handleMatchUpUpdate}
-                />
-              ))
-            }
-          </Box>
-        }
-        {
-          upperBracket.length > 0 &&
-          <Box sx={styles.bracketBox}>
-            {
-              upperBracket.map(matchUp => (
-                <SwissMatchUp
-                  key={matchUp.matchUpId}
-                  matchUp={matchUp}
-                  entryA={props.entries[matchUp.entryAId]}
-                  entryB={props.entries[matchUp.entryBId]}
-                  handleMatchUpUpdate={props.handleMatchUpUpdate}
-                />
-              ))
-            }
-          </Box>
-        }
+      <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', mb: '10px', mt: props.matchUps[0].round > 1 ? '20px' : 0}}>
+        <Typography variant={'h6'} color={theme.palette.primary.main}>
+          Round {props.matchUps[0].round}
+        </Typography>
+        <IconButton onClick={() => setExpanded((prev) => !prev)} color={'primary'}>
+          {expanded ? <ExpandLess/> : <ExpandMore/>}
+        </IconButton>
       </Box>
+      {
+        expanded &&
+          <Box sx={{display: 'flex', justifyContent: 'space-evenly'}}>
+            {
+              upperBracket.length > 0 &&
+                <Box sx={styles.bracketBox}>
+                  {
+                    upperBracket.map(matchUp => (
+                      <SwissMatchUp
+                        key={matchUp.matchUpId}
+                        matchUp={matchUp}
+                        entryA={props.entries[matchUp.entryAId]}
+                        entryB={props.entries[matchUp.entryBId]}
+                        handleMatchUpUpdate={props.handleMatchUpUpdate}
+                      />
+                    ))
+                  }
+                </Box>
+            }
+            {
+              middleBracket.length > 0 &&
+                <Box sx={styles.bracketBox}>
+                  {
+                    middleBracket.map(matchUp => (
+                      <SwissMatchUp
+                        key={matchUp.matchUpId}
+                        matchUp={matchUp}
+                        entryA={props.entries[matchUp.entryAId]}
+                        entryB={props.entries[matchUp.entryBId]}
+                        handleMatchUpUpdate={props.handleMatchUpUpdate}
+                      />
+                    ))
+                  }
+                </Box>
+            }
+            {
+              lowerBracket.length > 0 &&
+                <Box sx={styles.bracketBox}>
+                  {
+                    lowerBracket.map(matchUp => (
+                      <SwissMatchUp
+                        key={matchUp.matchUpId}
+                        matchUp={matchUp}
+                        entryA={props.entries[matchUp.entryAId]}
+                        entryB={props.entries[matchUp.entryBId]}
+                        handleMatchUpUpdate={props.handleMatchUpUpdate}
+                      />
+                    ))
+                  }
+                </Box>
+            }
+          </Box>
+      }
     </Box>
   )
 }

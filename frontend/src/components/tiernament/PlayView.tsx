@@ -3,7 +3,7 @@ import PlayOffDiagram from './PlayOffDiagram';
 import { Accordion, AccordionDetails, AccordionSummary, Box, styled, Typography } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { TiernamentRunEntryType, TiernamentRunType, TiernamentType } from '../../util/types';
+import { MatchUpType, TiernamentRunEntryType, TiernamentRunType, TiernamentType } from '../../util/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppSelector } from '../../redux/hooks';
 import TiernamentRound from './TiernamentRound';
@@ -43,22 +43,29 @@ function createTiernamentRun (tiernament: TiernamentType, needTwoStages: boolean
   }
   // create array of entry ids
   const entryIds = tiernament.entries.map(entry => entry.entryId)
+  newRun.matchUpsStage1.push(...generateMatchUps(entryIds, 1, 'middle'))
+  return newRun
+}
+
+function generateMatchUps(ids: string[], round: number, bracket: 'lower' | 'middle' | 'upper'): MatchUpType[] {
+  const entryIds = [...ids]
+  const matchUps: MatchUpType[] = []
   // randomly pair up entries
   while (entryIds.length > 0) {
     const randomIndex = Math.floor(Math.random() * entryIds.length)
     const randomEntryId = entryIds.splice(randomIndex, 1)[0]
     const randomIndex2 = Math.floor(Math.random() * entryIds.length)
     const randomEntryId2 = entryIds.splice(randomIndex2, 1)[0]
-    newRun.matchUpsStage1.push({
+    matchUps.push({
       matchUpId: uuidv4(),
-      round: 1,
-      bracket: 'middle',
+      round: round,
+      bracket: bracket,
       entryAId: randomEntryId,
       entryBId: randomEntryId2,
       winner: undefined,
     })
   }
-  return newRun
+  return matchUps
 }
 
 interface PlayViewProps {
@@ -79,21 +86,53 @@ export default function PlayView(props: PlayViewProps) {
   const [stage1Expanded, setStage1Expanded] = React.useState(true)
   const [stage2Expanded, setStage2Expanded] = React.useState(false)
 
-  const handleMatchUpUpdate = (matchUpId: string, newWinner: 'A' | 'B') => {
+  const handleRoundEnd = (newRun: TiernamentRunType, stage: 1 | 2): MatchUpType[] => {
+    const newMatchUps: MatchUpType[] = []
+    const entries = Object.values(newRun.entries)
+    const upperBracketEntries = entries.filter(entry => {
+      if(stage === 2 && entry.winsStage2 && entry.lossesStage2) return entry.winsStage2 > entry.lossesStage2
+      return entry.winsStage1 > entry.lossesStage1
+    })
+    const middleBracketEntries = entries.filter(entry => {
+      if(stage === 2 && entry.winsStage2 && entry.lossesStage2) return entry.winsStage2 === entry.lossesStage2
+      return entry.winsStage1 === entry.lossesStage1
+    })
+    const lowerBracketEntries = entries.filter(entry => {
+      if(stage === 2 && entry.winsStage2 && entry.lossesStage2) return entry.winsStage2 < entry.lossesStage2
+      return entry.winsStage1 < entry.lossesStage1
+    })
+    newMatchUps.push(...generateMatchUps(upperBracketEntries.map(entry => entry.entryId), nextRound, 'upper'))
+    newMatchUps.push(...generateMatchUps(middleBracketEntries.map(entry => entry.entryId), nextRound, 'middle'))
+    newMatchUps.push(...generateMatchUps(lowerBracketEntries.map(entry => entry.entryId), nextRound, 'lower'))
+    return newMatchUps
+  }
+
+  const handleMatchUpUpdateStage1 = (matchUpId: string, newWinner: 'A' | 'B') => {
     let newRun = { ...currentRun }
     let matchUp = newRun.matchUpsStage1.find(mU => mU.matchUpId === matchUpId)
-    if (matchUp && matchUp.winner === undefined) {
+    if(matchUp && matchUp.winner === undefined) {
       matchUp.winner = newWinner
       const winner = newRun.entries[matchUp.winner === 'A' ? matchUp.entryAId : matchUp.entryBId]
       winner.winsStage1++
-      const loser = newRun.entries[matchUp.winner === 'B' ? matchUp.entryAId : matchUp.entryBId]
-      loser.lossesStage1++
-      if (currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0) {
-        // handle next round
-        console.log('next round')
+      if(matchUp.entryBId) {
+        const loser = newRun.entries[matchUp.winner === 'B' ? matchUp.entryAId : matchUp.entryBId]
+        loser.lossesStage1++
+      }
+      if(currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound <= 5) {
+        const newMatchUps = handleRoundEnd(newRun, 1)
+        newRun.matchUpsStage1.push(...newMatchUps)
+        setNextRound((prev) => prev + 1)
+      } else if(currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound > 5) {
+        // TODO handle stage 2
+        console.log('stage 2')
       }
       setCurrentRun({ ...currentRun })
     }
+  }
+
+  const handleMatchUpUpdateStage2 = (matchUpId: string, newWinner: 'A' | 'B') => {
+    // TODO
+    console.log(matchUpId, newWinner)
   }
 
   return (
@@ -113,7 +152,7 @@ export default function PlayView(props: PlayViewProps) {
 
               return (
                 matchUps.length > 0 &&
-                <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdate} />
+                <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdateStage1} />
               )
             })
           }
@@ -137,7 +176,7 @@ export default function PlayView(props: PlayViewProps) {
 
                   return (
                     matchUps.length > 0 &&
-                    <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdate} />
+                    <TiernamentRound key={round} matchUps={matchUps} entries={currentRun.entries} handleMatchUpUpdate={handleMatchUpUpdateStage2} />
                   )
                 }
               })

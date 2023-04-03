@@ -26,7 +26,7 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
       padding: '5px',
       backgroundColor: props.matchUp.winner === 'B' ? alpha(theme.palette.tertiary.main, 0.5) :
         props.matchUp.winner === 'A' ? alpha(theme.palette.error.main, 0.5) : theme.palette.background.paper,
-      cursor: props.matchUp.winner === undefined ? 'pointer' : 'default',
+      cursor: props.matchUp.winner === undefined && props.matchUp.entryBId ? 'pointer' : 'default',
     },
     divider: {
       borderStyle: 'solid',
@@ -47,10 +47,22 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
     }
   }
 
+  React.useEffect(() => {
+    if(props.matchUp.winner === undefined && props.matchUp.entryBId === undefined) {
+      props.handleMatchUpUpdate(props.matchUp.matchUpId, 'A')
+    }
+  })
+
+  const handleMatchUpUpdate = (winner: 'A' | 'B') => {
+    if (props.matchUp.winner === undefined) {
+      props.handleMatchUpUpdate(props.matchUp.matchUpId, winner)
+    }
+  }
+
   return (
     <Grid container spacing={0}>
       <Grid item xs={6}>
-        <Box sx={styles.entryBoxA} onClick={() => props.handleMatchUpUpdate(props.matchUp.matchUpId, 'A')}>
+        <Box sx={styles.entryBoxA} onClick={() => handleMatchUpUpdate('A')}>
           <Grid container spacing={0}>
             <Grid item xs={6} sx={styles.alignRight}>
               <Typography
@@ -66,7 +78,7 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
         </Box>
       </Grid>
       <Grid item xs={6} sx={styles.divider}>
-        <Box sx={styles.entryBoxB} onClick={() => props.handleMatchUpUpdate(props.matchUp.matchUpId, 'B')}>
+        <Box sx={styles.entryBoxB} onClick={() => handleMatchUpUpdate('B')}>
           <Grid container spacing={0}>
             <Grid item xs={6} sx={styles.alignRight}>
               <CustomAvatar userName={props.entryB ? props.entryB.name : '-'} imageId={props.entryB ? props.entryB.imageId : ''} size={{height: 25, width: 25}} />
@@ -75,7 +87,7 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
               <Typography
                 fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
               >
-                {props.entryB ? props.entryB.name : 'DEFAULT'}
+                {props.entryB ? props.entryB.name : '-'}
               </Typography>
             </Grid>
           </Grid>
