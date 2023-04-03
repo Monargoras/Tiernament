@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useLoaderData } from 'react-router-dom';
-
 import { fetchTiernaments } from '../apiRequests/tiernamentRequests';
 import { TiernamentTitleType } from '../util/types';
+import { Typography } from '@mui/material';
 
 export async function loader() {
   const res = await fetchTiernaments()
@@ -13,19 +13,16 @@ export default function TiernamentPage() {
   const tiernaments = useLoaderData() as TiernamentTitleType[];
   return (
     <div>
-      <h1>Tiernament Page</h1>
+      <Typography variant={'h3'}>Tiernament Page</Typography>
       {
         tiernaments.map((tiernament: TiernamentTitleType, index) => (
-          <p key={index}>
+          <Typography key={index}>
             <Link to={`/tiernament/${tiernament.tiernamentId}`}>
               {tiernament.name}
             </Link>
-          </p>
+          </Typography>
         ))
       }
-      <button>
-        <Link to={'/'}>Home</Link>
-      </button>
     </div>
   )
 }
