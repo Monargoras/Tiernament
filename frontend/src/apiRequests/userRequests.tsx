@@ -121,25 +121,32 @@ export const createRefreshUserRequest = async (): Promise<string | undefined> =>
     })
 }
 
-export const createLogoutUserRequest = () => {
+export const createLogoutUserRequest = (newToken?: string) => {
   const dispatch = store.dispatch
+  const token = newToken ? newToken : store.getState().auth.token
 
   fetch(
     `${backendIP}/api/user/logout`,
     {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
       credentials: 'include',
     })
-    .then((res) => {
-      if(res.status === 500) {
+    .then(async (res) => {
+      if (res.status === 500) {
         console.log('Server Error')
       }
-      if(res.status === 401) {
-        console.log('Unauthorized')
+      if (res.status === 401 || res.status === 403) {
+        console.log('Unauthorized or Forbidden')
+        const refreshedToken = await createRefreshUserRequest()
+        if (refreshedToken) {
+          return createLogoutUserRequest(refreshedToken)
+        }
       }
-      if(res.status === 403) {
-        console.log('Forbidden')
+      if (res.ok) {
+        dispatch(logout())
       }
-      dispatch(logout())
     })
 }
