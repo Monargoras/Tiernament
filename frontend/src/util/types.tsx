@@ -32,9 +32,9 @@ export type TiernamentEntryType = {
 }
 
 export type TiernamentRunType = {
-  runId: String,
-  playerId: String,
-  tiernamentId: number,
+  runId: string,
+  playerId: string,
+  tiernamentId: string,
   date: Date,
   entries: { [id: string]: TiernamentRunEntryType },
   matchUpsStage1: MatchUpType[],
