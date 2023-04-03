@@ -27,7 +27,8 @@ function createTiernamentRun (tiernament: TiernamentType, needTwoStages: boolean
         entryId: obj.entryId,
         name: obj.name,
         imageId: obj.imageId,
-        placementHistory: obj.placementHistory,
+        matchHistoryStage1: [],
+        matchHistoryStage2: needTwoStages ? [] : undefined,
         eliminated: false,
         advanced: false,
         winsStage1: 0,
@@ -59,6 +60,7 @@ function generateMatchUps(ids: string[], round: number, bracket: 'lower' | 'midd
     const randomEntryId2 = entryIds.splice(randomIndex2, 1)[0]
     matchUps.push({
       matchUpId: uuidv4(),
+      stage: 'stage1',
       round: round,
       bracket: bracket,
       entryAId: randomEntryId,
@@ -115,12 +117,14 @@ export default function PlayView(props: PlayViewProps) {
       matchUp.winner = newWinner
       const winner = newRun.entries[matchUp.winner === 'A' ? matchUp.entryAId : matchUp.entryBId]
       winner.winsStage1++
+      winner.matchHistoryStage1.push('w')
       if(winner.winsStage1 >= 3) {
         winner.advanced = true
       }
       if(matchUp.entryBId) {
         const loser = newRun.entries[matchUp.winner === 'B' ? matchUp.entryAId : matchUp.entryBId]
         loser.lossesStage1++
+        loser.matchHistoryStage1.push('l')
         if(loser.lossesStage1 >= 3) {
           loser.eliminated = true
         }

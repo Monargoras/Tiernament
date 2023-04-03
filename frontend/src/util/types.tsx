@@ -45,6 +45,7 @@ export type TiernamentRunType = {
 
 export type MatchUpType = {
   matchUpId: string,
+  stage: 'stage1' | 'stage2' | 'playoffs',
   round: number,
   bracket: 'lower' | 'middle' | 'upper',
   entryAId: string,
@@ -56,7 +57,8 @@ export type TiernamentRunEntryType = {
   entryId: string,
   name: string,
   imageId: string,
-  placementHistory: number[],
+  matchHistoryStage1: string[],
+  matchHistoryStage2: string[] | undefined,
   eliminated: boolean,
   advanced: boolean,
   winsStage1: number,

@@ -25,5 +25,8 @@
   "bFileTooLarge": "Datei ist zu groß.",
   "stage1": "Schweizer System - Abschnitt 1",
   "stage2": "Schweizer System - Abschnitt 2",
-  "playoffs": "Endrunde"
+  "playoffs": "Endrunde",
+  "wins": "Siege",
+  "losses": "Niederlagen",
+  "round": "Runde"
 }

@@ -25,5 +25,8 @@
   "bFileTooLarge": "File size exceeds limit.",
   "stage1": "Swiss System - Stage 1",
   "stage2": "Swiss System - Stage 2",
-  "playoffs": "Playoffs"
+  "playoffs": "Playoffs",
+  "wins": "Wins",
+  "losses": "Losses",
+  "round": "Round"
 }

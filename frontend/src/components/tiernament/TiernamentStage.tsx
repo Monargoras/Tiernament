@@ -3,6 +3,7 @@ import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
 import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import SwissMatchUp from './SwissMatchUp';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 
 interface TiernamentStageProps {
@@ -15,6 +16,7 @@ interface TiernamentStageProps {
 export default function TiernamentStage(props: TiernamentStageProps) {
 
   const theme = useTheme()
+  const { t } = useTranslation()
 
   const styles = {
     bracketBox: {
@@ -36,7 +38,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
     <Box sx={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
       <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', mb: '10px', mt: props.matchUps[0].round > 1 ? '20px' : 0}}>
         <Typography variant={'h6'} color={theme.palette.primary.main}>
-          Round {props.matchUps[0].round}
+          {t('round')} {props.matchUps[0].round}
         </Typography>
         <IconButton onClick={() => setExpanded((prev) => !prev)} color={'primary'}>
           {expanded ? <ExpandLess/> : <ExpandMore/>}
