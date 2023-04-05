@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Grid, useTheme } from '@mui/material';
-import { generalStyles } from '../../util/styles';
 import Xarrow, { xarrowPropsType } from 'react-xarrows';
 import PlayoffMatchUp from './PlayoffMatchUp';
 import { MatchUpType, TiernamentRunType } from '../../util/types';
@@ -15,6 +14,16 @@ export default function PlayOffDiagram(props: PlayOffDiagramProps) {
 
   const theme = useTheme()
 
+  const styles = {
+    tiernamentPlayoffColumn: {
+      display: 'flex',
+      justifyContent: 'space-evenly',
+      flexDirection: 'column',
+      alignItems: 'center',
+      height: '70dvh',
+    },
+  }
+
   const getDummyMatchUp = (id: string): MatchUpType => {
     return {
       matchUpId: id,
@@ -27,7 +36,8 @@ export default function PlayOffDiagram(props: PlayOffDiagramProps) {
     }
   }
 
-  const quarterFinals = props.currentRun.matchUpsPlayoffs.filter((matchUp) => matchUp.round === 6)
+  const quarterMatchUps = props.currentRun.matchUpsPlayoffs.filter((matchUp) => matchUp.round === 6)
+  const quarterFinals = quarterMatchUps.length > 0 ? quarterMatchUps : [getDummyMatchUp('quarter1'), getDummyMatchUp('quarter2'), getDummyMatchUp('quarter3'), getDummyMatchUp('quarter4')]
   const semiMatchUps = props.currentRun.matchUpsPlayoffs.filter((matchUp) => matchUp.round === 7)
   const semiFinals = semiMatchUps.length > 0 ? semiMatchUps : [getDummyMatchUp('semi1'), getDummyMatchUp('semi2')]
   const finalMatchUp = props.currentRun.matchUpsPlayoffs.filter((matchUp) => matchUp.round === 8)
@@ -45,7 +55,7 @@ export default function PlayOffDiagram(props: PlayOffDiagramProps) {
 
   return (
     <Grid container>
-      <Grid item xs={4} id={'quarter-final-column'} sx={generalStyles.tiernamentPlayoffColumn}>
+      <Grid item xs={4} id={'quarter-final-column'} sx={styles.tiernamentPlayoffColumn}>
         {
           quarterFinals.map((entry) => (
             <Box key={entry.matchUpId}>
@@ -60,7 +70,7 @@ export default function PlayOffDiagram(props: PlayOffDiagramProps) {
           ))
         }
       </Grid>
-      <Grid item xs={4} id={'semi-final-column'} sx={generalStyles.tiernamentPlayoffColumn}>
+      <Grid item xs={4} id={'semi-final-column'} sx={styles.tiernamentPlayoffColumn}>
         {
           semiFinals.map((entry) => (
             <Box key={entry.matchUpId}>
@@ -79,7 +89,7 @@ export default function PlayOffDiagram(props: PlayOffDiagramProps) {
         <Xarrow {...arrowProps} start={quarterFinals[2].matchUpId} end={semiFinals[1].matchUpId} />
         <Xarrow {...arrowProps} start={quarterFinals[3].matchUpId} end={semiFinals[1].matchUpId} />
       </Grid>
-      <Grid item xs={4} id={'final-column'} sx={generalStyles.tiernamentPlayoffColumn}>
+      <Grid item xs={4} id={'final-column'} sx={styles.tiernamentPlayoffColumn}>
         <PlayoffMatchUp
           id={final.matchUpId}
           matchUp={final}

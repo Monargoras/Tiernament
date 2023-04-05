@@ -27,6 +27,7 @@ export default function PlayoffMatchUp(props: PlayoffMatchUpProps) {
       elevation: 4,
       boxShadow: `0px 0px 0px 1px ${theme.palette.text.secondary}`,
       cursor: props.matchUp.winner === undefined && props.matchUp.entryBId ? 'pointer' : 'default',
+      width: '15dvw',
     },
   }
 

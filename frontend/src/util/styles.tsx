@@ -37,11 +37,4 @@ export const generalStyles = {
     border: 1,
     borderColor: '#9e9e9e'
   },
-  tiernamentPlayoffColumn: {
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    flexDirection: 'column',
-    alignItems: 'center',
-    height: '70dvh',
-  },
 }
