@@ -61,7 +61,7 @@ export default function RootPage() {
 
   return (
     <>
-      <AppBar position={'static'} enableColorOnDark>
+      <AppBar position={'sticky'} enableColorOnDark>
         <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Box
