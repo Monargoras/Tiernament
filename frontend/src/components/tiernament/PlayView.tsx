@@ -65,7 +65,7 @@ function createTiernamentRun (tiernament: TiernamentType, needTwoStages: boolean
       lossesStage2: needTwoStages ? 0 : undefined,
     }
   }
-  newRun.matchUpsStage1.push(...generateMatchUps(entryIds, 1, 'middle', newRun.entries))
+  newRun.matchUpsStage1.push(...generateMatchUps(entryIds, 1, 'middle', newRun.entries, 'stage1'))
   return newRun
 }
 
@@ -89,7 +89,7 @@ function getNextMatchUpEntryId(nonDummyEntryIds: string[], dummyEntryIds: string
   }
 }
 
-function generateMatchUps(ids: string[], round: number, bracket: 'lower' | 'middle' | 'upper', entries: { [id: string]: TiernamentRunEntryType }): MatchUpType[] {
+function generateMatchUps(ids: string[], round: number, bracket: 'lower' | 'middle' | 'upper', entries: { [id: string]: TiernamentRunEntryType }, stage: 'stage1' | 'stage2'): MatchUpType[] {
   const entryIds = [...ids]
   const matchUps: MatchUpType[] = []
   const nonDummyEntries = entryIds.filter(id => entries[id].name !== DEFAULT_ENTRY_NAME)
@@ -103,7 +103,7 @@ function generateMatchUps(ids: string[], round: number, bracket: 'lower' | 'midd
 
     matchUps.push({
       matchUpId: uuidv4(),
-      stage: 'stage1',
+      stage: stage,
       round: round,
       bracket: bracket,
       entryAId: entryA,
@@ -150,20 +150,20 @@ export default function PlayView(props: PlayViewProps) {
     const newMatchUps: MatchUpType[] = []
     const entries = Object.values(newRun.entries).filter(entry => !entry.eliminated && !entry.advanced)
     const upperBracketEntries = entries.filter(entry => {
-      if(stage === 2 && entry.winsStage2 && entry.lossesStage2) return entry.winsStage2 > entry.lossesStage2
+      if(stage === 2 && entry.winsStage2 !== undefined && entry.lossesStage2 !== undefined) return entry.winsStage2 > entry.lossesStage2
       return entry.winsStage1 > entry.lossesStage1
     })
     const middleBracketEntries = entries.filter(entry => {
-      if(stage === 2 && entry.winsStage2 && entry.lossesStage2) return entry.winsStage2 === entry.lossesStage2
+      if(stage === 2 && entry.winsStage2 !== undefined && entry.lossesStage2 !== undefined) return entry.winsStage2 === entry.lossesStage2
       return entry.winsStage1 === entry.lossesStage1
     })
     const lowerBracketEntries = entries.filter(entry => {
-      if(stage === 2 && entry.winsStage2 && entry.lossesStage2) return entry.winsStage2 < entry.lossesStage2
+      if(stage === 2 && entry.winsStage2 !== undefined && entry.lossesStage2 !== undefined) return entry.winsStage2 < entry.lossesStage2
       return entry.winsStage1 < entry.lossesStage1
     })
-    newMatchUps.push(...generateMatchUps(upperBracketEntries.map(entry => entry.entryId), nextRound, 'upper', newRun.entries))
-    newMatchUps.push(...generateMatchUps(middleBracketEntries.map(entry => entry.entryId), nextRound, 'middle', newRun.entries))
-    newMatchUps.push(...generateMatchUps(lowerBracketEntries.map(entry => entry.entryId), nextRound, 'lower', newRun.entries))
+    newMatchUps.push(...generateMatchUps(upperBracketEntries.map(entry => entry.entryId), nextRound, 'upper', newRun.entries, stage === 1 ? 'stage1' : 'stage2'))
+    newMatchUps.push(...generateMatchUps(middleBracketEntries.map(entry => entry.entryId), nextRound, 'middle', newRun.entries, stage === 1 ? 'stage1' : 'stage2'))
+    newMatchUps.push(...generateMatchUps(lowerBracketEntries.map(entry => entry.entryId), nextRound, 'lower', newRun.entries, stage === 1 ? 'stage1' : 'stage2'))
     return newMatchUps
   }
 
@@ -184,23 +184,69 @@ export default function PlayView(props: PlayViewProps) {
       if(loser.lossesStage1 >= 3) {
         loser.eliminated = true
       }
-      if(currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound <= 5) {
+      if(newRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound <= 5) {
         const newMatchUps = handleRoundEnd(newRun, 1)
         newRun.matchUpsStage1.push(...newMatchUps)
         setNextRound((prev) => prev + 1)
         setScrollToBottom(true)
-      } else if(currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound > 5) {
-        // TODO handle stage 2
-        // generate new match ups, reset advanced attribute
-        console.log('stage 2')
+      } else if(newRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound > 5 && needTwoStages) {
+        // generate new match ups for stage2, reset advanced attribute
+        Object.values(newRun.entries).forEach(entry => entry.advanced = false)
+        const newMatchUps = generateMatchUps(
+          Object.values(newRun.entries)
+            .filter(entry => !entry.eliminated)
+            .map(entry => entry.entryId),
+          1,
+          'middle',
+          newRun.entries,
+          'stage2'
+        )
+        if(newRun.matchUpsStage2) {
+          newRun.matchUpsStage2.push(...newMatchUps)
+        }
+        setNextRound(2)
+        setStage1Expanded(false)
+        setStage2Expanded(true)
+      } else if(newRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound > 5) {
+        console.log('start playoffs')
       }
-      setCurrentRun({ ...currentRun })
+      setCurrentRun({ ...newRun })
     }
   }
 
   const handleMatchUpUpdateStage2 = (matchUpId: string, newWinner: 'A' | 'B') => {
-    // TODO
-    console.log(matchUpId, newWinner)
+    let newRun = {...currentRun}
+    if(newRun.matchUpsStage2) {
+      let matchUp = newRun.matchUpsStage2.find(mU => mU.matchUpId === matchUpId)
+      if (matchUp && matchUp.winner === undefined) {
+        matchUp.winner = newWinner
+        const winner = newRun.entries[matchUp.winner === 'A' ? matchUp.entryAId : matchUp.entryBId ? matchUp.entryBId : '']
+        if(winner && winner.winsStage2 !== undefined && winner.matchHistoryStage2) {
+          winner.winsStage2++
+          winner.matchHistoryStage2.push('w')
+          if (winner.winsStage2 >= 3) {
+            winner.advanced = true
+          }
+        }
+        const loser = newRun.entries[matchUp.winner === 'B' ? matchUp.entryAId : matchUp.entryBId]
+        if(loser && loser.lossesStage2 !== undefined && loser.matchHistoryStage2) {
+          loser.lossesStage2++
+          loser.matchHistoryStage2.push('l')
+          if (loser.lossesStage2 >= 3) {
+            loser.eliminated = true
+          }
+        }
+        if (newRun.matchUpsStage2.filter(mU => mU.winner === undefined).length === 0 && nextRound <= 5) {
+          const newMatchUps = handleRoundEnd(newRun, 2)
+          newRun.matchUpsStage2.push(...newMatchUps)
+          setNextRound((prev) => prev + 1)
+          setScrollToBottom(true)
+        } else if (newRun.matchUpsStage2.filter(mU => mU.winner === undefined).length === 0 && nextRound > 5) {
+          console.log('start playoffs 2')
+        }
+        setCurrentRun({ ...newRun })
+      }
+    }
   }
 
   return (

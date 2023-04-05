@@ -33,7 +33,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
   const middleBracket = props.matchUps.filter(matchUp => matchUp.bracket === 'middle')
   const upperBracket = props.matchUps.filter(matchUp => matchUp.bracket === 'upper')
 
-  const round = lowerBracket.length > 0 ? lowerBracket[0].round - 1 : middleBracket[0].round - 1
+  const round = lowerBracket.length > 0 ? lowerBracket[0].round - 1 : middleBracket.length > 0 ? middleBracket[0].round - 1 : upperBracket[0].round - 1
 
   const lowerMatchUp = lowerBracket.length > 0 ? props.entries[lowerBracket[0].entryAId] : undefined
   const winsLower = lowerMatchUp && (lowerBracket[0].stage === 'stage2' && lowerMatchUp.matchHistoryStage2 ?
