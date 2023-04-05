@@ -125,12 +125,26 @@ export default function PlayView(props: PlayViewProps) {
   const rounds = [1, 2, 3, 4, 5]
   const needTwoStages = props.tiernament.entries.length > 16
 
+  const curRoundRef = React.useRef<HTMLDivElement>(null)
+
   const [currentRun, setCurrentRun] = React.useState(() =>
     createTiernamentRun(props.tiernament, needTwoStages, authState.user?.userId)
   )
   const [nextRound, setNextRound] = React.useState(2)
   const [stage1Expanded, setStage1Expanded] = React.useState(true)
   const [stage2Expanded, setStage2Expanded] = React.useState(false)
+  const [scrollToBottom, setScrollToBottom] = React.useState(false)
+
+  React.useEffect(() => {
+    if(scrollToBottom) {
+      scrollToBottomRound()
+    }
+    setScrollToBottom(false)
+  }, [scrollToBottom])
+
+  const scrollToBottomRound = () => {
+    if(curRoundRef.current) curRoundRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
 
   const handleRoundEnd = (newRun: TiernamentRunType, stage: 1 | 2): MatchUpType[] => {
     const newMatchUps: MatchUpType[] = []
@@ -174,6 +188,7 @@ export default function PlayView(props: PlayViewProps) {
         const newMatchUps = handleRoundEnd(newRun, 1)
         newRun.matchUpsStage1.push(...newMatchUps)
         setNextRound((prev) => prev + 1)
+        setScrollToBottom(true)
       } else if(currentRun.matchUpsStage1.filter(mU => mU.winner === undefined).length === 0 && nextRound > 5) {
         // TODO handle stage 2
         // generate new match ups, reset advanced attribute
@@ -209,6 +224,10 @@ export default function PlayView(props: PlayViewProps) {
               )
             })
           }
+          {
+            (!currentRun.matchUpsStage2 || currentRun.matchUpsStage2.length === 0) &&
+              <div ref={curRoundRef}/>
+          }
         </AccordionDetails>
       </Accordion>
       {
@@ -233,6 +252,10 @@ export default function PlayView(props: PlayViewProps) {
                   )
                 }
               })
+            }
+            {
+              currentRun.matchUpsStage2.length > 0 &&
+              <div ref={curRoundRef}/>
             }
           </AccordionDetails>
         </Accordion>
