@@ -4,7 +4,7 @@ import { Box, IconButton, Tooltip, Typography, useTheme } from '@mui/material';
 import SwissMatchUp from './SwissMatchUp';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import {DEFAULT_ENTRY_NAME} from "./PlayView";
+import { DEFAULT_ENTRY_NAME } from './PlayView';
 
 
 interface TiernamentStageProps {
@@ -36,26 +36,26 @@ export default function TiernamentStage(props: TiernamentStageProps) {
   const round = lowerBracket.length > 0 ? lowerBracket[0].round - 1 : middleBracket.length > 0 ? middleBracket[0].round - 1 : upperBracket[0].round - 1
 
   const lowerMatchUp = lowerBracket.length > 0 ? props.entries[lowerBracket[0].entryAId] : undefined
-  const winsLower = lowerMatchUp && (lowerBracket[0].stage === 'stage2' && lowerMatchUp.matchHistoryStage2 ?
+  const winsLower = lowerMatchUp && (lowerBracket[0].stage === 'stage2' ?
     lowerMatchUp.matchHistoryStage2.slice(0, round).filter(res => res === 'w').length :
     lowerMatchUp.matchHistoryStage1.slice(0, round).filter(res => res === 'w').length)
-  const lossesLower = lowerMatchUp && (lowerBracket[0].stage === 'stage2' && lowerMatchUp.matchHistoryStage2 ?
+  const lossesLower = lowerMatchUp && (lowerBracket[0].stage === 'stage2' ?
     lowerMatchUp.matchHistoryStage2.slice(0, round).filter(res => res === 'l').length :
     lowerMatchUp.matchHistoryStage1.slice(0, round).filter(res => res === 'l').length)
 
   const middleMatchUp = middleBracket.length > 0 ? props.entries[middleBracket[0].entryAId] : undefined
-  const winsMiddle = middleMatchUp && (middleBracket[0].stage === 'stage2' && middleMatchUp.matchHistoryStage2 ?
+  const winsMiddle = middleMatchUp && (middleBracket[0].stage === 'stage2' ?
     middleMatchUp.matchHistoryStage2.slice(0, round).filter(res => res === 'w').length :
     middleMatchUp.matchHistoryStage1.slice(0, round).filter(res => res === 'w').length)
-  const lossesMiddle = middleMatchUp && (middleBracket[0].stage === 'stage2' && middleMatchUp.matchHistoryStage2 ?
+  const lossesMiddle = middleMatchUp && (middleBracket[0].stage === 'stage2' ?
     middleMatchUp.matchHistoryStage2.slice(0, round).filter(res => res === 'l').length :
     middleMatchUp.matchHistoryStage1.slice(0, round).filter(res => res === 'l').length)
 
   const upperMatchUp = upperBracket.length > 0 ? props.entries[upperBracket[0].entryAId] : undefined
-  const winsUpper = upperMatchUp && (upperBracket[0].stage === 'stage2' && upperMatchUp.matchHistoryStage2 ?
+  const winsUpper = upperMatchUp && (upperBracket[0].stage === 'stage2' ?
     upperMatchUp.matchHistoryStage2.slice(0, round).filter(res => res === 'w').length :
     upperMatchUp.matchHistoryStage1.slice(0, round).filter(res => res === 'w').length)
-  const lossesUpper = upperMatchUp && (upperBracket[0].stage === 'stage2' && upperMatchUp.matchHistoryStage2 ?
+  const lossesUpper = upperMatchUp && (upperBracket[0].stage === 'stage2' ?
     upperMatchUp.matchHistoryStage2.slice(0, round).filter(res => res === 'l').length :
     upperMatchUp.matchHistoryStage1.slice(0, round).filter(res => res === 'l').length)
 

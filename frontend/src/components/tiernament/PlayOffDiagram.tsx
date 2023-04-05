@@ -3,16 +3,36 @@ import { Box, Grid, useTheme } from '@mui/material';
 import { generalStyles } from '../../util/styles';
 import Xarrow, { xarrowPropsType } from 'react-xarrows';
 import PlayoffMatchUp from './PlayoffMatchUp';
-import { placeholderEntryA, placeholderEntryB, placeholderMatchUpNoWinner, placeholderMatchUpWinner } from '../../util/placeholderData';
+import { MatchUpType, TiernamentRunType } from '../../util/types';
 
 
-export default function PlayOffDiagram() {
+interface PlayOffDiagramProps {
+  currentRun: TiernamentRunType,
+  handleMatchUpUpdate: (matchUpId: string, newWinner: 'A' | 'B') => void,
+}
+
+export default function PlayOffDiagram(props: PlayOffDiagramProps) {
 
   const theme = useTheme()
 
-  const quarterFinals = ['quarter1', 'quarter2', 'quarter3', 'quarter4']
-  const semiFinals = ['semi1', 'semi2']
-  const final = 'final'
+  const getDummyMatchUp = (id: string): MatchUpType => {
+    return {
+      matchUpId: id,
+      stage: 'playoffs',
+      round: 0,
+      entryAId: '',
+      entryBId: '',
+      winner: undefined,
+      bracket: 'playoffs',
+    }
+  }
+
+  const quarterFinals = props.currentRun.matchUpsPlayoffs.filter((matchUp) => matchUp.round === 6)
+  const semiMatchUps = props.currentRun.matchUpsPlayoffs.filter((matchUp) => matchUp.round === 7)
+  const semiFinals = semiMatchUps.length > 0 ? semiMatchUps : [getDummyMatchUp('semi1'), getDummyMatchUp('semi2')]
+  const finalMatchUp = props.currentRun.matchUpsPlayoffs.filter((matchUp) => matchUp.round === 8)
+  const final = finalMatchUp.length > 0 ? finalMatchUp[0] : getDummyMatchUp('final')
+
   const arrowProps: xarrowPropsType = {
     start: '',
     end: '',
@@ -28,8 +48,14 @@ export default function PlayOffDiagram() {
       <Grid item xs={4} id={'quarter-final-column'} sx={generalStyles.tiernamentPlayoffColumn}>
         {
           quarterFinals.map((entry) => (
-            <Box key={entry}>
-              <PlayoffMatchUp id={entry} matchUp={placeholderMatchUpWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
+            <Box key={entry.matchUpId}>
+              <PlayoffMatchUp
+                id={entry.matchUpId}
+                matchUp={entry}
+                entryA={props.currentRun.entries[entry.entryAId]}
+                entryB={props.currentRun.entries[entry.entryBId]}
+                handleMatchUpUpdate={props.handleMatchUpUpdate}
+              />
             </Box>
           ))
         }
@@ -37,20 +63,32 @@ export default function PlayOffDiagram() {
       <Grid item xs={4} id={'semi-final-column'} sx={generalStyles.tiernamentPlayoffColumn}>
         {
           semiFinals.map((entry) => (
-            <Box key={entry}>
-              <PlayoffMatchUp id={entry} matchUp={placeholderMatchUpWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
+            <Box key={entry.matchUpId}>
+              <PlayoffMatchUp
+                id={entry.matchUpId}
+                matchUp={entry}
+                entryA={entry.entryAId != '' ? props.currentRun.entries[entry.entryAId] : undefined}
+                entryB={entry.entryBId != '' ? props.currentRun.entries[entry.entryBId] : undefined}
+                handleMatchUpUpdate={props.handleMatchUpUpdate}
+              />
             </Box>
           ))
         }
-        <Xarrow {...arrowProps} start={quarterFinals[0]} end={semiFinals[0]} />
-        <Xarrow {...arrowProps} start={quarterFinals[1]} end={semiFinals[0]} />
-        <Xarrow {...arrowProps} start={quarterFinals[2]} end={semiFinals[1]} />
-        <Xarrow {...arrowProps} start={quarterFinals[3]} end={semiFinals[1]} />
+        <Xarrow {...arrowProps} start={quarterFinals[0].matchUpId} end={semiFinals[0].matchUpId} />
+        <Xarrow {...arrowProps} start={quarterFinals[1].matchUpId} end={semiFinals[0].matchUpId} />
+        <Xarrow {...arrowProps} start={quarterFinals[2].matchUpId} end={semiFinals[1].matchUpId} />
+        <Xarrow {...arrowProps} start={quarterFinals[3].matchUpId} end={semiFinals[1].matchUpId} />
       </Grid>
       <Grid item xs={4} id={'final-column'} sx={generalStyles.tiernamentPlayoffColumn}>
-        <PlayoffMatchUp id={'final'} matchUp={placeholderMatchUpNoWinner} entryA={placeholderEntryA} entryB={placeholderEntryB} />
-        <Xarrow {...arrowProps} start={semiFinals[0]} end={final} />
-        <Xarrow {...arrowProps} start={semiFinals[1]} end={final} />
+        <PlayoffMatchUp
+          id={final.matchUpId}
+          matchUp={final}
+          entryA={final.entryAId != '' ? props.currentRun.entries[final.entryAId] : undefined}
+          entryB={final.entryBId != '' ? props.currentRun.entries[final.entryBId] : undefined}
+          handleMatchUpUpdate={props.handleMatchUpUpdate}
+        />
+        <Xarrow {...arrowProps} start={semiFinals[0].matchUpId} end={final.matchUpId} />
+        <Xarrow {...arrowProps} start={semiFinals[1].matchUpId} end={final.matchUpId} />
       </Grid>
     </Grid>
   )
