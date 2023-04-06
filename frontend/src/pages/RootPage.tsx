@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  AppBar, Toolbar, Box, Menu, MenuItem, Container, IconButton, Typography, Button, Tooltip, useTheme
+  AppBar, Toolbar, Box, Menu, MenuItem, Container, IconButton, Typography, Button, Tooltip, useTheme, styled, TextField, InputAdornment
 } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Menu as MenuIcon, Search } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { AppBarRoutes } from '../App';
 import LanguageSelector from '../components/general/LanguageSelector';
@@ -13,6 +13,29 @@ import { createLogoutUserRequest } from '../apiRequests/userRequests';
 import CustomAvatar from '../components/profile/CustomAvatar';
 
 
+const SearchField = styled(TextField)(props => ({
+  '& label': {
+    color: props.theme.palette.text.primary,
+  },
+  '& label.Mui-focused': {
+    color: props.theme.palette.primary.dark,
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: props.theme.palette.primary.dark,
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: props.theme.palette.primary.dark,
+    },
+    '&:hover fieldset': {
+      borderColor: props.theme.palette.tertiary.main,
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: props.theme.palette.primary.dark,
+    },
+  },
+}))
+
 export default function RootPage() {
 
   const { t } = useTranslation()
@@ -21,6 +44,7 @@ export default function RootPage() {
   const authState = useAppSelector(state => state.auth)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
+  const [search, setSearch] = React.useState('')
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget)
@@ -57,6 +81,10 @@ export default function RootPage() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const handleSearch = () => {
+    console.log(search)
   }
 
   return (
@@ -120,6 +148,35 @@ export default function RootPage() {
                   display: { xs: 'block', md: 'none' },
                 }}
               >
+                <SearchField
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  sx={{ width: '100%', maxWidth: '250px', my: 2, px: 1 }}
+                  id='search'
+                  label={t('search')}
+                  variant='outlined'
+                  size='small'
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch()
+                    }
+                  }}
+                  InputProps={
+                    {
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton
+                            aria-label='search'
+                            onClick={handleSearch}
+                            edge='end'
+                          >
+                            <Search/>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
+                  }
+                />
                 {Object.keys(AppBarRoutes).map((page) => (
                   <MenuItem key={page} onClick={() => handleNavigate(page)}>
                     <Typography textAlign='center'>{t(page)}</Typography>
@@ -128,6 +185,35 @@ export default function RootPage() {
               </Menu>
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              <SearchField
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                sx={{ width: '100%', maxWidth: '250px', my: 2 }}
+                id='search'
+                label={t('search')}
+                variant='outlined'
+                size='small'
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch()
+                  }
+                }}
+                InputProps={
+                  {
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          aria-label='search'
+                          onClick={handleSearch}
+                          edge='end'
+                        >
+                          <Search/>
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }
+                }
+              />
               {Object.keys(AppBarRoutes).map((page) => (
                 <Button
                   key={page}
