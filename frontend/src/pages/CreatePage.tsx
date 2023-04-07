@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/hooks';
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { createDeleteImageRequest, createPostImageRequest } from '../apiRequests/imageRequests';
 import ErrorSnackbar from '../components/general/ErrorSnackbar';
@@ -22,8 +22,6 @@ export default function CreatePage() {
   const styles = {
     paper: {
       padding: '10px',
-      width: '100%',
-      marginRight: '10px',
     },
     textField: {
       marginX: '5px',
@@ -35,6 +33,7 @@ export default function CreatePage() {
     flexColumn: {
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
     },
   }
 
@@ -76,76 +75,90 @@ export default function CreatePage() {
   }
 
   return (
-    <Box sx={styles.flexRow}>
-      <Paper sx={styles.paper}>
-        <Typography variant={'h6'} sx={{mb: '10px', ml: '5px'}}>
-          {t('createTiernamentHeader')}
-        </Typography>
-        <Box sx={styles.flexRow}>
-          <Box sx={styles.flexColumn}>
-            <TextField
-              id={'tiernamentName'}
-              label={t('tiernamentName')}
-              variant={'outlined'}
-              sx={styles.textField}
-              value={tiernamentName}
-              onChange={(event) => setTiernamentName(event.target.value)}
-            />
-            <Button sx={{mx: 'auto', mt: '10px', width:'95%'}} component={'label'} variant={'contained'}>
-              {t('changeImage')}
-              <AddAPhoto fontSize={'large'} color={'secondary'} sx={{ml: '5px'}} />
-              <input
-                type={'file'}
-                accept={'image/*'}
-                multiple={false}
-                hidden
-                onChange={
-                  event => {
-                    if(event.target.files) {
-                      handleImageChange(event.target.files![0])
+    <Box>
+      <Grid container spacing={2} alignItems={'center'}>
+        <Grid item xs={12} sm={12} md={8} lg={8} xl={9}>
+          <Paper sx={styles.paper}>
+            <Typography variant={'h6'} sx={{mb: '10px', ml: '5px'}}>
+              {t('createTiernamentHeader')}
+            </Typography>
+            <Box sx={styles.flexRow}>
+              <Box sx={styles.flexColumn}>
+                <TextField
+                  id={'tiernamentName'}
+                  label={t('tiernamentName')}
+                  variant={'outlined'}
+                  sx={styles.textField}
+                  value={tiernamentName}
+                  onChange={(event) => setTiernamentName(event.target.value)}
+                />
+                <Button sx={{mx: 'auto', mt: '10px', width:'95%'}} component={'label'} variant={'contained'}>
+                  {t('changeImage')}
+                  <AddAPhoto fontSize={'large'} color={'secondary'} sx={{ml: '5px'}} />
+                  <input
+                    type={'file'}
+                    accept={'image/*'}
+                    multiple={false}
+                    hidden
+                    onChange={
+                      event => {
+                        if(event.target.files) {
+                          handleImageChange(event.target.files![0])
+                        }
+                      }
                     }
-                  }
-                }
+                  />
+                </Button>
+                <Button sx={{mx: 'auto', mt: '10px', width:'95%'}} onClick={handleRemoveImage}>
+                  {t('removeImage')}
+                  <DeleteForever fontSize={'large'} color={'secondary'} sx={{ml: '5px'}} />
+                </Button>
+              </Box>
+              <TextField
+                id={'tiernamentDescription'}
+                label={t('tiernamentDescription')}
+                variant={'outlined'}
+                sx={styles.textField}
+                value={tiernamentDescription}
+                onChange={(event) => setTiernamentDescription(event.target.value)}
+                multiline
+                maxRows={10}
               />
-            </Button>
-            <Button sx={{mx: 'auto', mt: '10px', width:'95%'}} onClick={handleRemoveImage}>
-              {t('removeImage')}
-              <DeleteForever fontSize={'large'} color={'secondary'} sx={{ml: '5px'}} />
-            </Button>
+            </Box>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={12} md={4} lg={4} xl={3}>
+          <Box sx={styles.flexColumn}>
+            <Typography
+              variant={'h6'}
+              sx={{mb: '5px'}}
+              color={'secondary'}
+            >
+              {t('preview')}
+            </Typography>
+            <TiernamentCard
+              tiernament={{
+                tiernamentId: '1',
+                authorId: authState.user?.userId || '',
+                authorDisplayName: authState.user?.displayName || '',
+                authorAvatarId: authState.user?.avatarId || '',
+                name: tiernamentName,
+                imageId: imageId || '',
+                description: tiernamentDescription,
+                date: new Date(),
+              }}
+              dummy
+            />
           </Box>
-          <TextField
-            id={'tiernamentDescription'}
-            label={t('tiernamentDescription')}
-            variant={'outlined'}
-            sx={styles.textField}
-            value={tiernamentDescription}
-            onChange={(event) => setTiernamentDescription(event.target.value)}
-            multiline
-          />
-        </Box>
-      </Paper>
-        <Box sx={{textAlign: 'center'}}>
-          <Typography
-            variant={'h6'}
-            sx={{mb: '5px'}}
-            color={'secondary'}
-          >
-            {t('preview')}
-          </Typography>
-          <TiernamentCard
-            tiernament={{
-              tiernamentId: '1',
-              authorId: authState.user?.userId || '',
-              authorDisplayName: authState.user?.displayName || '',
-              authorAvatarId: authState.user?.avatarId || '',
-              name: tiernamentName,
-              imageId: imageId || '',
-              description: tiernamentDescription,
-              date: new Date(),
-            }}
-            dummy
-          />
-        </Box>
+        </Grid>
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+          <Paper sx={{...styles.paper, marginRight: 0, marginTop: '10px'}}>
+            <Typography variant={'h6'} sx={{mb: '10px', ml: '5px'}}>
+              {t('createTiernamentEntries')}
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
       <ErrorSnackbar errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>
     </Box>
   )
