@@ -42,7 +42,11 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
     }
 
     fun getTiernamentsBySearchTerm(searchTerm: String): List<TiernamentTitleDTO> {
-        return repo.findByNameContainingIgnoreCase(searchTerm).map { getTiernamentTitleDTO(it) }
+        // search for tiernament name containing search term and the author's display name containing search term
+        val tiernaments = repo.findByNameContainingIgnoreCase(searchTerm)
+        val users = userRepo.findByDisplayNameEqualsIgnoreCase(searchTerm)
+        val userTiernaments = users.map { repo.findByAuthorId(it.userId) }.flatten()
+        return (tiernaments + userTiernaments).map { getTiernamentTitleDTO(it) }
     }
 
     fun getTiernamentById(id: String): Tiernament? {

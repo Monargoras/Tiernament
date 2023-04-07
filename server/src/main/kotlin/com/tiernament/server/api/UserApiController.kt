@@ -28,6 +28,7 @@ import java.util.*
 interface UserRepo : MongoRepository<User, String> {
     fun findByUserId(id: String): User?
     fun findByName(name: String): User?
+    fun findByDisplayNameEqualsIgnoreCase(name: String): List<User>
 }
 
 interface SessionRepo : MongoRepository<Session, String> {
