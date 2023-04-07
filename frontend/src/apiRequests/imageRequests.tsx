@@ -1,6 +1,10 @@
 import { store } from '../redux/store';
-import { backendIP } from './requestGenerator';
+import {backendIP, createRequest} from './requestGenerator';
 import { createRefreshUserRequest } from './userRequests';
+
+export function getImageLink(imageId: string) {
+  return `${backendIP}/api/image/get/${imageId}`
+}
 
 export function createPostImageRequest(image: File, newToken?: string): Promise<Response> {
   const formData = new FormData()
@@ -32,6 +36,9 @@ export function createPostImageRequest(image: File, newToken?: string): Promise<
     })
 }
 
-export function getImageLink(imageId: string) {
-  return `${backendIP}/api/image/get/${imageId}`
+export function createDeleteImageRequest(imageId: string) {
+  return createRequest('DELETE', `api/image`, undefined, imageId, true)
 }
+
+
+
