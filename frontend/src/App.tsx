@@ -118,10 +118,10 @@ export default function App() {
         palette: {
           mode: mode,
           primary: {
-            main: '#2bbdc5',
+            main: '#16c6e9',
           },
           secondary: {
-            main: '#ab47bc',
+            main: '#a216e9',
           },
           tertiary: palette.augmentColor({
             color: {
