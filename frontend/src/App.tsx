@@ -13,6 +13,8 @@ import { createRefreshUserRequest } from './apiRequests/userRequests';
 import ProfilePage from './pages/ProfilePage';
 import { loader as profileLoader } from './pages/ProfilePage';
 import LoadingPage from './pages/LoadingPage';
+import SearchPage from './pages/SearchPage';
+import { loader as searchLoader } from './pages/SearchPage';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -59,7 +61,8 @@ const router = createBrowserRouter([
       },
       {
         path: 'tiernament/search/:searchTerm',
-        element: <p>Search</p>,
+        element: <SearchPage />,
+        loader: (args) => searchLoader(args.params as { searchTerm: string }),
       },
       {
         path: 'about',
