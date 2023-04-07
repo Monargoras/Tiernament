@@ -18,20 +18,20 @@ export default function SearchPage() {
   const { t } = useTranslation()
 
   return (
-    <div>
+    <Box>
       <Box>
         <Typography variant={'h5'} sx={{mb: '5px', ml: '10px'}}>
           {t('searchFor', {searchTerm: searchTerm})}
         </Typography>
         <Divider />
       </Box>
-      <div style={{display: 'flex', flexDirection: 'row'}}>
+      <Box sx={{display: 'flex', flexDirection: 'row'}}>
         {
           tiernaments.map((tiernament: TiernamentTitleType, index) => (
             <TiernamentCard key={index} tiernament={tiernament} />
           ))
         }
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
