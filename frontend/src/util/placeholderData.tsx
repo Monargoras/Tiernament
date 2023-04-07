@@ -148,13 +148,13 @@ export const placeholderEntryA: TiernamentRunEntryType = {
   name: 'Fop',
   imageId: '6420a1009ba3c9781a7879c8',
   matchHistoryStage1: [],
-  matchHistoryStage2: undefined,
+  matchHistoryStage2: [],
   eliminated: false,
   advanced: false,
   winsStage1: 3,
-  winsStage2: undefined,
+  winsStage2: 0,
   lossesStage1: 0,
-  lossesStage2: undefined,
+  lossesStage2: 0,
 
 }
 
@@ -163,13 +163,13 @@ export const placeholderEntryB: TiernamentRunEntryType = {
   name: 'Dt',
   imageId: '6420a380b0cf975d69a1b845',
   matchHistoryStage1: [],
-  matchHistoryStage2: undefined,
+  matchHistoryStage2: [],
   eliminated: false,
   advanced: false,
   winsStage1: 3,
-  winsStage2: undefined,
+  winsStage2: 0,
   lossesStage1: 2,
-  lossesStage2: undefined,
+  lossesStage2: 0,
 }
 
 export const placeholderMatchUpWinner: MatchUpType = {
