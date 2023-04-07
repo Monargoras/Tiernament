@@ -30,5 +30,6 @@
   "losses": "Losses",
   "round": "Round",
   "search": "Search",
-  "byAuthor": "by {{authorName}}"
+  "byAuthor": "by {{authorName}}",
+  "searchFor": "Search for \"{{searchTerm}}\""
 }

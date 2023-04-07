@@ -30,5 +30,6 @@
   "losses": "Niederlagen",
   "round": "Runde",
   "search": "Suchen",
-  "byAuthor": "von {{authorName}}"
+  "byAuthor": "von {{authorName}}",
+  "searchFor": "Suche für \"{{searchTerm}}\""
 }

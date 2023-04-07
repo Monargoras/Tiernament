@@ -11,7 +11,9 @@ export async function loader() {
 }
 
 export default function TiernamentPage() {
-  const tiernaments = useLoaderData() as TiernamentTitleType[];
+
+  const tiernaments = useLoaderData() as TiernamentTitleType[]
+
   return (
     <Box sx={{display: 'flex', flexDirection: 'row'}}>
       {

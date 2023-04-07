@@ -4,6 +4,7 @@ import { fetchTiernamentsBySearchTerm } from '../apiRequests/tiernamentRequests'
 import { TiernamentTitleType } from '../util/types';
 import { Box, Divider, Typography } from '@mui/material';
 import TiernamentCard from '../components/tiernament/TiernamentCard';
+import { useTranslation } from 'react-i18next';
 
 export async function loader(params: { searchTerm: string }) {
   const res = await fetchTiernamentsBySearchTerm(params.searchTerm)
@@ -12,12 +13,15 @@ export async function loader(params: { searchTerm: string }) {
 }
 
 export default function SearchPage() {
-  const { tiernaments, searchTerm } = useLoaderData() as { tiernaments: TiernamentTitleType[], searchTerm: string };
+
+  const { tiernaments, searchTerm } = useLoaderData() as { tiernaments: TiernamentTitleType[], searchTerm: string }
+  const { t } = useTranslation()
+
   return (
     <div>
       <Box>
         <Typography variant={'h5'} sx={{mb: '5px', ml: '10px'}}>
-          Search for "{searchTerm}"
+          {t('searchFor', {searchTerm: searchTerm})}
         </Typography>
         <Divider />
       </Box>
