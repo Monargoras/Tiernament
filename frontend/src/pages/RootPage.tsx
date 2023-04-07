@@ -28,7 +28,7 @@ const SearchField = styled(TextField)(props => ({
       borderColor: props.theme.palette.primary.dark,
     },
     '&:hover fieldset': {
-      borderColor: props.theme.palette.tertiary.main,
+      borderColor: props.theme.palette.text.primary,
     },
     '&.Mui-focused fieldset': {
       borderColor: props.theme.palette.primary.dark,
