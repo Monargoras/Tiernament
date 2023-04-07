@@ -32,5 +32,9 @@
   "search": "Suchen",
   "byAuthor": "von {{authorName}}",
   "searchFor": "Suche für \"{{searchTerm}}\"",
-  "noResults": "Keine Ergebnisse gefunden."
+  "noResults": "Keine Ergebnisse gefunden.",
+  "tiernamentName": "Tiernament Name",
+  "tiernamentDescription": "Tiernament Beschreibung",
+  "createTiernamentHeader": "Gib die Daten für dein Tiernament ein (Foto ist nicht Pflicht):",
+  "removeImage": "Bild entfernen"
 }

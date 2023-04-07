@@ -32,5 +32,9 @@
   "search": "Search",
   "byAuthor": "by {{authorName}}",
   "searchFor": "Search for \"{{searchTerm}}\"",
-  "noResults": "No results found."
+  "noResults": "No results found.",
+  "tiernamentName": "Tiernament name",
+  "tiernamentDescription": "Tiernament description",
+  "createTiernamentHeader": "Enter your Tiernaments data (Photo is not mandatory):",
+  "removeImage": "Remove image"
 }
