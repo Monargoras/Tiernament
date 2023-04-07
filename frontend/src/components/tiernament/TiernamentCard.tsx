@@ -19,7 +19,7 @@ export default function TiernamentCard(props: TiernamentCardProps) {
     card: {
       cursor: 'pointer',
       margin: '10px',
-      maxWidth: 250,
+      width: 250,
     }
   }
 
@@ -29,16 +29,14 @@ export default function TiernamentCard(props: TiernamentCardProps) {
 
   return (
     <Card sx={styles.card}>
-      <CardActionArea onClick={handleNavigate}>
-        {
-          props.tiernament.imageId &&
-            <CardMedia
-                component={'img'}
-                height={'150'}
-                image={getImageLink(props.tiernament.imageId)}
-                alt={props.tiernament.name}
-            />
-        }
+      <CardActionArea onClick={handleNavigate} sx={{height: '100%', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start'}}>
+        <CardMedia
+          component={'img'}
+          height={'150'}
+          image={props.tiernament.imageId !== '' ? getImageLink(props.tiernament.imageId) : '/tiernamentIcon.png'}
+          alt={props.tiernament.name}
+          sx={{objectFit: 'contain'}}
+        />
         <CardContent>
           <Typography gutterBottom variant={'h5'} component={'div'}>
             {props.tiernament.name}

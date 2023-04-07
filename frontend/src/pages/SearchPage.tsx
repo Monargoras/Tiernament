@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link, useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { fetchTiernamentsBySearchTerm } from '../apiRequests/tiernamentRequests';
 import { TiernamentTitleType } from '../util/types';
-import { Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
+import TiernamentCard from '../components/tiernament/TiernamentCard';
 
 export async function loader(params: { searchTerm: string }) {
   const res = await fetchTiernamentsBySearchTerm(params.searchTerm)
@@ -14,18 +15,19 @@ export default function SearchPage() {
   const { tiernaments, searchTerm } = useLoaderData() as { tiernaments: TiernamentTitleType[], searchTerm: string };
   return (
     <div>
-      <Typography variant={'h3'}>
-        Search Page for {searchTerm}
-      </Typography>
-      {
-        tiernaments.map((tiernament: TiernamentTitleType, index) => (
-          <Typography key={index}>
-            <Link to={`/tiernament/${tiernament.tiernamentId}`}>
-              {tiernament.name}
-            </Link>
-          </Typography>
-        ))
-      }
+      <Box>
+        <Typography variant={'h5'} sx={{mb: '5px', ml: '10px'}}>
+          Search for "{searchTerm}"
+        </Typography>
+        <Divider />
+      </Box>
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        {
+          tiernaments.map((tiernament: TiernamentTitleType, index) => (
+            <TiernamentCard key={index} tiernament={tiernament} />
+          ))
+        }
+      </div>
     </div>
   )
 }
