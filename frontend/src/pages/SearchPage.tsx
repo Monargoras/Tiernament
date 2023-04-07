@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, useLoaderData } from 'react-router-dom';
-import { fetchTiernaments } from '../apiRequests/tiernamentRequests';
+import { fetchTiernamentsBySearchTerm } from '../apiRequests/tiernamentRequests';
 import { TiernamentTitleType } from '../util/types';
 import { Typography } from '@mui/material';
 
 export async function loader(params: { searchTerm: string }) {
-  const res = await fetchTiernaments()
+  const res = await fetchTiernamentsBySearchTerm(params.searchTerm)
   const data = await res.json()
   return { tiernaments: data, searchTerm: params.searchTerm }
 }
