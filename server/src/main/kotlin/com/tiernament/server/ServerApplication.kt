@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
+
 @SpringBootApplication
 @RestController
-class ServerApplication { }
+class ServerApplication
 
 @Configuration
 class CorsConfiguration: WebMvcConfigurer {
