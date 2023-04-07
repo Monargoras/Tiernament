@@ -27,9 +27,16 @@ export default function SearchPage() {
       </Box>
       <Box sx={{display: 'flex', flexDirection: 'row'}}>
         {
+          tiernaments.length > 0 &&
           tiernaments.map((tiernament: TiernamentTitleType, index) => (
             <TiernamentCard key={index} tiernament={tiernament} />
           ))
+        }
+        {
+          tiernaments.length === 0 &&
+          <Typography variant={'h6'} sx={{mx: '10px'}}>
+            {t('noResults')}
+          </Typography>
         }
       </Box>
     </Box>

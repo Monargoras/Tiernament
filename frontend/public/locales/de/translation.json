@@ -31,5 +31,6 @@
   "round": "Runde",
   "search": "Suchen",
   "byAuthor": "von {{authorName}}",
-  "searchFor": "Suche für \"{{searchTerm}}\""
+  "searchFor": "Suche für \"{{searchTerm}}\"",
+  "noResults": "Keine Ergebnisse gefunden."
 }

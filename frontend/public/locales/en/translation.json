@@ -31,5 +31,6 @@
   "round": "Round",
   "search": "Search",
   "byAuthor": "by {{authorName}}",
-  "searchFor": "Search for \"{{searchTerm}}\""
+  "searchFor": "Search for \"{{searchTerm}}\"",
+  "noResults": "No results found."
 }
