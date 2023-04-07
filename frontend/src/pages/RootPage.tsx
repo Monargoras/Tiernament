@@ -84,7 +84,8 @@ export default function RootPage() {
   }
 
   const handleSearch = () => {
-    console.log(search)
+    navigate(`/tiernament/search/${search}`)
+    document.getElementById('searchField')?.blur()
   }
 
   return (
@@ -189,7 +190,7 @@ export default function RootPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 sx={{ width: '100%', maxWidth: '250px', my: 2 }}
-                id='search'
+                id='searchField'
                 label={t('search')}
                 variant='outlined'
                 size='small'
