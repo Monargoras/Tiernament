@@ -15,6 +15,7 @@ import { loader as profileLoader } from './pages/ProfilePage';
 import LoadingPage from './pages/LoadingPage';
 import SearchPage from './pages/SearchPage';
 import { loader as searchLoader } from './pages/SearchPage';
+import CreatePage from "./pages/CreatePage";
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -53,7 +54,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'tiernament/create',
-        element: <p>Create</p>,
+        element: <CreatePage />,
       },
       {
         path: 'tiernament/edit/:tiernamentId',

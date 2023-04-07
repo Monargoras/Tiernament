@@ -2,7 +2,7 @@ import React from 'react';
 import {
   AppBar, Toolbar, Box, Menu, MenuItem, Container, IconButton, Typography, Button, Tooltip, useTheme, styled, TextField, InputAdornment
 } from '@mui/material';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Menu as MenuIcon, Search } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { AppBarRoutes } from '../App';
@@ -40,6 +40,7 @@ export default function RootPage() {
 
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
   const theme = useTheme()
   const authState = useAppSelector(state => state.auth)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -246,7 +247,7 @@ export default function RootPage() {
               {
                 !authState.isAuthenticated &&
                 <Button
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate('/login', { state: { from: location.pathname } })}
                   sx={{ p: 0, color: theme.palette.text.primary, display: 'block' }}
                 >
                   {t('login')}
