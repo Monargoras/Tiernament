@@ -36,5 +36,6 @@
   "tiernamentName": "Tiernament Name",
   "tiernamentDescription": "Tiernament Beschreibung",
   "createTiernamentHeader": "Gib die Daten für dein Tiernament ein (Foto ist nicht Pflicht):",
-  "removeImage": "Bild entfernen"
+  "removeImage": "Bild entfernen",
+  "preview": "Vorschau"
 }

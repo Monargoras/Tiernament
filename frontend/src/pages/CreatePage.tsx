@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/hooks';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import {createDeleteImageRequest, createPostImageRequest} from '../apiRequests/imageRequests';
+import { createDeleteImageRequest, createPostImageRequest } from '../apiRequests/imageRequests';
 import ErrorSnackbar from '../components/general/ErrorSnackbar';
 import { AddAPhoto, DeleteForever } from '@mui/icons-material';
 import TiernamentCard from '../components/tiernament/TiernamentCard';
@@ -124,19 +124,28 @@ export default function CreatePage() {
           />
         </Box>
       </Paper>
-      <TiernamentCard
-        tiernament={{
-          tiernamentId: '1',
-          authorId: authState.user?.userId || '',
-          authorDisplayName: authState.user?.displayName || '',
-          authorAvatarId: authState.user?.avatarId || '',
-          name: tiernamentName,
-          imageId: imageId || '',
-          description: tiernamentDescription,
-          date: new Date(),
-        }}
-        dummy
-      />
+        <Box sx={{textAlign: 'center'}}>
+          <Typography
+            variant={'h6'}
+            sx={{mb: '5px'}}
+            color={'secondary'}
+          >
+            {t('preview')}
+          </Typography>
+          <TiernamentCard
+            tiernament={{
+              tiernamentId: '1',
+              authorId: authState.user?.userId || '',
+              authorDisplayName: authState.user?.displayName || '',
+              authorAvatarId: authState.user?.avatarId || '',
+              name: tiernamentName,
+              imageId: imageId || '',
+              description: tiernamentDescription,
+              date: new Date(),
+            }}
+            dummy
+          />
+        </Box>
       <ErrorSnackbar errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>
     </Box>
   )
