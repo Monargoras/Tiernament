@@ -84,8 +84,10 @@ export default function RootPage() {
   }
 
   const handleSearch = () => {
-    navigate(`/tiernament/search/${search}`)
-    document.getElementById('searchField')?.blur()
+    if(search.length > 0) {
+      navigate(`/tiernament/search/${search}`)
+      document.getElementById('searchField')?.blur()
+    }
   }
 
   return (
