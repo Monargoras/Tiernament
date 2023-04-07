@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import { getImageLink } from '../../apiRequests/imageRequests';
 import { useTranslation } from 'react-i18next';
-import CustomAvatar from "../profile/CustomAvatar";
+import CustomAvatar from '../profile/CustomAvatar';
 
 interface TiernamentCardProps {
   tiernament: TiernamentTitleType
+  dummy?: boolean
 }
 
 export default function TiernamentCard(props: TiernamentCardProps) {
@@ -18,13 +19,15 @@ export default function TiernamentCard(props: TiernamentCardProps) {
   const styles = {
     card: {
       cursor: 'pointer',
-      margin: '10px',
+      margin: props.dummy ? '0px' : '10px',
       width: 250,
     }
   }
 
   const handleNavigate = () => {
-    navigate(`/tiernament/${props.tiernament.tiernamentId}`)
+    if(!props.dummy) {
+      navigate(`/tiernament/${props.tiernament.tiernamentId}`)
+    }
   }
 
   return (
