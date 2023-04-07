@@ -17,17 +17,21 @@ data class Tiernament (
     //TODO add field presenting history of previous matches, e.g. the best entry in previous playthroughs
 )
 
-data class TiernamentTitleDTO (
+data class TiernamentTitleDTO(
     val tiernamentId: String,
     val authorId: String,
+    val authorDisplayName: String,
+    val authorAvatarId: String,
     val name: String,
     val imageId: String,
     val description: String,
     val date: Date,
 ) {
-    constructor(tiernament: Tiernament) : this(
+    constructor(tiernament: Tiernament, displayName: String, authorAvatarId: String) : this(
         tiernamentId = tiernament.tiernamentId,
         authorId = tiernament.authorId,
+        authorDisplayName = displayName,
+        authorAvatarId = authorAvatarId,
         name = tiernament.name,
         imageId = tiernament.imageId,
         description = tiernament.description,

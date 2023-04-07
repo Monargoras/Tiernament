@@ -19,21 +19,33 @@ interface TiernamentRepo : MongoRepository<Tiernament, String> {
 }
 
 @Service
-class TiernamentService(@Autowired val repo: TiernamentRepo) {
+class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val userRepo: UserRepo) {
     fun getTiernamentCount(): Int {
         return repo.findAll().count()
     }
 
     fun getTiernaments(): List<TiernamentTitleDTO> {
-        return repo.findAll().map { TiernamentTitleDTO(it) }
+        return repo.findAll().map { TiernamentTitleDTO(
+            it,
+            userRepo.findByUserId(it.authorId)?.displayName ?: "",
+            userRepo.findByUserId(it.authorId)?.avatarId ?: ""
+        ) }
     }
 
     fun getTiernamentsByAuthorId(id: String): List<TiernamentTitleDTO> {
-        return repo.findByAuthorId(id).map { TiernamentTitleDTO(it) }
+        return repo.findByAuthorId(id).map { TiernamentTitleDTO(
+            it,
+            userRepo.findByUserId(it.authorId)?.displayName ?: "",
+            userRepo.findByUserId(it.authorId)?.avatarId ?: ""
+        ) }
     }
 
     fun getTiernamentsBySearchTerm(searchTerm: String): List<TiernamentTitleDTO> {
-        return repo.findByNameContainingIgnoreCase(searchTerm).map { TiernamentTitleDTO(it) }
+        return repo.findByNameContainingIgnoreCase(searchTerm).map { TiernamentTitleDTO(
+            it,
+            userRepo.findByUserId(it.authorId)?.displayName ?: "",
+            userRepo.findByUserId(it.authorId)?.avatarId ?: ""
+        ) }
     }
 
     fun getTiernamentById(id: String): Tiernament? {

@@ -1,6 +1,8 @@
 export type TiernamentTitleType = {
   tiernamentId: string,
   authorId: string,
+  authorDisplayName: string,
+  authorAvatarId: string,
   name: string,
   imageId: string,
   description: string,

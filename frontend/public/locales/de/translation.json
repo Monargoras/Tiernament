@@ -29,5 +29,6 @@
   "wins": "Siege",
   "losses": "Niederlagen",
   "round": "Runde",
-  "search": "Suchen"
+  "search": "Suchen",
+  "byAuthor": "von {{authorName}}"
 }
