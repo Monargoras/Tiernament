@@ -36,7 +36,10 @@
   "tiernamentName": "Tiernament name",
   "tiernamentDescription": "Tiernament description",
   "createTiernamentHeader": "Enter your Tiernaments data (Photo is not mandatory):",
-  "createTiernamentEntries": "Create Tiernament entries:",
+  "createTiernamentEntries": "Create Tiernament entries ({{count}}/32):",
   "removeImage": "Remove image",
-  "preview": "Preview"
+  "preview": "Preview",
+  "entryName": "Name",
+  "addEntry": "Add entry",
+  "removeEntry": "Remove entry"
 }

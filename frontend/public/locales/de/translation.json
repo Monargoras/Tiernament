@@ -36,7 +36,10 @@
   "tiernamentName": "Tiernament Name",
   "tiernamentDescription": "Tiernament Beschreibung",
   "createTiernamentHeader": "Gib die Daten für dein Tiernament ein (Foto ist nicht Pflicht):",
-  "createTiernamentEntries": "Tiernamentteilnehmer erstellen:",
+  "createTiernamentEntries": "Tiernamentteilnehmer erstellen ({{count}}/32):",
   "removeImage": "Bild entfernen",
-  "preview": "Vorschau"
+  "preview": "Vorschau",
+  "entryName": "Name",
+  "addEntry": "Teilnehmer hinzufügen",
+  "removeEntry": "Teilnehmer entfernen"
 }
