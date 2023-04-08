@@ -6,6 +6,7 @@ interface UserAvatarProps {
   userName: string,
   imageId: string,
   size?: {height: number, width: number},
+  dummy?: boolean
 }
 
 export default function CustomAvatar(props: UserAvatarProps) {
@@ -14,7 +15,7 @@ export default function CustomAvatar(props: UserAvatarProps) {
     return (
       <Avatar
         alt={props.userName}
-        src={getImageLink(props.imageId)}
+        src={props.dummy ? props.imageId : getImageLink(props.imageId)}
         sx={props.size && {height: props.size.height, width: props.size.width}}
       />
     )
