@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAppSelector } from '../../redux/hooks';
-import { Box, Button, IconButton, Grid, Paper, TextField, Typography, Tooltip, Divider } from '@mui/material';
+import { Box, Button, IconButton, Grid, Paper, TextField, Typography, Tooltip, Divider, Badge } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { createPostImageRequest } from '../../apiRequests/imageRequests';
 import ErrorSnackbar from '../../components/general/ErrorSnackbar';
-import { Add, AddAPhoto, DeleteForever } from '@mui/icons-material';
+import { Add, AddAPhoto, DeleteForever, Edit } from '@mui/icons-material';
 import TiernamentCard from '../../components/tiernament/TiernamentCard';
 import { TiernamentEntryType } from '../../util/types';
 import CustomAvatar from '../../components/profile/CustomAvatar';
@@ -18,7 +18,7 @@ export default function Editor() {
   const [tiernamentName, setTiernamentName] = React.useState('')
   const [tiernamentDescription, setTiernamentDescription] = React.useState('')
   const [errorMessage, setErrorMessage] = React.useState('')
-  const [titleImage, setTitleImage] = React.useState<{image: File, url: string} | undefined>(undefined)
+  const [coverImage, setCoverImage] = React.useState<{image: File, url: string} | undefined>(undefined)
   const [entries, setEntries] = React.useState<TiernamentEntryType[]>([])
   const [entryImages, setEntryImages] = React.useState<{[key: string]: {image: File, url: string}}>({})
   const [entryName, setEntryName] = React.useState('')
@@ -54,18 +54,25 @@ export default function Editor() {
   }
 
   const handleRemoveImage = (entryId?: string) => {
-    if(!entryId && titleImage) {
-      setTitleImage(undefined)
+    if(!entryId && coverImage) {
+      setCoverImage(undefined)
     } else if(entryId && entryImages[entryId]) {
       const newEntryImages = {...entryImages}
       delete newEntryImages[entryId]
       setEntryImages(newEntryImages)
+      const newEntries = entries.map(entry => {
+        if(entry.entryId === entryId) {
+          return {...entry, imageId: ''}
+        }
+        return entry
+      })
+      setEntries(newEntries)
     }
   }
 
   const handleTitleImagePost = () => {
-    if(titleImage?.image) {
-      createPostImageRequest(titleImage.image)
+    if(coverImage?.image) {
+      createPostImageRequest(coverImage.image)
         .then((res) => {
           if (res.ok) {
             // TODO handle success
@@ -81,10 +88,24 @@ export default function Editor() {
     }
   }
 
-  const handleImageChange = (imageFile: File) => {
+  const handleCoverImageChange = (imageFile: File) => {
     if(imageFile) {
       const imageUrl = URL.createObjectURL(imageFile)
-      setTitleImage({image: imageFile, url: imageUrl})
+      setCoverImage({image: imageFile, url: imageUrl})
+    }
+  }
+
+  const handleEntryImageChange = (imageFile: File, entryId: string) => {
+    if(imageFile) {
+      const imageUrl = URL.createObjectURL(imageFile)
+      setEntryImages({...entryImages, [entryId]: {image: imageFile, url: imageUrl}})
+      const newEntries = entries.map(entry => {
+        if(entry.entryId === entryId) {
+          return {...entry, imageId: imageUrl}
+        }
+        return entry
+      })
+      setEntries(newEntries)
     }
   }
 
@@ -93,6 +114,11 @@ export default function Editor() {
       setEntries([...entries, {entryId: uuidv4(), name: entryName, imageId: '', placementHistory: []}])
       setEntryName('')
     }
+  }
+
+  const handleDeleteEntry = (entryId: string) => {
+    handleRemoveImage(entryId)
+    setEntries(entries.filter(entry => entry.entryId !== entryId))
   }
 
   return (
@@ -124,7 +150,7 @@ export default function Editor() {
                     onChange={
                       event => {
                         if(event.target.files) {
-                          handleImageChange(event.target.files![0])
+                          handleCoverImageChange(event.target.files![0])
                         }
                       }
                     }
@@ -164,7 +190,7 @@ export default function Editor() {
                 authorDisplayName: authState.user?.displayName || '',
                 authorAvatarId: authState.user?.avatarId || '',
                 name: tiernamentName,
-                imageId: titleImage?.url || '',
+                imageId: coverImage?.url || '',
                 description: tiernamentDescription,
                 date: new Date(),
               }}
@@ -204,7 +230,33 @@ export default function Editor() {
               {
                 entries.map((entry, index) => (
                   <Paper key={index} sx={styles.entryBox}>
-                    <CustomAvatar userName={entry.name} imageId={entry.imageId} size={{width: 25, height: 25}} />
+                    <Box sx={{m: '5px', mr: '10px'}}>
+                      <Badge
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        badgeContent={
+                          <Edit fontSize={'small'} color={'primary'}/>
+                        }
+                      >
+                        <Tooltip title={t('changeImage')}>
+                          <IconButton sx={{p: 0}} component={'label'}>
+                            <CustomAvatar userName={entry.name} imageId={entry.imageId} size={{width: 25, height: 25}} dummy />
+                            <input
+                              type={'file'}
+                              accept={'image/*'}
+                              multiple={false}
+                              hidden
+                              onChange={
+                                event => {
+                                  if(event.target.files) {
+                                    handleEntryImageChange(event.target.files![0], entry.entryId)
+                                  }
+                                }
+                              }
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </Badge>
+                    </Box>
                     <TextField
                       id={`entryName${index}`}
                       variant={'standard'}
@@ -216,13 +268,7 @@ export default function Editor() {
                         setEntries(newEntries)
                       }}
                     />
-                    <IconButton
-                      onClick={() => {
-                        const newEntries = [...entries]
-                        newEntries.splice(index, 1)
-                        setEntries(newEntries)
-                      }}
-                    >
+                    <IconButton onClick={() => handleDeleteEntry(entry.entryId)}>
                       <DeleteForever fontSize={'small'} color={'primary'} />
                     </IconButton>
                   </Paper>
