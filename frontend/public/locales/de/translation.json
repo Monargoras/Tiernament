@@ -41,5 +41,6 @@
   "preview": "Vorschau",
   "entryName": "Name",
   "addEntry": "Teilnehmer hinzufügen",
-  "removeEntry": "Teilnehmer entfernen"
+  "removeEntry": "Teilnehmer entfernen",
+  "entriesFromImages": "Teilnehmer aus Bilddateien erstellen"
 }

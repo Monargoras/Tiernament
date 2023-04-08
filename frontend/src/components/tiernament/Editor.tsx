@@ -109,6 +109,24 @@ export default function Editor() {
     }
   }
 
+  const handleEntryFromImage = (imageFiles: FileList) => {
+    if(imageFiles) {
+      const newEntryImages = {...entryImages}
+      const newEntries = [...entries]
+      for(let i = 0; i < imageFiles.length; i++) {
+        const imageFile = imageFiles[i]
+        const imageUrl = URL.createObjectURL(imageFile)
+        const newEntryId = uuidv4()
+        //remove everything behind last . in filename
+        const name = imageFile.name.split('.').slice(0, -1).join('.')
+        newEntryImages[newEntryId] = {image: imageFile, url: imageUrl}
+        newEntries.push({entryId: newEntryId, name: name, imageId: imageUrl, placementHistory: []})
+      }
+      setEntryImages(newEntryImages)
+      setEntries(newEntries)
+    }
+  }
+
   const handleAddEntry = () => {
     if(entryName) {
       setEntries([...entries, {entryId: uuidv4(), name: entryName, imageId: '', placementHistory: []}])
@@ -224,6 +242,23 @@ export default function Editor() {
                   <Add fontSize={'large'} color={'primary'} />
                 </IconButton>
               </Tooltip>
+              <Divider sx={{ml: '5px', mr: '10px'}} flexItem orientation={'vertical'} />
+              <Button component={'label'} variant={'contained'}>
+                {t('entriesFromImages')}
+                <input
+                  type={'file'}
+                  accept={'image/*'}
+                  multiple
+                  hidden
+                  onChange={
+                    event => {
+                      if(event.target.files) {
+                        handleEntryFromImage(event.target.files)
+                      }
+                    }
+                  }
+                />
+              </Button>
             </Box>
             <Divider sx={{my: '10px'}} />
             <Box sx={{...styles.flexRow, pl: '5px', flexWrap: 'wrap'}}>

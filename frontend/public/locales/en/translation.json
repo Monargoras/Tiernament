@@ -41,5 +41,6 @@
   "preview": "Preview",
   "entryName": "Name",
   "addEntry": "Add entry",
-  "removeEntry": "Remove entry"
+  "removeEntry": "Remove entry",
+  "entriesFromImages": "Create entries from image files"
 }
