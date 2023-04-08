@@ -66,14 +66,14 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
       <Grid item xs={6}>
         <Box sx={styles.entryBoxA} onClick={() => handleMatchUpUpdate('A')}>
           <Grid container spacing={0}>
-            <Grid item xs={6} sx={styles.alignRight}>
+            <Grid item xs={9} sx={styles.alignRight}>
               <Typography
                 fontWeight={props.matchUp.winner === 'A' ? 'bold' : 'normal'}
               >
                 {props.entryA ? props.entryA.name : '-'}
               </Typography>
             </Grid>
-            <Grid item xs={6} sx={styles.alignLeft}>
+            <Grid item xs={3} sx={styles.alignLeft}>
               <CustomAvatar userName={props.entryA ? props.entryA.name : '-'} imageId={props.entryA ? props.entryA.imageId : ''} size={{height: 25, width: 25}} />
             </Grid>
           </Grid>
@@ -82,10 +82,10 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
       <Grid item xs={6} sx={styles.divider}>
         <Box sx={styles.entryBoxB} onClick={() => handleMatchUpUpdate('B')}>
           <Grid container spacing={0}>
-            <Grid item xs={6} sx={styles.alignRight}>
+            <Grid item xs={3} sx={styles.alignRight}>
               <CustomAvatar userName={props.entryB ? props.entryB.name : '-'} imageId={props.entryB ? props.entryB.imageId : ''} size={{height: 25, width: 25}} />
             </Grid>
-            <Grid item xs={6} sx={styles.alignLeft}>
+            <Grid item xs={9} sx={styles.alignLeft}>
               <Typography
                 fontWeight={props.matchUp.winner === 'B' ? 'bold' : 'normal'}
               >

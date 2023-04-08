@@ -21,7 +21,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
 
   const styles = {
     bracketBox: {
-      minWidth: '25dvw',
+      minWidth: '30dvw',
       borderStyle: 'solid',
       borderColor: theme.palette.text.primary,
       borderWidth: '1px 1px 1px 1px',
