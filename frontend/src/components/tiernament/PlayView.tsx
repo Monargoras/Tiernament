@@ -49,7 +49,7 @@ function createTiernamentRun (tiernament: TiernamentType, needTwoStages: boolean
   const entryIds = tiernament.entries.map(entry => entry.entryId)
   // fill entryIds until length is a power of 2
   while (entryIds.length < 16 || entryIds.length > 16 && entryIds.length < 32) {
-    const defaultId = (Object.keys(newRun.entries).length + 1).toString()
+    const defaultId = uuidv4()
     entryIds.push(defaultId)
     newRun.entries[defaultId] = {
       entryId: defaultId,
