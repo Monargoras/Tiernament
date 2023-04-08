@@ -36,7 +36,9 @@ export default function TiernamentCard(props: TiernamentCardProps) {
         <CardMedia
           component={'img'}
           height={'150'}
-          image={props.tiernament.imageId !== '' ? getImageLink(props.tiernament.imageId) : '/tiernamentIcon.png'}
+          image={props.tiernament.imageId !== '' && !props.dummy ? getImageLink(props.tiernament.imageId) :
+            props.tiernament.imageId !== '' && props.dummy ? props.tiernament.imageId : '/tiernamentIcon.png'
+          }
           alt={props.tiernament.name}
           sx={{objectFit: 'contain'}}
         />
