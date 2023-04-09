@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { createPatchUserRequest } from '../../apiRequests/userRequests';
 import { Badge, Box, IconButton, Paper, TextField, Tooltip, Typography } from '@mui/material';
 import { Check, Edit, Undo } from '@mui/icons-material';
-import { generalStyles } from '../../util/styles';
 import { createPostImageRequest } from '../../apiRequests/imageRequests';
 import CustomAvatar from '../general/CustomAvatar';
 import ErrorSnackbar from '../general/ErrorSnackbar';
