@@ -37,8 +37,12 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
         return repo.findAll().map { getTiernamentTitleDTO(it) }
     }
 
-    fun getTiernamentsByAuthorId(id: String): List<TiernamentTitleDTO> {
-        return repo.findByAuthorId(id).map { getTiernamentTitleDTO(it) }
+    fun getTiernamentsByAuthorName(name: String): List<TiernamentTitleDTO> {
+        // get author name from user id
+        userRepo.findByName(name)?.let { user ->
+            return repo.findByAuthorId(user.userId).map { getTiernamentTitleDTO(it) }
+        }
+        return listOf()
     }
 
     fun getTiernamentsBySearchTerm(searchTerm: String): List<TiernamentTitleDTO> {
@@ -96,9 +100,9 @@ class PublicTiernamentApiController(@Autowired val service: TiernamentService) {
         return service.getTiernaments()
     }
 
-    @GetMapping("/author/{id}")
-    fun getTiernamentsByAuthorId(@PathVariable("id") id: String): List<TiernamentTitleDTO> {
-        return service.getTiernamentsByAuthorId(id)
+    @GetMapping("/author/{name}")
+    fun getTiernamentsByAuthorName(@PathVariable("name") name: String): List<TiernamentTitleDTO> {
+        return service.getTiernamentsByAuthorName(name)
     }
 
     @GetMapping("/search/{searchTerm}")
