@@ -10,11 +10,13 @@ import { TiernamentDTO, TiernamentEntryType } from '../../util/types';
 import CustomAvatar from '../../components/profile/CustomAvatar';
 import { v4 as uuidv4 } from 'uuid';
 import { createTiernamentRequest } from '../../apiRequests/tiernamentRequests';
+import { useNavigate } from 'react-router-dom';
 
 export default function Editor() {
 
   const authState = useAppSelector(state => state.auth)
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const [tiernamentName, setTiernamentName] = React.useState('')
   const [tiernamentDescription, setTiernamentDescription] = React.useState('')
@@ -23,6 +25,9 @@ export default function Editor() {
   const [entries, setEntries] = React.useState<TiernamentEntryType[]>([])
   const [entryImages, setEntryImages] = React.useState<{[key: string]: {image: File, url: string}}>({})
   const [entryName, setEntryName] = React.useState('')
+  const [nameError, setNameError] = React.useState(false)
+  const [descriptionError, setDescriptionError] = React.useState(false)
+  const [entryError, setEntryError] = React.useState(false)
 
   const styles = {
     paper: {
@@ -39,6 +44,14 @@ export default function Editor() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+    },
+    createEntryContainer: {
+      padding: '10px',
+      marginTop: '10px',
+      borderStyle: 'solid',
+      borderWidth: '1px',
+      borderColor: entryError ? 'error.main' : 'transparent',
+      borderRadius: '5px',
     },
     entryBox: {
       display: 'flex',
@@ -94,7 +107,36 @@ export default function Editor() {
     }
   }
 
+  const validateEntryNames = () => {
+    //check if any entry has empty name
+    let hasEmptyName = false
+    entries.forEach(entry => {
+      if(entry.name.length === 0) {
+        setEntryError(true)
+        hasEmptyName = true
+      }
+    })
+    return hasEmptyName
+  }
+
+  const validateInput = () => {
+    if(tiernamentName.length === 0) {
+      setNameError(true)
+    }
+    if(tiernamentDescription.length === 0) {
+      setDescriptionError(true)
+    }
+    if(entries.length === 0) {
+      setEntryError(true)
+    }
+    const hasEmptyName = validateEntryNames()
+    return !(tiernamentName.length === 0 || tiernamentDescription.length === 0 || entries.length === 0 || hasEmptyName)
+  }
+
   const handleCreateTiernament = async () => {
+    if(!validateInput()) {
+      return
+    }
     // upload cover image
     const coverImageId = await handleCoverImagePost()
     // upload entry images
@@ -135,8 +177,10 @@ export default function Editor() {
     createTiernamentRequest(newTiernament)
       .then(r => {
           if (r.ok) {
-            r.json().then(data => {
-              console.log(data)
+            r.json().then(() => {
+              if(authState.user) {
+                navigate(`/profile/${authState.user.name}`)
+              }
             })
           }
         }
@@ -164,6 +208,15 @@ export default function Editor() {
     }
   }
 
+  const handleEntryNameChange = (index: number, newName: string) => {
+    const newEntries = [...entries]
+    newEntries[index].name = newName
+    if(entryError && newName.length > 0) {
+      setEntryError(validateEntryNames)
+    }
+    setEntries(newEntries)
+  }
+
   const handleEntryFromImage = (imageFiles: FileList) => {
     if(imageFiles) {
       const newEntryImages = {...entryImages}
@@ -177,6 +230,9 @@ export default function Editor() {
         newEntryImages[newEntryId] = {image: imageFile, url: imageUrl}
         newEntries.push({entryId: newEntryId, name: name, imageId: imageUrl, placementHistory: []})
       }
+      if(entryError && newEntries.length > 7) {
+        setEntryError(false)
+      }
       setEntryImages(newEntryImages)
       setEntries(newEntries)
     }
@@ -184,6 +240,9 @@ export default function Editor() {
 
   const handleAddEntry = () => {
     if(entryName) {
+      if(entryError && entries.length > 6) {
+        setEntryError(false)
+      }
       setEntries([...entries, {entryId: uuidv4(), name: entryName, imageId: '', placementHistory: []}])
       setEntryName('')
     }
@@ -210,7 +269,11 @@ export default function Editor() {
                   variant={'outlined'}
                   sx={styles.textField}
                   value={tiernamentName}
-                  onChange={(event) => setTiernamentName(event.target.value)}
+                  error={nameError}
+                  onChange={(event) => {
+                    setTiernamentName(event.target.value)
+                    setNameError(false)
+                  }}
                 />
                 <Button sx={{mx: 'auto', mt: '10px', width:'95%'}} component={'label'} variant={'contained'}>
                   {t('changeImage')}
@@ -240,7 +303,11 @@ export default function Editor() {
                 variant={'outlined'}
                 sx={styles.textField}
                 value={tiernamentDescription}
-                onChange={(event) => setTiernamentDescription(event.target.value)}
+                error={descriptionError}
+                onChange={(event) => {
+                  setTiernamentDescription(event.target.value)
+                  setDescriptionError(false)
+                }}
                 multiline
                 maxRows={10}
               />
@@ -272,7 +339,7 @@ export default function Editor() {
           </Box>
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-          <Paper sx={{...styles.paper, marginTop: '10px'}}>
+          <Paper sx={styles.createEntryContainer}>
             <Tooltip title={t('createEntriesTooltip')} placement={'top-start'}>
               <Typography variant={'h6'} sx={{mb: '10px', ml: '5px'}}>
                 {t('createTiernamentEntries', {count: entries.length})}
@@ -354,10 +421,9 @@ export default function Editor() {
                       variant={'standard'}
                       sx={styles.textField}
                       value={entry.name}
+                      error={entryError && entry.name.length === 0}
                       onChange={(event) => {
-                        const newEntries = [...entries]
-                        newEntries[index].name = event.target.value
-                        setEntries(newEntries)
+                        handleEntryNameChange(index, event.target.value)
                       }}
                     />
                     <IconButton onClick={() => handleDeleteEntry(entry.entryId)}>
