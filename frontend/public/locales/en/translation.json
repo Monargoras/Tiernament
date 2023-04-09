@@ -44,5 +44,6 @@
   "removeEntry": "Remove entry",
   "entriesFromImages": "Create entries from image files",
   "createEntriesTooltip": "Create up to 32 entries, at least 8. Ideally either 16 or 32, but we will include dummy entries to fill up to the next higher power of 2 to ensure a good Tiernament structure. These dummy entries won't impact the Tiernament results.",
-  "createTiernament": "Create Tiernament"
+  "createTiernament": "Create Tiernament",
+  "profileTiernaments": "Created Tiernaments"
 }

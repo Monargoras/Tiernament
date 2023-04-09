@@ -44,5 +44,6 @@
   "removeEntry": "Teilnehmer entfernen",
   "entriesFromImages": "Teilnehmer aus Bilddateien erstellen",
   "createEntriesTooltip": "Erstellen Sie bis zu 32 Einträge, mindestens 8. Idealerweise entweder 16 oder 32, aber wir werden Dummy-Einträge hinzufügen, um bis zur nächsten höheren Zweierpotenz aufzufüllen, um eine gute Tiernamentstruktur zu gewährleisten. Diese Dummys werden den Ausgang des Tiernaments nicht beeinflussen.",
-  "createTiernament": "Tiernament erstellen"
+  "createTiernament": "Tiernament erstellen",
+  "profileTiernaments": "Erstellte Tiernaments"
 }
