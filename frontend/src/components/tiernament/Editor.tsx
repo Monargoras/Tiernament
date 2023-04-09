@@ -6,9 +6,10 @@ import { createPostImageRequest } from '../../apiRequests/imageRequests';
 import ErrorSnackbar from '../../components/general/ErrorSnackbar';
 import { Add, AddAPhoto, DeleteForever, Edit } from '@mui/icons-material';
 import TiernamentCard from '../../components/tiernament/TiernamentCard';
-import { TiernamentEntryType } from '../../util/types';
+import { TiernamentDTO, TiernamentEntryType } from '../../util/types';
 import CustomAvatar from '../../components/profile/CustomAvatar';
 import { v4 as uuidv4 } from 'uuid';
+import { createTiernamentRequest } from '../../apiRequests/tiernamentRequests';
 
 export default function Editor() {
 
@@ -70,12 +71,14 @@ export default function Editor() {
     }
   }
 
-  const handleTitleImagePost = () => {
-    if(coverImage?.image) {
-      createPostImageRequest(coverImage.image)
+  const handleCoverImagePost = () => {
+    if (coverImage?.image) {
+      return createPostImageRequest(coverImage.image)
         .then((res) => {
           if (res.ok) {
-            // TODO handle success
+            return res.json().then((data) => {
+              return data.id satisfies string
+            }) satisfies Promise<string>
           } else {
             if (res.status === 413) {
               res.json().then((data) => {
@@ -83,9 +86,61 @@ export default function Editor() {
                 handleRemoveImage()
               })
             }
+            return ''
           }
         })
+    } else {
+      return ''
     }
+  }
+
+  const handleCreateTiernament = async () => {
+    // upload cover image
+    const coverImageId = await handleCoverImagePost()
+    // upload entry images
+    const newEntries = [...entries]
+    const promiseArray: Promise<void | Response>[] = []
+    let updatedLinks = 0
+    entries.forEach(entry => {
+      if(entryImages[entry.entryId]?.image) {
+        promiseArray.push(createPostImageRequest(entryImages[entry.entryId].image)
+          .then((res) => {
+            if(res.ok) {
+              return res.json().then((data) => {
+                const newEntry = newEntries.find(e => e.entryId === entry.entryId)
+                if(newEntry) {
+                  newEntry.imageId = data.id
+                  updatedLinks++
+                }
+              })
+            } else {
+              if(res.status === 413) {
+                return res.json().then((data) => {
+                  setErrorMessage(data.message)
+                  handleRemoveImage(entry.entryId)
+                })
+              }
+            }
+          })
+        )
+      }
+    })
+    await Promise.all(promiseArray)
+    const newTiernament: TiernamentDTO = {
+      name: tiernamentName,
+      description: tiernamentDescription,
+      imageId: coverImageId || '',
+      entries: newEntries
+    }
+    createTiernamentRequest(newTiernament)
+      .then(r => {
+          if (r.ok) {
+            r.json().then(data => {
+              console.log(data)
+            })
+          }
+        }
+      )
   }
 
   const handleCoverImageChange = (imageFile: File) => {
@@ -218,9 +273,11 @@ export default function Editor() {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <Paper sx={{...styles.paper, marginTop: '10px'}}>
-            <Typography variant={'h6'} sx={{mb: '10px', ml: '5px'}}>
-              {t('createTiernamentEntries', {count: entries.length})}
-            </Typography>
+            <Tooltip title={t('createEntriesTooltip')} placement={'top-start'}>
+              <Typography variant={'h6'} sx={{mb: '10px', ml: '5px'}}>
+                {t('createTiernamentEntries', {count: entries.length})}
+              </Typography>
+            </Tooltip>
             <Box sx={{...styles.flexRow}}>
               <TextField
                 id={'entryName'}
@@ -313,6 +370,16 @@ export default function Editor() {
           </Paper>
         </Grid>
       </Grid>
+      <Box sx={{display: 'flex', justifyContent: 'center'}}>
+        <Button
+          sx={{mt: '10px'}}
+          variant={'contained'}
+          color={'primary'}
+          onClick={handleCreateTiernament}
+        >
+          {t('createTiernament')}
+        </Button>
+      </Box>
       <ErrorSnackbar errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>
     </Box>
   )
