@@ -18,6 +18,13 @@ interface ProfileHeaderProps {
 
 export default function ProfileHeader(props: ProfileHeaderProps) {
 
+  const styles = {
+    container: {
+      display: 'flex',
+      flexDirection: 'row',
+    }
+  }
+
   const authState = useAppSelector(state => state.auth)
   const { t } = useTranslation()
   const [name, setName] = React.useState(props.user.displayName)
@@ -80,7 +87,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
       <Paper sx={{padding: '20px', paddingY: '25px', margin: 'auto'}} elevation={4}>
         {
           props.privateView &&
-            <Box sx={generalStyles.flexWrapBox}>
+            <Box sx={styles.container}>
                 <Badge
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
@@ -150,7 +157,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
         }
         {
           !props.privateView &&
-            <Box sx={generalStyles.flexWrapBox}>
+            <Box sx={styles.container}>
                 <CustomAvatar userName={props.user.displayName} imageId={props.user.avatarId}/>
                 <Typography variant={'h4'} sx={{marginLeft: '20px'}}>
                   {props.user.displayName}
