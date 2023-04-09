@@ -3,7 +3,8 @@ import { useLoaderData } from 'react-router-dom';
 import { fetchTiernamentById } from '../../apiRequests/tiernamentRequests';
 import { TiernamentType } from '../../util/types';
 import PlayView from './PlayView';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
+import CustomAvatar from '../general/CustomAvatar';
 
 export async function loader(params: { tiernamentId: string }) {
   const res = await fetchTiernamentById(params.tiernamentId)
@@ -11,6 +12,21 @@ export async function loader(params: { tiernamentId: string }) {
 }
 
 export default function Tiernament() {
+
+  const styles = {
+    entryBox: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderStyle: 'solid',
+      borderWidth: '1px',
+      borderColor: 'primary.main',
+      borderRadius: '5px',
+      p: '5px',
+      mr: '5px',
+      mb: '5px',
+    },
+  }
 
   const tiernament = useLoaderData() as TiernamentType
 
@@ -21,16 +37,22 @@ export default function Tiernament() {
   }
 
   return (
-    <div>
+    <Box>
       <Typography variant={'h5'}>{tiernament.name}</Typography>
       {
         !playView &&
         <>
-          <Box sx={{display: 'flex', flexDirection: 'row'}}>
-            <Typography variant={'body1'}>Entries:&nbsp;&nbsp;</Typography>
+          <Box sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
             {
-              tiernament.entries.map(entry => {
-                return <Typography key={entry.entryId} variant={'body1'}>{entry.name}&nbsp;&nbsp;</Typography>
+              tiernament.entries.map((entry, index) => {
+                return (
+                  <Paper key={index} sx={styles.entryBox}>
+                    <Box sx={{m: '5px', mr: '10px'}}>
+                      <CustomAvatar userName={entry.name} imageId={entry.imageId} size={{width: 25, height: 25}} />
+                    </Box>
+                    <Typography variant={'body1'}>{entry.name}</Typography>
+                  </Paper>
+                )
               })
             }
           </Box>
@@ -43,6 +65,6 @@ export default function Tiernament() {
         playView &&
         <PlayView tiernament={tiernament} />
       }
-    </div>
+    </Box>
   )
 }
