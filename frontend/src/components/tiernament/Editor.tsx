@@ -7,7 +7,7 @@ import ErrorSnackbar from '../../components/general/ErrorSnackbar';
 import { Add, AddAPhoto, DeleteForever, Edit } from '@mui/icons-material';
 import TiernamentCard from '../../components/tiernament/TiernamentCard';
 import { TiernamentDTO, TiernamentEntryType } from '../../util/types';
-import CustomAvatar from '../../components/profile/CustomAvatar';
+import CustomAvatar from '../general/CustomAvatar';
 import { v4 as uuidv4 } from 'uuid';
 import { createTiernamentRequest } from '../../apiRequests/tiernamentRequests';
 import { useNavigate } from 'react-router-dom';

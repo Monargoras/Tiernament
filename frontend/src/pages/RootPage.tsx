@@ -10,7 +10,7 @@ import LanguageSelector from '../components/general/LanguageSelector';
 import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
 import { createLogoutUserRequest } from '../apiRequests/userRequests';
-import CustomAvatar from '../components/profile/CustomAvatar';
+import CustomAvatar from '../components/general/CustomAvatar';
 
 
 const SearchField = styled(TextField)(props => ({

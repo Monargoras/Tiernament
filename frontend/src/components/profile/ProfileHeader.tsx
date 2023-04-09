@@ -7,7 +7,7 @@ import { Badge, Box, IconButton, Paper, TextField, Tooltip, Typography } from '@
 import { Check, Edit, Undo } from '@mui/icons-material';
 import { generalStyles } from '../../util/styles';
 import { createPostImageRequest } from '../../apiRequests/imageRequests';
-import CustomAvatar from './CustomAvatar';
+import CustomAvatar from '../general/CustomAvatar';
 import ErrorSnackbar from '../general/ErrorSnackbar';
 
 interface ProfileHeaderProps {

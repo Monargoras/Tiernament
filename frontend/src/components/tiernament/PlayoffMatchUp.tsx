@@ -1,7 +1,7 @@
 import React from 'react';
 import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
 import { Box, Divider, Paper, Typography, useTheme } from '@mui/material';
-import CustomAvatar from '../profile/CustomAvatar';
+import CustomAvatar from '../general/CustomAvatar';
 
 interface PlayoffMatchUpProps {
   id: string,

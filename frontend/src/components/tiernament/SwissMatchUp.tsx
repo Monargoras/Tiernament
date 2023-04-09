@@ -1,7 +1,7 @@
 import React from 'react';
 import {MatchUpType, TiernamentRunEntryType} from '../../util/types';
 import { alpha, Box, Grid, Typography, useTheme } from '@mui/material';
-import CustomAvatar from '../profile/CustomAvatar';
+import CustomAvatar from '../general/CustomAvatar';
 
 
 interface SwissMatchUpProps {

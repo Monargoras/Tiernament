@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import { getImageLink } from '../../apiRequests/imageRequests';
 import { useTranslation } from 'react-i18next';
-import CustomAvatar from '../profile/CustomAvatar';
+import CustomAvatar from '../general/CustomAvatar';
 
 interface TiernamentCardProps {
   tiernament: TiernamentTitleType
