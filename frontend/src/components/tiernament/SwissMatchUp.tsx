@@ -17,12 +17,14 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
 
   const styles = {
     entryBoxA: {
+      height: '100%',
       padding: '5px',
       backgroundColor: props.matchUp.winner === 'A' ? alpha(theme.palette.tertiary.main, 0.5) :
         props.matchUp.winner === 'B' ? alpha(theme.palette.error.main, 0.5) : theme.palette.background.paper,
       cursor: props.matchUp.winner === undefined ? 'pointer' : 'default',
     },
     entryBoxB: {
+      height: '100%',
       padding: '5px',
       backgroundColor: props.matchUp.winner === 'B' ? alpha(theme.palette.tertiary.main, 0.5) :
         props.matchUp.winner === 'A' ? alpha(theme.palette.error.main, 0.5) : theme.palette.background.paper,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
-import { Box, IconButton, Tooltip, Typography, useTheme } from '@mui/material';
+import { Box, Divider, IconButton, Tooltip, Typography, useTheme } from '@mui/material';
 import SwissMatchUp from './SwissMatchUp';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -61,6 +61,26 @@ export default function TiernamentStage(props: TiernamentStageProps) {
 
   const [expanded, setExpanded] = React.useState(true)
 
+  const getSwissMatchUps = (matchUps: MatchUpType[]) => {
+    return matchUps.map((matchUp, index) => {
+      return (
+        <>
+          <SwissMatchUp
+            key={matchUp.matchUpId}
+            matchUp={matchUp}
+            entryA={matchUp.entryAId && props.entries[matchUp.entryAId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryAId] : undefined}
+            entryB={matchUp.entryBId && props.entries[matchUp.entryBId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryBId] : undefined}
+            handleMatchUpUpdate={props.handleMatchUpUpdate}
+          />
+          {
+            index < matchUps.length - 1 &&
+            <Divider/>
+          }
+        </>
+      )
+    })
+  }
+
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
       <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', mb: '10px', mt: props.matchUps[0].round > 1 ? '20px' : 0}}>
@@ -79,15 +99,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
                 <Tooltip title={`${t('wins')}: ${winsUpper} | ${t('losses')}: ${lossesUpper}`} placement={'top'}>
                     <Box sx={styles.bracketBox}>
                       {
-                        upperBracket.map(matchUp => (
-                          <SwissMatchUp
-                            key={matchUp.matchUpId}
-                            matchUp={matchUp}
-                            entryA={matchUp.entryAId && props.entries[matchUp.entryAId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryAId] : undefined}
-                            entryB={matchUp.entryBId && props.entries[matchUp.entryBId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryBId] : undefined}
-                            handleMatchUpUpdate={props.handleMatchUpUpdate}
-                          />
-                        ))
+                        getSwissMatchUps(upperBracket)
                       }
                     </Box>
                 </Tooltip>
@@ -97,15 +109,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
                 <Tooltip title={`${t('wins')}: ${winsMiddle} | ${t('losses')}: ${lossesMiddle}`} placement={'top'}>
                     <Box sx={styles.bracketBox}>
                       {
-                        middleBracket.map(matchUp => (
-                          <SwissMatchUp
-                            key={matchUp.matchUpId}
-                            matchUp={matchUp}
-                            entryA={matchUp.entryAId && props.entries[matchUp.entryAId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryAId] : undefined}
-                            entryB={matchUp.entryBId && props.entries[matchUp.entryBId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryBId] : undefined}
-                            handleMatchUpUpdate={props.handleMatchUpUpdate}
-                          />
-                        ))
+                        getSwissMatchUps(middleBracket)
                       }
                     </Box>
                 </Tooltip>
@@ -115,15 +119,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
                 <Tooltip title={`${t('wins')}: ${winsLower} | ${t('losses')}: ${lossesLower}`} placement={'top'}>
                     <Box sx={styles.bracketBox}>
                       {
-                        lowerBracket.map(matchUp => (
-                          <SwissMatchUp
-                            key={matchUp.matchUpId}
-                            matchUp={matchUp}
-                            entryA={matchUp.entryAId && props.entries[matchUp.entryAId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryAId] : undefined}
-                            entryB={matchUp.entryBId && props.entries[matchUp.entryBId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryBId] : undefined}
-                            handleMatchUpUpdate={props.handleMatchUpUpdate}
-                          />
-                        ))
+                        getSwissMatchUps(lowerBracket)
                       }
                     </Box>
                 </Tooltip>
