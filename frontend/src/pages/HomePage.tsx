@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Carousel from 'react-material-ui-carousel';
 import { TiernamentTitleType } from '../util/types';
 import TiernamentCard from '../components/tiernament/TiernamentCard';
-import {fetchRandomTen, fetchTiernamentById} from "../apiRequests/tiernamentRequests";
+import { fetchRandomTen } from '../apiRequests/tiernamentRequests';
 
 export async function loader() {
   const res = await fetchRandomTen()
