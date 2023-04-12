@@ -96,7 +96,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
           <Box sx={{display: 'flex', justifyContent: 'space-evenly'}}>
             {
               upperBracket.length > 0 &&
-                <Tooltip title={`${t('wins')}: ${winsUpper} | ${t('losses')}: ${lossesUpper}`} placement={'top'}>
+                <Tooltip title={t('upperBracketTooltip', {wins: winsUpper, losses: lossesUpper})} placement={'top'}>
                     <Box sx={styles.bracketBox}>
                       {
                         getSwissMatchUps(upperBracket)
@@ -106,7 +106,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
             }
             {
               middleBracket.length > 0 &&
-                <Tooltip title={`${t('wins')}: ${winsMiddle} | ${t('losses')}: ${lossesMiddle}`} placement={'top'}>
+                <Tooltip title={t('middleBracketTooltip', {wins: winsMiddle, losses: lossesMiddle})} placement={'top'}>
                     <Box sx={styles.bracketBox}>
                       {
                         getSwissMatchUps(middleBracket)
@@ -116,7 +116,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
             }
             {
               lowerBracket.length > 0 &&
-                <Tooltip title={`${t('wins')}: ${winsLower} | ${t('losses')}: ${lossesLower}`} placement={'top'}>
+                <Tooltip title={t('lowerBracketTooltip', {wins: winsLower, losses: lossesLower})} placement={'top'}>
                     <Box sx={styles.bracketBox}>
                       {
                         getSwissMatchUps(lowerBracket)
