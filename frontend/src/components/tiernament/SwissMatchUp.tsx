@@ -1,14 +1,14 @@
 import React from 'react';
-import {MatchUpType, TiernamentRunEntryType} from '../../util/types';
+import { MatchUpType, TiernamentRunEntryType } from '../../util/types';
 import { alpha, Box, Grid, Typography, useTheme } from '@mui/material';
 import CustomAvatar from '../general/CustomAvatar';
-
 
 interface SwissMatchUpProps {
   matchUp: MatchUpType,
   entryA: TiernamentRunEntryType | undefined,
   entryB: TiernamentRunEntryType | undefined,
   handleMatchUpUpdate: (matchUpId: string, newWinner: 'A' | 'B') => void,
+  handleOpenModal: (matchUp: MatchUpType) => void,
 }
 
 export default function SwissMatchUp(props: SwissMatchUpProps) {
@@ -21,14 +21,14 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
       padding: '5px',
       backgroundColor: props.matchUp.winner === 'A' ? alpha(theme.palette.tertiary.main, 0.5) :
         props.matchUp.winner === 'B' ? alpha(theme.palette.error.main, 0.5) : theme.palette.background.paper,
-      cursor: props.matchUp.winner === undefined ? 'pointer' : 'default',
+      cursor: 'pointer',
     },
     entryBoxB: {
       height: '100%',
       padding: '5px',
       backgroundColor: props.matchUp.winner === 'B' ? alpha(theme.palette.tertiary.main, 0.5) :
         props.matchUp.winner === 'A' ? alpha(theme.palette.error.main, 0.5) : theme.palette.background.paper,
-      cursor: props.matchUp.winner === undefined && props.matchUp.entryBId ? 'pointer' : 'default',
+      cursor: 'pointer',
     },
     divider: {
       borderStyle: 'solid',
@@ -46,7 +46,7 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
       display: 'flex',
       textAlign: 'right',
       justifyContent: 'right',
-    }
+    },
   }
 
   React.useEffect(() => {
@@ -57,16 +57,10 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
     }
   })
 
-  const handleMatchUpUpdate = (winner: 'A' | 'B') => {
-    if (props.matchUp.winner === undefined) {
-      props.handleMatchUpUpdate(props.matchUp.matchUpId, winner)
-    }
-  }
-
   return (
     <Grid container spacing={0}>
       <Grid item xs={6}>
-        <Box sx={styles.entryBoxA} onClick={() => handleMatchUpUpdate('A')}>
+        <Box sx={styles.entryBoxA} onClick={() => props.handleOpenModal(props.matchUp)}>
           <Grid container spacing={0}>
             <Grid item xs={9} sx={styles.alignRight}>
               <Typography
@@ -82,7 +76,7 @@ export default function SwissMatchUp(props: SwissMatchUpProps) {
         </Box>
       </Grid>
       <Grid item xs={6} sx={styles.divider}>
-        <Box sx={styles.entryBoxB} onClick={() => handleMatchUpUpdate('B')}>
+        <Box sx={styles.entryBoxB} onClick={() => props.handleOpenModal(props.matchUp)}>
           <Grid container spacing={0}>
             <Grid item xs={3} sx={styles.alignRight}>
               <CustomAvatar userName={props.entryB ? props.entryB.name : '-'} imageId={props.entryB ? props.entryB.imageId : ''} size={{height: 25, width: 25}} />

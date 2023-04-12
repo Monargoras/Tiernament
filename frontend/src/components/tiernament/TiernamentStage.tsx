@@ -5,6 +5,7 @@ import SwissMatchUp from './SwissMatchUp';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { DEFAULT_ENTRY_NAME } from './PlayView';
+import MatchUpModal from "./MatchUpModal";
 
 
 interface TiernamentStageProps {
@@ -60,6 +61,39 @@ export default function TiernamentStage(props: TiernamentStageProps) {
     upperMatchUp.matchHistoryStage1.slice(0, round).filter(res => res === 'l').length)
 
   const [expanded, setExpanded] = React.useState(true)
+  const [showModal, setShowModal] = React.useState(false)
+  const [modalMatchUp, setModalMatchUp] = React.useState<MatchUpType | undefined>(undefined)
+  const [modalEntryA, setModalEntryA] = React.useState<TiernamentRunEntryType | undefined>(undefined)
+  const [modalEntryB, setModalEntryB] = React.useState<TiernamentRunEntryType | undefined>(undefined)
+
+  const setNewModalMatchUp = (matchUp: MatchUpType) => {
+    setModalMatchUp(matchUp)
+    setModalEntryA(matchUp.entryAId && props.entries[matchUp.entryAId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryAId] : undefined)
+    setModalEntryB(matchUp.entryBId && props.entries[matchUp.entryBId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryBId] : undefined)
+  }
+  const handleOpenModal = (matchUp: MatchUpType) => {
+    setNewModalMatchUp(matchUp)
+    setShowModal(true)
+  }
+  const handleCloseModal = () => setShowModal(false)
+
+  React.useEffect(() => {
+    let timer: number | undefined
+    if(!modalMatchUp || modalMatchUp.winner !== undefined) {
+      const matchUp = props.matchUps.filter(matchUp => matchUp.winner === undefined)[0]
+      if(matchUp) {
+        timer = setTimeout(() => setNewModalMatchUp(matchUp), 500)
+      } else {
+        setShowModal(false)
+      }
+    }
+
+    return () => {
+      if(timer) {
+        clearTimeout(timer)
+      }
+    }
+  }, [props.matchUps])
 
   const getSwissMatchUps = (matchUps: MatchUpType[]) => {
     return matchUps.map((matchUp, index) => {
@@ -71,6 +105,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
             entryA={matchUp.entryAId && props.entries[matchUp.entryAId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryAId] : undefined}
             entryB={matchUp.entryBId && props.entries[matchUp.entryBId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryBId] : undefined}
             handleMatchUpUpdate={props.handleMatchUpUpdate}
+            handleOpenModal={handleOpenModal}
           />
           {
             index < matchUps.length - 1 &&
@@ -125,6 +160,17 @@ export default function TiernamentStage(props: TiernamentStageProps) {
                 </Tooltip>
             }
           </Box>
+      }
+      {
+        modalMatchUp &&
+          <MatchUpModal
+              showModal={showModal}
+              handleCloseModal={handleCloseModal}
+              entryA={modalEntryA}
+              entryB={modalEntryB}
+              matchUp={modalMatchUp}
+              handleMatchUpUpdate={props.handleMatchUpUpdate}
+          />
       }
     </Box>
   )
