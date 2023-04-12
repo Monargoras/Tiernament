@@ -37,6 +37,12 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
         return repo.findAll().map { getTiernamentTitleDTO(it) }
     }
 
+    fun getRandomTenTiernaments(): List<TiernamentTitleDTO> {
+        val tiernaments = repo.findAll()
+        val randomTen = tiernaments.shuffled().take(10)
+        return randomTen.map { getTiernamentTitleDTO(it) }
+    }
+
     fun getTiernamentsByAuthorName(name: String): List<TiernamentTitleDTO> {
         // get author name from user id
         userRepo.findByName(name)?.let { user ->
@@ -98,6 +104,11 @@ class PublicTiernamentApiController(@Autowired val service: TiernamentService) {
     @GetMapping
     fun getTiernaments(): List<TiernamentTitleDTO> {
         return service.getTiernaments()
+    }
+
+    @GetMapping("/randomTen")
+    fun getRandomTenTiernaments(): List<TiernamentTitleDTO> {
+        return service.getRandomTenTiernaments()
     }
 
     @GetMapping("/author/{name}")
