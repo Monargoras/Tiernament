@@ -5,7 +5,7 @@ import SwissMatchUp from './SwissMatchUp';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { DEFAULT_ENTRY_NAME } from './PlayView';
-import MatchUpModal from "./MatchUpModal";
+import MatchUpModal from './MatchUpModal';
 
 
 interface TiernamentStageProps {
