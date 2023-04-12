@@ -15,7 +15,8 @@ import { loader as profileLoader } from './pages/ProfilePage';
 import LoadingPage from './pages/LoadingPage';
 import SearchPage from './pages/SearchPage';
 import { loader as searchLoader } from './pages/SearchPage';
-import CreatePage from "./pages/CreatePage";
+import CreatePage from './pages/CreatePage';
+import ImprintPage from './pages/ImprintPage';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -24,12 +25,6 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     tertiary: PaletteColor;
   }
-}
-
-export const AppBarRoutes: { [key: string]: string } = {
-  create: '/tiernament/create',
-  about: '/about',
-  imprint: '/imprint',
 }
 
 const router = createBrowserRouter([
@@ -66,10 +61,6 @@ const router = createBrowserRouter([
         loader: (args) => searchLoader(args.params as { searchTerm: string }),
       },
       {
-        path: 'about',
-        element: <p>About</p>,
-      },
-      {
         path: 'login',
         element: <AuthenticationPage />,
       },
@@ -84,7 +75,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'imprint',
-        element: <p>Imprint</p>,
+        element: <ImprintPage />,
       }
     ]
   }

@@ -5,7 +5,6 @@ import {
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Menu as MenuIcon, Search } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { AppBarRoutes } from '../App';
 import LanguageSelector from '../components/general/LanguageSelector';
 import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
@@ -54,8 +53,13 @@ export default function RootPage() {
     setAnchorElUser(event.currentTarget)
   }
 
-  const handleNavigate = (destination: string) => {
-    navigate(`${AppBarRoutes[destination]}`)
+  const handleNavigateCreate = () => {
+    navigate('/tiernament/create')
+    handleCloseNavMenu()
+  }
+
+  const handleNavigateImprint = () => {
+    navigate('/imprint')
     handleCloseNavMenu()
   }
 
@@ -181,11 +185,12 @@ export default function RootPage() {
                     }
                   }
                 />
-                {Object.keys(AppBarRoutes).map((page) => (
-                  <MenuItem key={page} onClick={() => handleNavigate(page)}>
-                    <Typography textAlign='center'>{t(page)}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem onClick={handleNavigateCreate}>
+                  <Typography textAlign='center'>{t('create')}</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleNavigateImprint}>
+                  <Typography textAlign='center'>{t('imprint')}</Typography>
+                </MenuItem>
               </Menu>
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -218,15 +223,20 @@ export default function RootPage() {
                   }
                 }
               />
-              {Object.keys(AppBarRoutes).map((page) => (
-                <Button
-                  key={page}
-                  onClick={() => handleNavigate(page)}
-                  sx={{ my: 2, color: theme.palette.text.primary, display: 'block' }}
-                >
-                  {t(page)}
-                </Button>
-              ))}
+              <Button
+                onClick={handleNavigateCreate}
+                sx={{ m: 2, color: theme.palette.secondary.main }}
+                color={'secondary'}
+                variant={'outlined'}
+              >
+                {t('create')}
+              </Button>
+              <Button
+                onClick={handleNavigateImprint}
+                sx={{ my: 2, p: 0, color: theme.palette.text.primary }}
+              >
+                {t('imprint')}
+              </Button>
             </Box>
 
             <Box sx={{ flexGrow: 0, display: 'flex', flexDirection: 'row' }}>
