@@ -4,7 +4,7 @@ import { Box, Button, IconButton, Grid, Paper, TextField, Typography, Tooltip, D
 import { useTranslation } from 'react-i18next';
 import { createPostImageRequest } from '../../apiRequests/imageRequests';
 import ErrorSnackbar from '../../components/general/ErrorSnackbar';
-import { Add, AddAPhoto, DeleteForever, Edit } from '@mui/icons-material';
+import { Add, AddAPhoto, DeleteForever, Edit, Help } from '@mui/icons-material';
 import TiernamentCard from '../../components/tiernament/TiernamentCard';
 import { TiernamentDTO, TiernamentEntryType } from '../../util/types';
 import CustomAvatar from '../general/CustomAvatar';
@@ -340,11 +340,14 @@ export default function Editor() {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <Paper sx={styles.createEntryContainer}>
-            <Tooltip title={t('createEntriesTooltip')} placement={'top-start'}>
-              <Typography variant={'h6'} sx={{mb: '10px', ml: '5px'}}>
+            <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', mb: '10px', ml: '5px'}}>
+              <Typography variant={'h6'}>
                 {t('createTiernamentEntries', {count: entries.length})}
               </Typography>
-            </Tooltip>
+              <Tooltip title={t('createEntriesTooltip')} arrow placement={'top'}>
+                <Help color={'primary'}/>
+              </Tooltip>
+            </Box>
             <Box sx={{...styles.flexRow}}>
               <TextField
                 id={'entryName'}
