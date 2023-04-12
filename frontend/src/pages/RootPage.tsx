@@ -225,9 +225,9 @@ export default function RootPage() {
               />
               <Button
                 onClick={handleNavigateCreate}
-                sx={{ m: 2, color: theme.palette.secondary.main }}
+                sx={{ m: 2, color: theme.palette.secondary.contrastText }}
                 color={'secondary'}
-                variant={'outlined'}
+                variant={'contained'}
               >
                 {t('create')}
               </Button>
