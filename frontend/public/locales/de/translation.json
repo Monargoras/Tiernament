@@ -48,5 +48,8 @@
   "entriesFromImages": "Teilnehmer aus Bilddateien erstellen",
   "createEntriesTooltip": "Erstellen Sie bis zu 32 Einträge, mindestens 8. Idealerweise entweder 16 oder 32, aber wir werden Dummy-Einträge hinzufügen, um bis zur nächsten höheren Zweierpotenz aufzufüllen, um eine gute Tiernamentstruktur zu gewährleisten. Diese Dummys werden den Ausgang des Tiernaments nicht beeinflussen.",
   "createTiernament": "Tiernament erstellen",
-  "profileTiernaments": "Erstellte Tiernaments"
+  "profileTiernaments": "Erstellte Tiernaments",
+  "homePageTitle": "Willkommen bei Tiernament",
+  "homePageDescription": "Der ultimative Weg um den wahren Gewinner einer Kategorie zu finden. Tiernament ist die Evolution von Tierlisten. Egal, ob Sie die besten Filme, Spiele, Songs, Memes oder etwas anderes bewerten möchten, Tiernament ist der richtige Ort dafür. Treten Sie jetzt bei und starten Sie Ihr eigenes Tiernament noch heute!",
+  "exploreTiernaments": "Alle Tiernaments entdecken"
 }

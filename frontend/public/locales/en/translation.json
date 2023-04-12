@@ -48,5 +48,8 @@
   "entriesFromImages": "Create entries from image files",
   "createEntriesTooltip": "Create up to 32 entries, at least 8. Ideally either 16 or 32, but we will include dummy entries to fill up to the next higher power of 2 to ensure a good Tiernament structure. These dummy entries won't impact the Tiernament results.",
   "createTiernament": "Create Tiernament",
-  "profileTiernaments": "Created Tiernaments"
+  "profileTiernaments": "Created Tiernaments",
+  "homePageTitle": "Welcome to Tiernament!",
+  "homePageText": "The ultimate way to rank anything and everything! Tiernament is the evolution of tierlists, finding the one true winner among one category. Whether you want to rank the best movies, games, songs, memes, or anything else, Tiernament is the place to be. Join now and start your own Tiernament today!",
+  "exploreTiernaments": "Explore all Tiernaments"
 }
