@@ -5,6 +5,12 @@ import { useTranslation } from 'react-i18next';
 import Carousel from 'react-material-ui-carousel';
 import { TiernamentTitleType } from '../util/types';
 import TiernamentCard from '../components/tiernament/TiernamentCard';
+import {fetchRandomTen, fetchTiernamentById} from "../apiRequests/tiernamentRequests";
+
+export async function loader() {
+  const res = await fetchRandomTen()
+  return await res.json()
+}
 
 export default function HomePage() {
 
@@ -14,7 +20,6 @@ export default function HomePage() {
       flexDirection: 'column',
       alignItems: 'center',
       width: '100%',
-      textAlign: 'center'
     },
   }
 
