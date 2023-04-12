@@ -1,20 +1,50 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Typography } from '@mui/material';
-
+import { useLoaderData, useNavigate } from 'react-router-dom';
+import { Box, Button, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import Carousel from 'react-material-ui-carousel';
+import { TiernamentTitleType } from '../util/types';
+import TiernamentCard from '../components/tiernament/TiernamentCard';
 
 export default function HomePage() {
 
+  const styles = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '100%',
+      textAlign: 'center'
+    },
+  }
+
   const navigate = useNavigate()
+  const { t } = useTranslation()
+  const tiernaments = useLoaderData() as TiernamentTitleType[]
 
   return (
-    <div>
+    <Box sx={styles.container}>
       <Typography variant={'h2'}>
-        Home Page
+        {t('homePageTitle')}
       </Typography>
+      <Typography variant={'h6'} sx={{maxWidth: '50%', my: '20px'}}>
+        {t('homePageText')}
+      </Typography>
+      <Carousel
+        sx={{width: 260, height: 400}}
+        autoPlay={true}
+        swipe={true}
+        indicators={false}
+        animation={'slide'}
+        navButtonsAlwaysVisible={false}
+      >
+        {tiernaments.map(tiernament => (
+          <TiernamentCard tiernament={tiernament} key={tiernament.tiernamentId}/>
+        ))}
+      </Carousel>
       <Button variant={'contained'} onClick={() => navigate('/tiernament')}>
-        Tiernament
+        {t('exploreTiernaments')}
       </Button>
-    </div>
+    </Box>
   )
 }

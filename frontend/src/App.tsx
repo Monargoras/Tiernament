@@ -36,6 +36,7 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <HomePage />,
+        loader: tiernamentLoader,
       },
       {
         path: 'tiernament',
