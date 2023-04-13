@@ -79,15 +79,26 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
         return repo.insert(tiernament)
     }
 
-    fun updateTiernament(id: String, tiernament: Tiernament): Tiernament? {
-        return repo.findByTiernamentId(id = id)?.let {
-            repo.save(it.copy(name = tiernament.name, imageId = tiernament.imageId, description = tiernament.description, entries = tiernament.entries))
+    fun updateTiernament(id: String, tiernament: Tiernament, curUser: User): Tiernament? {
+        // check if tiernament exists
+        repo.findByTiernamentId(id)?.let {
+            // check if user is the author
+            if (it.authorId == curUser.userId) {
+                // update tiernament
+                repo.save(it.copy(name = tiernament.name, imageId = tiernament.imageId, description = tiernament.description, entries = tiernament.entries))
+            }
         }
+        return null
     }
 
-    fun deleteTiernament(id: String) {
+    fun deleteTiernament(id: String, curUser: User) {
+        // check if tiernament exists
         repo.findByTiernamentId(id)?.let {
-            repo.delete(it)
+            // check if user is the author
+            if (it.authorId == curUser.userId) {
+                // delete tiernament
+                repo.delete(it)
+            }
         }
     }
 }
@@ -138,12 +149,12 @@ class PrivateTiernamentApiController(@Autowired val service: TiernamentService) 
     }
 
     @PatchMapping("/{id}")
-    fun updateTiernament(@PathVariable("id") id: String, @RequestBody tiernament: Tiernament): Tiernament? {
-        return service.updateTiernament(id, tiernament)
+    fun updateTiernament(@PathVariable("id") id: String, @RequestBody tiernament: Tiernament, @AuthenticationPrincipal curUser: User): Tiernament? {
+        return service.updateTiernament(id, tiernament, curUser)
     }
 
     @DeleteMapping("/{id}")
-    fun deleteTiernament(@PathVariable("id") id: String) {
-        service.deleteTiernament(id)
+    fun deleteTiernament(@PathVariable("id") id: String, @AuthenticationPrincipal curUser: User) {
+        service.deleteTiernament(id, curUser)
     }
 }
