@@ -32,7 +32,7 @@ export default function HomePage() {
       <Typography variant={'h2'}>
         {t('homePageTitle')}
       </Typography>
-      <Typography variant={'h6'} sx={{maxWidth: '50%', my: '20px'}}>
+      <Typography variant={'h6'} sx={{maxWidth: '50%', my: '20px', textAlign: 'center'}}>
         {t('homePageText')}
       </Typography>
       <Carousel
