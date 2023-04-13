@@ -1,11 +1,10 @@
-PATCH http://localhost:8080/api/tiernament/0709b846-0f22-4c70-a295-f1a0eed68ea0
+PATCH http://localhost:8080/api/tiernament/edit/f138d534-95af-4517-bd8d-2ad7d87947a8
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNb25hcmdvcmFzIiwiZXhwIjoxNjgxNDI5OTEzfQ.sAtYpeRpq8G3vltMkKOISDU-t6gyct87F3tY2F2HEz0
 
 {
-  "tiernamentId": "0709b846-0f22-4c70-a295-f1a0eed68ea0",
-  "authorId": "15",
-  "name": "Tournament 1",
-  "description": "Tournament 1",
-  "date": "2023-03-08T21:27:45.341+00:00",
-  "entries": []
+  "name":"Avatar2",
+  "imageId":"64388df6492fa54a62bbc1e3",
+  "description":"find the coolest mongogo avatar",
+  "entries":[{"entryId":"a5799275-9fc5-4c7a-a744-14e8493fd9dd","name":"Avatar klein","imageId":"64388df6492fa54a62bbc1e5","placementHistory":[]},{"entryId":"55bad267-0424-4b0f-8141-951f2166c024","name":"Avatar","imageId":"64388df6492fa54a62bbc1e7","placementHistory":[]},{"entryId":"fa4cdc26-99dc-441b-98d7-8fb9ac877f20","name":"AvatarHalloween","imageId":"64388df6492fa54a62bbc1ed","placementHistory":[]},{"entryId":"8a86b2b7-7865-4b9b-ab91-eb75da5fcf4e","name":"AvatarHalloween2","imageId":"64388df6492fa54a62bbc1ec","placementHistory":[]},{"entryId":"4dbcd97c-3b0d-43ee-8483-f8a4103e1e93","name":"Banner","imageId":"64388df6492fa54a62bbc1ea","placementHistory":[]},{"entryId":"baf2cc1d-c493-4637-89da-dcc1ceeb5088","name":"Blackscreen","imageId":"64388df6492fa54a62bbc204","placementHistory":[]},{"entryId":"21f0cab6-4772-486d-98c2-aef6162a634f","name":"bobross-profile_image-0b9dd167a9bb16b5-300x300","imageId":"64388df6492fa54a62bbc1ee","placementHistory":[]},{"entryId":"ad90946f-8436-49a9-be88-ede71f07c32e","name":"BRB","imageId":"64388df6492fa54a62bbc1f2","placementHistory":[]},{"entryId":"ff58faea-ae6b-4278-9a85-5c9acbb6f30e","name":"flixWeihnachteeen","imageId":"64388df6492fa54a62bbc1fa","placementHistory":[]},{"entryId":"e9337ea5-dd48-4a53-95c5-cd76939bf2cf","name":"maiho offline screen","imageId":"64388df6492fa54a62bbc1fd","placementHistory":[]},{"entryId":"5f577055-9fc1-48fa-8df3-97de502ff885","name":"marcell_400x400","imageId":"64388df6492fa54a62bbc200","placementHistory":[]},{"entryId":"67eabed3-960e-43b9-ab62-07a40efa0936","name":"Monmoose","imageId":"64388df6492fa54a62bbc20a","placementHistory":[]},{"entryId":"497459fd-4fe0-41d6-802d-3e979b6da5cb","name":"offline screen","imageId":"64388df6492fa54a62bbc202","placementHistory":[]},{"entryId":"b7559f6d-17f2-4e9f-9c61-9e8cd5f13a41","name":"placeKing","imageId":"64388df6492fa54a62bbc207","placementHistory":[]}]
 }
