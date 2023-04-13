@@ -45,12 +45,24 @@ class UserDetailsService(private val repository: UserRepo, private val sessionRe
     fun addSession(sessionId: String, userId: String) {
         sessionRepo.insert(Session(sessionId, userId, Date()))
     }
+
+    fun updateUser(newUser: UserDTO) {
+        var user = repository.findByUserId(newUser.userId) ?: throw UsernameNotFoundException("${newUser.userId} not found")
+        user = user.copy(
+            displayName = newUser.displayName,
+            avatarId = newUser.avatarId,
+            tiernaments = newUser.tiernaments,
+            tiernamentRuns = newUser.tiernamentRuns,
+        )
+        repository.save(user)
+    }
 }
 
 @RestController
 @RequestMapping("/api/user")
 class UserApiController(@Autowired val repo: UserRepo,
                         @Autowired val sessionRepo: SessionRepo,
+                        @Autowired val userDetailsService: UserDetailsService,
                         @Autowired val imageRepo: ImageRepo,
                         @Autowired val gridFSBucket: GridFSBucket
 ) {
@@ -180,12 +192,12 @@ class UserApiController(@Autowired val repo: UserRepo,
     @PatchMapping
     fun updateUser(@RequestBody user: UserDTO, @AuthenticationPrincipal curUser: User): ResponseEntity<UserDTO> {
         repo.findByUserId(id = curUser.userId)?.let {
-            val newUser = repo.save(it.copy(displayName = user.displayName, avatarId = user.avatarId, tiernaments = user.tiernaments, tiernamentRuns = user.tiernamentRuns))
+            userDetailsService.updateUser(user)
             if(curUser.avatarId != "" && curUser.avatarId != user.avatarId) {
                 imageRepo.deleteImageByImageId(curUser.avatarId)
                 gridFSBucket.delete(ObjectId(curUser.avatarId))
             }
-            return ResponseEntity.ok(UserDTO(newUser))
+            return ResponseEntity.ok(user)
         }
         return ResponseEntity.badRequest().build()
     }
