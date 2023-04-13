@@ -50,16 +50,16 @@ export default function WinnerModal(props: WinnerModalProps) {
   }
 
   const particlesInit = React.useCallback(async (engine: Engine) => {
-    console.log(engine);
     // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
     // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
     // starting from v2 you can add only the features you need reducing the bundle size
-    await loadFull(engine);
-  }, []);
+    await loadFull(engine)
+  }, [])
 
   const particlesLoaded = React.useCallback(async (container: Container | undefined) => {
-    await console.log(container);
-  }, []);
+    // you can get the tsParticles instance (container) here, use it to manipulate the canvas
+    await container?.refresh()
+  }, [])
 
   return (
     <Box>
