@@ -1,0 +1,18 @@
+.anim_gradient {
+    background: linear-gradient(180deg, #16C6E9FF 0%, #A216E9FF 100%);
+    animation : "gradient 25s ease infinite";
+    height: 92.3dvh;
+    width: 100%;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}

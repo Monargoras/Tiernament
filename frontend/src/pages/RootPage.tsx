@@ -10,7 +10,7 @@ import ThemeModeToggle from '../components/general/ThemeModeToggle';
 import { useAppSelector } from '../redux/hooks';
 import { createLogoutUserRequest } from '../apiRequests/userRequests';
 import CustomAvatar from '../components/general/CustomAvatar';
-
+import '../util/animatedBackground.css';
 
 const SearchField = styled(TextField)(props => ({
   '& label': {
@@ -294,6 +294,7 @@ export default function RootPage() {
         </Container>
       </AppBar>
       <Box
+        className={location.pathname === '/' ? 'anim_gradient' : ''}
         sx={{
           padding: '10px'
         }}
