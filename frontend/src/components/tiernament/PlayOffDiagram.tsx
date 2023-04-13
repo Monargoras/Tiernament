@@ -3,6 +3,7 @@ import { Box, Grid, useTheme } from '@mui/material';
 import Xarrow, { xarrowPropsType } from 'react-xarrows';
 import PlayoffMatchUp from './PlayoffMatchUp';
 import { MatchUpType, TiernamentRunType } from '../../util/types';
+import WinnerModal from "./WinnerModal";
 
 
 interface PlayOffDiagramProps {
@@ -13,6 +14,21 @@ interface PlayOffDiagramProps {
 export default function PlayOffDiagram(props: PlayOffDiagramProps) {
 
   const theme = useTheme()
+  const [showModal, setShowModal] = React.useState(false)
+
+  const handleOpenModal = () => {
+    setShowModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+  }
+
+  React.useEffect(() => {
+    if(props.currentRun.winner !== undefined) {
+      setShowModal(true)
+    }
+  }, [props.currentRun.winner])
 
   const styles = {
     tiernamentPlayoffColumn: {
@@ -54,52 +70,60 @@ export default function PlayOffDiagram(props: PlayOffDiagramProps) {
   }
 
   return (
-    <Grid container>
-      <Grid item xs={4} id={'quarter-final-column'} sx={styles.tiernamentPlayoffColumn}>
-        {
-          quarterFinals.map((entry) => (
-            <Box key={entry.matchUpId}>
-              <PlayoffMatchUp
-                id={entry.matchUpId}
-                matchUp={entry}
-                entryA={props.currentRun.entries[entry.entryAId]}
-                entryB={props.currentRun.entries[entry.entryBId]}
-                handleMatchUpUpdate={props.handleMatchUpUpdate}
-              />
-            </Box>
-          ))
-        }
+    <Box>
+      <Grid container>
+        <Grid item xs={4} id={'quarter-final-column'} sx={styles.tiernamentPlayoffColumn}>
+          {
+            quarterFinals.map((entry) => (
+              <Box key={entry.matchUpId}>
+                <PlayoffMatchUp
+                  id={entry.matchUpId}
+                  matchUp={entry}
+                  entryA={props.currentRun.entries[entry.entryAId]}
+                  entryB={props.currentRun.entries[entry.entryBId]}
+                  handleMatchUpUpdate={props.handleMatchUpUpdate}
+                />
+              </Box>
+            ))
+          }
+        </Grid>
+        <Grid item xs={4} id={'semi-final-column'} sx={styles.tiernamentPlayoffColumn}>
+          {
+            semiFinals.map((entry) => (
+              <Box key={entry.matchUpId}>
+                <PlayoffMatchUp
+                  id={entry.matchUpId}
+                  matchUp={entry}
+                  entryA={entry.entryAId != '' ? props.currentRun.entries[entry.entryAId] : undefined}
+                  entryB={entry.entryBId != '' ? props.currentRun.entries[entry.entryBId] : undefined}
+                  handleMatchUpUpdate={props.handleMatchUpUpdate}
+                />
+              </Box>
+            ))
+          }
+          <Xarrow {...arrowProps} start={quarterFinals[0].matchUpId} end={semiFinals[0].matchUpId} />
+          <Xarrow {...arrowProps} start={quarterFinals[1].matchUpId} end={semiFinals[0].matchUpId} />
+          <Xarrow {...arrowProps} start={quarterFinals[2].matchUpId} end={semiFinals[1].matchUpId} />
+          <Xarrow {...arrowProps} start={quarterFinals[3].matchUpId} end={semiFinals[1].matchUpId} />
+        </Grid>
+        <Grid item xs={4} id={'final-column'} sx={styles.tiernamentPlayoffColumn}>
+          <Box onClick={props.currentRun.winner ? handleOpenModal : () => {}}>
+            <PlayoffMatchUp
+              id={final.matchUpId}
+              matchUp={final}
+              entryA={final.entryAId != '' ? props.currentRun.entries[final.entryAId] : undefined}
+              entryB={final.entryBId != '' ? props.currentRun.entries[final.entryBId] : undefined}
+              handleMatchUpUpdate={props.handleMatchUpUpdate}
+            />
+          </Box>
+          <Xarrow {...arrowProps} start={semiFinals[0].matchUpId} end={final.matchUpId} />
+          <Xarrow {...arrowProps} start={semiFinals[1].matchUpId} end={final.matchUpId} />
+        </Grid>
       </Grid>
-      <Grid item xs={4} id={'semi-final-column'} sx={styles.tiernamentPlayoffColumn}>
-        {
-          semiFinals.map((entry) => (
-            <Box key={entry.matchUpId}>
-              <PlayoffMatchUp
-                id={entry.matchUpId}
-                matchUp={entry}
-                entryA={entry.entryAId != '' ? props.currentRun.entries[entry.entryAId] : undefined}
-                entryB={entry.entryBId != '' ? props.currentRun.entries[entry.entryBId] : undefined}
-                handleMatchUpUpdate={props.handleMatchUpUpdate}
-              />
-            </Box>
-          ))
-        }
-        <Xarrow {...arrowProps} start={quarterFinals[0].matchUpId} end={semiFinals[0].matchUpId} />
-        <Xarrow {...arrowProps} start={quarterFinals[1].matchUpId} end={semiFinals[0].matchUpId} />
-        <Xarrow {...arrowProps} start={quarterFinals[2].matchUpId} end={semiFinals[1].matchUpId} />
-        <Xarrow {...arrowProps} start={quarterFinals[3].matchUpId} end={semiFinals[1].matchUpId} />
-      </Grid>
-      <Grid item xs={4} id={'final-column'} sx={styles.tiernamentPlayoffColumn}>
-        <PlayoffMatchUp
-          id={final.matchUpId}
-          matchUp={final}
-          entryA={final.entryAId != '' ? props.currentRun.entries[final.entryAId] : undefined}
-          entryB={final.entryBId != '' ? props.currentRun.entries[final.entryBId] : undefined}
-          handleMatchUpUpdate={props.handleMatchUpUpdate}
-        />
-        <Xarrow {...arrowProps} start={semiFinals[0].matchUpId} end={final.matchUpId} />
-        <Xarrow {...arrowProps} start={semiFinals[1].matchUpId} end={final.matchUpId} />
-      </Grid>
-    </Grid>
+      {
+        props.currentRun.winner &&
+        <WinnerModal showModal={showModal} handleCloseModal={handleCloseModal} winner={props.currentRun.winner}/>
+      }
+    </Box>
   )
 }
