@@ -6,23 +6,27 @@ import { createPostImageRequest } from '../../apiRequests/imageRequests';
 import ErrorSnackbar from '../../components/general/ErrorSnackbar';
 import { Add, AddAPhoto, DeleteForever, Edit, Help } from '@mui/icons-material';
 import TiernamentCard from '../../components/tiernament/TiernamentCard';
-import { TiernamentDTO, TiernamentEntryType } from '../../util/types';
+import { TiernamentDTO, TiernamentEntryType, TiernamentType } from '../../util/types';
 import CustomAvatar from '../general/CustomAvatar';
 import { v4 as uuidv4 } from 'uuid';
 import { createTiernamentRequest } from '../../apiRequests/tiernamentRequests';
 import { useNavigate } from 'react-router-dom';
 
-export default function Editor() {
+interface EditorProps {
+  tiernament?: TiernamentType
+}
+
+export default function Editor(props: EditorProps) {
 
   const authState = useAppSelector(state => state.auth)
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const [tiernamentName, setTiernamentName] = React.useState('')
-  const [tiernamentDescription, setTiernamentDescription] = React.useState('')
+  const [tiernamentName, setTiernamentName] = React.useState(props.tiernament?.name || '')
+  const [tiernamentDescription, setTiernamentDescription] = React.useState(props.tiernament?.description || '')
   const [errorMessage, setErrorMessage] = React.useState('')
   const [coverImage, setCoverImage] = React.useState<{image: File, url: string} | undefined>(undefined)
-  const [entries, setEntries] = React.useState<TiernamentEntryType[]>([])
+  const [entries, setEntries] = React.useState<TiernamentEntryType[]>(props.tiernament?.entries || [])
   const [entryImages, setEntryImages] = React.useState<{[key: string]: {image: File, url: string}}>({})
   const [entryName, setEntryName] = React.useState('')
   const [nameError, setNameError] = React.useState(false)

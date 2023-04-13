@@ -18,6 +18,8 @@ import { loader as searchLoader } from './pages/SearchPage';
 import CreatePage from './pages/CreatePage';
 import ImprintPage from './pages/ImprintPage';
 import { loader as homePageLoader } from './pages/HomePage';
+import EditPage from './pages/EditPage';
+import { loader as editPageLoader } from './pages/EditPage';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -55,7 +57,8 @@ const router = createBrowserRouter([
       },
       {
         path: 'tiernament/edit/:tiernamentId',
-        element: <p>Edit</p>,
+        element: <EditPage />,
+        loader: (args) => editPageLoader(args.params as { tiernamentId: string }),
       },
       {
         path: 'tiernament/search/:searchTerm',
