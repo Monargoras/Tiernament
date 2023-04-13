@@ -6,6 +6,7 @@ import com.tiernament.server.models.TiernamentTitleDTO
 import com.tiernament.server.models.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Service
@@ -142,6 +143,16 @@ class PublicTiernamentApiController(@Autowired val service: TiernamentService) {
 @RestController
 @RequestMapping("/api/tiernament/edit")
 class PrivateTiernamentApiController(@Autowired val service: TiernamentService) {
+
+    @GetMapping("/{id}")
+    fun getTiernamentById(@PathVariable("id") id: String, @AuthenticationPrincipal curUser: User): ResponseEntity<Tiernament> {
+        val tiernament = service.getTiernamentById(id) ?: return ResponseEntity.notFound().build()
+        // verify that the user is the author
+        if (tiernament.authorId != curUser.userId) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        }
+        return ResponseEntity.ok(tiernament)
+    }
 
     @PostMapping
     fun postTiernament(@RequestBody body: TiernamentDTO, @AuthenticationPrincipal curUser: User): Tiernament {

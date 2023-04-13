@@ -21,6 +21,10 @@ export function createTiernamentRequest(tiernament: TiernamentDTO) {
   return createRequest('POST', 'api/tiernament/edit', tiernament, undefined, true)
 }
 
+export function createGetTiernamentForEditRequest(tiernamentId: string) {
+  return createRequest('GET', 'api/tiernament/edit', undefined, tiernamentId, true)
+}
+
 export function fetchTiernamentsByUsername(username: string) {
   return createRequest('GET', 'api/tiernament/get/author', undefined, username)
 }
