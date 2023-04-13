@@ -36,7 +36,7 @@ export default function ProfileTiernamentList(props: ProfileTiernamentListProps)
       <Typography variant='h5' sx={{p: '5px', pl: '10px'}}>
         {t('profileTiernaments')}
       </Typography>
-      <Box sx={{display: 'flex', flexDirection: 'row'}}>
+      <Box sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
         {
           props.tiernaments.map((tiernament, index) => {
             return (
