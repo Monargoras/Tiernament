@@ -72,10 +72,6 @@ const router = createBrowserRouter([
         loader: (args) => profileLoader(args.params as { username: string }),
       },
       {
-        path: 'settings',
-        element: <p>Settings</p>,
-      },
-      {
         path: 'imprint',
         element: <ImprintPage />,
       }

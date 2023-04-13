@@ -63,11 +63,6 @@ export default function RootPage() {
     handleCloseNavMenu()
   }
 
-  const handleSettings = () => {
-    navigate('/settings')
-    handleCloseUserMenu()
-  }
-
   const handleProfile = () => {
     if(authState.user) {
       navigate(`/profile/${authState.user.name}`)
@@ -281,9 +276,6 @@ export default function RootPage() {
               >
                 <MenuItem key={'profile'} onClick={() => handleProfile()}>
                   <Typography textAlign='center'>{t('profile')}</Typography>
-                </MenuItem>
-                <MenuItem key={'settings'} onClick={() => handleSettings()}>
-                  <Typography textAlign='center'>{t('settings')}</Typography>
                 </MenuItem>
                 <MenuItem key={'logout'} onClick={() => handleLogout()}>
                   <Typography textAlign='center'>{t('logout')}</Typography>
