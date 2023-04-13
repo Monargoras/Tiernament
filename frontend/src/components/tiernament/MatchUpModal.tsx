@@ -25,6 +25,7 @@ export default function MatchUpModal(props: MatchUpModalProps) {
       backgroundColor: 'background.paper',
       border: '2px solid #000',
       borderColor: theme.palette.primary.main,
+      borderRadius: '5px',
       boxShadow: 24,
       p: 4,
       display: 'flex',
@@ -86,8 +87,8 @@ export default function MatchUpModal(props: MatchUpModalProps) {
               props.entryA && props.entryA.imageId &&
                 <Box
                     component={'img'}
-                    src={props.entryA ? getImageLink(props.entryA.imageId) : ''}
-                    alt={props.entryA ? props.entryA.name : ''}
+                    src={getImageLink(props.entryA.imageId)}
+                    alt={props.entryA.name}
                     sx={{
                       maxWidth: 400,
                       height: 250,
@@ -104,8 +105,8 @@ export default function MatchUpModal(props: MatchUpModalProps) {
               props.entryB && props.entryB.imageId &&
                 <Box
                     component={'img'}
-                    src={props.entryB ? getImageLink(props.entryB.imageId) : ''}
-                    alt={props.entryB ? props.entryB.name : ''}
+                    src={getImageLink(props.entryB.imageId)}
+                    alt={props.entryB.name}
                     sx={{
                       maxWidth: 400,
                       height: 250,
