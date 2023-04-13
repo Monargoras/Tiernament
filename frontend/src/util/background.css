@@ -1,7 +1,7 @@
-.anim_gradient {
+.background {
     background: linear-gradient(180deg, #16C6E9FF 0%, #A216E9FF 100%);
     animation : "gradient 25s ease infinite";
-    height: 92.3dvh;
+    min-height: 92.3dvh;
     width: 100%;
 }
 
