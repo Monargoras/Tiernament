@@ -1,5 +1,5 @@
 .background {
-    background: linear-gradient(45deg, #16C6E9FF, #A216E9FF);
+    background: linear-gradient(225deg, #16C6E9FF, #A216E9FF);
     background-size: 400% 400%;
     animation : gradient 15s ease infinite;
     min-height: 92.3dvh;
