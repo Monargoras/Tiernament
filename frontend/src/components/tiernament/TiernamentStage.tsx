@@ -98,9 +98,8 @@ export default function TiernamentStage(props: TiernamentStageProps) {
   const getSwissMatchUps = (matchUps: MatchUpType[]) => {
     return matchUps.map((matchUp, index) => {
       return (
-        <>
+        <Box key={matchUp.matchUpId}>
           <SwissMatchUp
-            key={matchUp.matchUpId}
             matchUp={matchUp}
             entryA={matchUp.entryAId && props.entries[matchUp.entryAId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryAId] : undefined}
             entryB={matchUp.entryBId && props.entries[matchUp.entryBId].name !== DEFAULT_ENTRY_NAME ? props.entries[matchUp.entryBId] : undefined}
@@ -111,7 +110,7 @@ export default function TiernamentStage(props: TiernamentStageProps) {
             index < matchUps.length - 1 &&
             <Divider/>
           }
-        </>
+        </Box>
       )
     })
   }
