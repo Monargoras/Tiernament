@@ -29,7 +29,7 @@ export default function HomePage() {
 
   return (
     <Box sx={styles.container}>
-      <Typography variant={'h2'}>
+      <Typography variant={'h2'} sx={{textAlign: 'center'}}>
         {t('homePageTitle')}
       </Typography>
       <Typography variant={'h6'} sx={{maxWidth: '50%', my: '20px', textAlign: 'center'}}>
