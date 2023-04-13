@@ -42,6 +42,7 @@ export default function Tiernament() {
       {
         !playView &&
         <>
+          <Typography variant={'body1'}>{tiernament.description}</Typography>
           <Box sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
             {
               tiernament.entries.map((entry, index) => {
