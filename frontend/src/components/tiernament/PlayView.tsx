@@ -321,6 +321,8 @@ export default function PlayView(props: PlayViewProps) {
           }
         )
         setNextRound((prev) => prev + 1)
+      } else if (newRun.matchUpsPlayoffs.filter(mU => mU.winner === undefined).length === 0 && nextRound === 9) {
+        newRun.winner = newRun.matchUpsPlayoffs[6].winner === 'A' ? newRun.entries[newRun.matchUpsPlayoffs[6].entryAId] : newRun.entries[newRun.matchUpsPlayoffs[6].entryBId]
       }
       setCurrentRun({...newRun})
     }
