@@ -23,9 +23,11 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^12.2.0",
     "react-material-ui-carousel": "^3.4.2",
+    "react-particles": "^2.9.3",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
     "react-xarrows": "^2.0.2",
+    "tsparticles": "^2.9.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
