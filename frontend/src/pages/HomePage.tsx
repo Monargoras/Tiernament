@@ -36,7 +36,7 @@ export default function HomePage() {
         {t('homePageText')}
       </Typography>
       <Carousel
-        sx={{width: 260, height: 400}}
+        sx={{width: 270, height: 400, display: 'flex', alignItems: 'center'}}
         autoPlay={true}
         swipe={true}
         indicators={false}
