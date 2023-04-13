@@ -25,6 +25,14 @@ export function createGetTiernamentForEditRequest(tiernamentId: string) {
   return createRequest('GET', 'api/tiernament/edit', undefined, tiernamentId, true)
 }
 
+export function createPatchTiernamentRequest(tiernament: TiernamentDTO) {
+  return createRequest('PATCH', 'api/tiernament/edit', tiernament, undefined, true)
+}
+
+export function createDeleteTiernamentRequest(tiernamentId: string) {
+  return createRequest('DELETE', 'api/tiernament/edit', undefined, tiernamentId, true)
+}
+
 export function fetchTiernamentsByUsername(username: string) {
   return createRequest('GET', 'api/tiernament/get/author', undefined, username)
 }

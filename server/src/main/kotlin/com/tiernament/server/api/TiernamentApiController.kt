@@ -80,7 +80,7 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
         return repo.insert(tiernament)
     }
 
-    fun updateTiernament(id: String, tiernament: Tiernament, curUser: User): Tiernament? {
+    fun updateTiernament(id: String, tiernament: TiernamentDTO, curUser: User): Tiernament? {
         // check if tiernament exists
         repo.findByTiernamentId(id)?.let {
             // check if user is the author
@@ -160,7 +160,7 @@ class PrivateTiernamentApiController(@Autowired val service: TiernamentService) 
     }
 
     @PatchMapping("/{id}")
-    fun updateTiernament(@PathVariable("id") id: String, @RequestBody tiernament: Tiernament, @AuthenticationPrincipal curUser: User): Tiernament? {
+    fun updateTiernament(@PathVariable("id") id: String, @RequestBody tiernament: TiernamentDTO, @AuthenticationPrincipal curUser: User): Tiernament? {
         return service.updateTiernament(id, tiernament, curUser)
     }
 
