@@ -86,7 +86,7 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
             // check if user is the author
             if (it.authorId == curUser.userId) {
                 // update tiernament
-                repo.save(it.copy(name = tiernament.name, imageId = tiernament.imageId, description = tiernament.description, entries = tiernament.entries))
+                return repo.save(it.copy(name = tiernament.name, imageId = tiernament.imageId, description = tiernament.description, entries = tiernament.entries))
             }
         }
         return null
