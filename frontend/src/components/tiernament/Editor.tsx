@@ -11,6 +11,7 @@ import CustomAvatar from '../general/CustomAvatar';
 import { v4 as uuidv4 } from 'uuid';
 import { createDeleteTiernamentRequest, createPatchTiernamentRequest, createTiernamentRequest } from '../../apiRequests/tiernamentRequests';
 import { useNavigate } from 'react-router-dom';
+import DeleteModal from '../general/DeleteModal';
 
 interface EditorProps {
   tiernament?: TiernamentType
@@ -33,6 +34,9 @@ export default function Editor(props: EditorProps) {
   const [descriptionError, setDescriptionError] = React.useState(false)
   const [entryError, setEntryError] = React.useState(false)
   const [changedImageIds, setChangedImageIds] = React.useState<string[]>([])
+  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false)
+  const [deleteConfirmText, setDeleteConfirmText] = React.useState('')
+  const [deleteConfirmTextError, setDeleteConfirmTextError] = React.useState(false)
 
   React.useEffect(() => {
     if(props.tiernament) {
@@ -320,15 +324,19 @@ export default function Editor(props: EditorProps) {
   }
 
   const handleDeleteTiernament = () => {
-    if(props.tiernament) {
-      createDeleteTiernamentRequest(props.tiernament.tiernamentId)
-        .then(r => {
-          if(r.ok) {
-            if(authState.user) {
-              navigate(`/profile/${authState.user.name}`)
+    if(tiernamentName === deleteConfirmText) {
+      if (props.tiernament) {
+        createDeleteTiernamentRequest(props.tiernament.tiernamentId)
+          .then(r => {
+            if (r.ok) {
+              if (authState.user) {
+                navigate(`/profile/${authState.user.name}`)
+              }
             }
-          }
-        })
+          })
+      }
+    } else {
+      setDeleteConfirmTextError(true)
     }
   }
 
@@ -533,12 +541,22 @@ export default function Editor(props: EditorProps) {
             sx={{mt: '10px', ml: '10px'}}
             variant={'contained'}
             color={'secondary'}
-            onClick={handleDeleteTiernament}
+            onClick={() => setDeleteModalOpen(true)}
           >
             {t('deleteTiernament')}
           </Button>
         }
       </Box>
+      <DeleteModal
+        deleteModalOpen={deleteModalOpen}
+        setDeleteModalOpen={setDeleteModalOpen}
+        deleteConfirmText={deleteConfirmText}
+        setDeleteConfirmText={setDeleteConfirmText}
+        deleteConfirmTextError={deleteConfirmTextError}
+        setDeleteConfirmTextError={setDeleteConfirmTextError}
+        comparisonName={tiernamentName}
+        handleDelete={handleDeleteTiernament}
+      />
       <ErrorSnackbar errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>
     </Box>
   )

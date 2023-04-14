@@ -54,5 +54,8 @@
   "exploreTiernaments": "Alle Tiernaments entdecken",
   "edit": "Bearbeiten",
   "editConfirm": "Änderungen speichern",
-  "deleteTiernament": "Tiernament löschen"
+  "deleteTiernament": "Tiernament löschen",
+  "deleteConfirm": "Gib '{{name}}' zum Bestätigen ein. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "delete": "Löschen",
+  "cancel": "Abbrechen"
 }

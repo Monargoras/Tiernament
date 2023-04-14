@@ -54,5 +54,8 @@
   "exploreTiernaments": "Explore all Tiernaments",
   "edit": "Edit",
   "editConfirm": "Save changes",
-  "deleteTiernament": "Delete Tiernament"
+  "deleteTiernament": "Delete Tiernament",
+  "deleteConfirm": "Enter '{{name}}' to confirm. This action cannot be undone.",
+  "delete": "Delete",
+  "cancel": "Cancel"
 }
