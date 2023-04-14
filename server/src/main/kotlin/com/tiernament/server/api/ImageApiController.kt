@@ -38,6 +38,7 @@ class ImageApiController(
         return repo.findAll().count()
     }
 
+    // TODO schedule this to run every day, move to authorized image api
     @GetMapping("/get/cleanup")
     fun cleanup(): ResponseEntity<String> {
         // collect all used image ids and entry image ids in a list
