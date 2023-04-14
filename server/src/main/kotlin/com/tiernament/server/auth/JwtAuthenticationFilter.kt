@@ -1,7 +1,8 @@
 package com.tiernament.server.auth
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.tiernament.server.api.UserDetailsService
+import com.tiernament.server.api.SessionService
+import com.tiernament.server.api.UserService
 import com.tiernament.server.models.LoginDTO
 import com.tiernament.server.models.User
 import com.tiernament.server.models.UserDTO
@@ -21,7 +22,8 @@ import java.util.*
 class JwtAuthenticationFilter(
     private val jwtTokenUtil: JwtTokenUtil,
     private val authenticationManager: AuthenticationManager,
-    private val userDetailsService: UserDetailsService
+    private val userService: UserService,
+    private val sessionService: SessionService,
 ) :
     UsernamePasswordAuthenticationFilter() {
 
@@ -46,9 +48,9 @@ class JwtAuthenticationFilter(
         val username = (auth.principal as User).username
         val accessToken: String = jwtTokenUtil.generateToken(username)
 
-        val user = userDetailsService.loadUserByUsername(username)
+        val user = userService.loadUserByUsername(username)
         val sessionId = UUID.randomUUID().toString()
-        userDetailsService.addSession(sessionId, user.userId)
+        sessionService.addSession(sessionId, user.userId)
         val refreshToken = jwtTokenUtil.generateRefreshToken(user.userId, sessionId)
 
         // add user and token to response

@@ -1,6 +1,6 @@
 package com.tiernament.server.auth
 
-import com.tiernament.server.api.UserDetailsService
+import com.tiernament.server.api.UserService
 import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -15,7 +15,7 @@ import java.io.IOException
 
 class JwtAuthorizationFilter(
     private val jwtTokenUtil: JwtTokenUtil,
-    private val service: UserDetailsService,
+    private val service: UserService,
     authManager: AuthenticationManager,
 
     ) : BasicAuthenticationFilter(authManager) {

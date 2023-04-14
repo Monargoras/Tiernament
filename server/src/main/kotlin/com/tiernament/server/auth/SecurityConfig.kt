@@ -1,6 +1,7 @@
 package com.tiernament.server.auth
 
-import com.tiernament.server.api.UserDetailsService
+import com.tiernament.server.api.SessionService
+import com.tiernament.server.api.UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -12,7 +13,8 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 class SecurityConfig(
-    private val userDetailsService: UserDetailsService,
+    private val userService: UserService,
+    private val sessionService: SessionService,
 ) {
     private val jwtToken = JwtTokenUtil()
 
@@ -20,7 +22,7 @@ class SecurityConfig(
         val authenticationManagerBuilder = http.getSharedObject(
             AuthenticationManagerBuilder::class.java
         )
-        authenticationManagerBuilder.userDetailsService(userDetailsService)
+        authenticationManagerBuilder.userDetailsService(userService)
         return authenticationManagerBuilder.build()
     }
 
@@ -42,8 +44,8 @@ class SecurityConfig(
             .permitAll().anyRequest().authenticated().and().csrf().disable()
             .authenticationManager(authenticationManager)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .addFilter(JwtAuthenticationFilter(jwtToken, authenticationManager, userDetailsService))
-            .addFilter(JwtAuthorizationFilter(jwtToken, userDetailsService, authenticationManager))
+            .addFilter(JwtAuthenticationFilter(jwtToken, authenticationManager, userService, sessionService))
+            .addFilter(JwtAuthorizationFilter(jwtToken, userService, authenticationManager))
 
         return http.build()
     }

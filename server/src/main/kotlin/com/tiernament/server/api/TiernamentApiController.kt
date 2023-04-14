@@ -20,9 +20,10 @@ interface TiernamentRepo : MongoRepository<Tiernament, String> {
 }
 
 @Service
-class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val userRepo: UserRepo) {
+class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val userService: UserService, @Autowired val imageService: ImageService) {
+
     val getTiernamentTitleDTO = { tiernament: Tiernament ->
-        val user = userRepo.findByUserId(tiernament.authorId)
+        val user = userService.findByUserId(tiernament.authorId)
         TiernamentTitleDTO(
             tiernament,
             user?.displayName ?: "",
@@ -46,7 +47,7 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
 
     fun getTiernamentsByAuthorName(name: String): List<TiernamentTitleDTO> {
         // get author name from user id
-        userRepo.findByName(name)?.let { user ->
+        userService.findByUsername(name)?.let { user ->
             return repo.findByAuthorId(user.userId).map { getTiernamentTitleDTO(it) }
         }
         return listOf()
@@ -55,7 +56,7 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
     fun getTiernamentsBySearchTerm(searchTerm: String): List<TiernamentTitleDTO> {
         // search for tiernament name containing search term and the author's display name containing search term
         val tiernaments = repo.findByNameContainingIgnoreCase(searchTerm)
-        val users = userRepo.findByDisplayNameEqualsIgnoreCase(searchTerm)
+        val users = userService.findByDisplayName(searchTerm)
         val userTiernaments = users.map { repo.findByAuthorId(it.userId) }.flatten()
         return (tiernaments + userTiernaments).map { getTiernamentTitleDTO(it) }
     }
@@ -97,6 +98,15 @@ class TiernamentService(@Autowired val repo: TiernamentRepo, @Autowired val user
         repo.findByTiernamentId(id)?.let {
             // check if user is the author
             if (it.authorId == curUser.userId) {
+                // delete used images
+                if (it.imageId != "") {
+                    imageService.deleteImage(it.imageId)
+                }
+                it.entries.forEach { entry ->
+                    if (entry.imageId != "") {
+                        imageService.deleteImage(entry.imageId)
+                    }
+                }
                 // delete tiernament
                 repo.delete(it)
             }

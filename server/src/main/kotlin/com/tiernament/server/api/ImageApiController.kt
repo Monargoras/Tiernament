@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
@@ -21,78 +22,104 @@ import java.util.*
 
 interface ImageRepo : MongoRepository<Image, String> {
     fun findByImageId(id: String): Image?
-    fun deleteImageByImageId(id: String)
+}
+
+@Service
+class ImageService(
+    @Autowired val imageRepo: ImageRepo,
+    @Autowired val tiernamentRepo: TiernamentRepo,
+    @Autowired val userRepo: UserRepo,
+    @Autowired val gridFSBucket: GridFSBucket
+) {
+
+    fun getAllImages(): List<Image> {
+        return imageRepo.findAll()
+    }
+
+    fun getImage(imageId: String): ByteArray? {
+        imageRepo.findByImageId(imageId)?.let {
+            val outputStream = ByteArrayOutputStream()
+            gridFSBucket.downloadToStream(ObjectId(imageId), outputStream)
+            return outputStream.toByteArray()
+        }
+        return null
+    }
+
+    fun uploadImage(image: MultipartFile, user: User): String {
+        val options = GridFSUploadOptions()
+            .chunkSizeBytes(358400)
+            .metadata(Document("type", "image"))
+        val id = gridFSBucket.uploadFromStream(image.originalFilename ?: image.name, image.inputStream, options)
+        imageRepo.insert(Image(imageId = id.toString(), userId=user.userId , name = image.originalFilename ?: image.name))
+        return id.toString()
+    }
+
+    fun deleteImage(imageId: String): Boolean {
+        imageRepo.findByImageId(imageId)?.let {
+            gridFSBucket.delete(ObjectId(it.imageId))
+            imageRepo.delete(it)
+            return true
+        }
+        return false
+    }
+
+    fun cleanup(): String {
+        // collect all used image ids and entry image ids in a list
+        val usedImageIds = tiernamentRepo.findAll().map { it.imageId }
+        val entryImageIds = tiernamentRepo.findAll().map { it.entries }.flatten().map { it.imageId }
+        val userAvatars = userRepo.findAll().map { it.avatarId }
+        val allUsedImageIds = usedImageIds + entryImageIds + userAvatars
+
+        // delete all images that are not in the list
+        var count = 0
+        imageRepo.findAll().forEach {
+            if (!allUsedImageIds.contains(it.imageId)) {
+                gridFSBucket.delete(ObjectId(it.imageId))
+                imageRepo.delete(it)
+                count++
+            }
+        }
+        return("Deleted $count images")
+    }
 }
 
 @RestController
 @RequestMapping("/api/image")
-class ImageApiController(
-    @Autowired val repo: ImageRepo,
-    @Autowired val gridFSBucket: GridFSBucket,
-    @Autowired val tiernamentRepo: TiernamentRepo,
-    @Autowired val userRepo: UserRepo
-) {
+class ImageApiController(@Autowired val service: ImageService) {
 
     @GetMapping("/get/count")
     fun getImageCount(): Int {
-        return repo.findAll().count()
+        return service.getAllImages().size
     }
 
     // TODO schedule this to run every day, move to authorized image api
     @GetMapping("/get/cleanup")
     fun cleanup(): ResponseEntity<String> {
-        // collect all used image ids and entry image ids in a list
-        val usedImageIds = tiernamentRepo.findAll().map { it.imageId }
-        val entryImageIds = tiernamentRepo.findAll().map { it.entries }.flatten().map { it.imageId }
-        val userAvatars = userRepo.findAll().map { it.avatarId }
-        val allImageIds = usedImageIds + entryImageIds + userAvatars
-
-        // delete all images that are not in the list
-        var count = 0
-        repo.findAll().forEach {
-            if (!allImageIds.contains(it.imageId)) {
-                gridFSBucket.delete(ObjectId(it.imageId))
-                repo.delete(it)
-                count++
-            }
-        }
-        return ResponseEntity.ok("Deleted $count images.")
+        return ResponseEntity.ok(service.cleanup())
     }
 
     @GetMapping("/get/{id}", produces = [MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE])
     fun getImageById(@PathVariable("id") id: String): ResponseEntity<ByteArray> {
-        repo.findByImageId(id)?.let {
-            ByteArrayOutputStream().use { fos ->
-                gridFSBucket.downloadToStream(ObjectId(it.imageId), fos)
-                return ResponseEntity.ok(fos.toByteArray())
-            }
+        service.getImage(id)?.let {
+            return ResponseEntity.ok(it)
         }
         return ResponseEntity.notFound().build()
     }
 
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun postImage(@RequestPart("image") image: MultipartFile, @AuthenticationPrincipal user: User): ResponseEntity<JSONObject> {
-        val options = GridFSUploadOptions()
-            .chunkSizeBytes(358400)
-            .metadata(Document("type", "image"))
-        val id = gridFSBucket.uploadFromStream(image.originalFilename ?: image.name, image.inputStream, options)
-
-        repo.insert(Image(imageId = id.toString(), userId=user.userId , name = image.originalFilename ?: image.name))
-
-        JSONObject().apply {
-            put("id", id.toString())
-        }.let { json ->
-            return ResponseEntity.ok(json)
+        service.uploadImage(image, user).let {
+            return ResponseEntity.ok(JSONObject().apply {
+                put("id", it)
+            })
         }
     }
 
     @DeleteMapping("/{id}")
     fun deleteImage(@PathVariable("id") id: String): ResponseEntity<String> {
-        repo.findByImageId(id)?.let {
-            repo.delete(it)
-            gridFSBucket.delete(ObjectId(it.imageId))
-            return ResponseEntity.ok(id)
+        service.deleteImage(id).let {
+            if(it) return ResponseEntity.ok(id)
+            else return ResponseEntity.notFound().build()
         }
-        return ResponseEntity.badRequest().build()
     }
 }
