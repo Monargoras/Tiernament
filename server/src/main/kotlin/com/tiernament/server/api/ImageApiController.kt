@@ -26,11 +26,36 @@ interface ImageRepo : MongoRepository<Image, String> {
 
 @RestController
 @RequestMapping("/api/image")
-class ImageApiController(@Autowired val repo: ImageRepo, @Autowired val gridFSBucket: GridFSBucket) {
+class ImageApiController(
+    @Autowired val repo: ImageRepo,
+    @Autowired val gridFSBucket: GridFSBucket,
+    @Autowired val tiernamentRepo: TiernamentRepo,
+    @Autowired val userRepo: UserRepo
+) {
 
     @GetMapping("/get/count")
     fun getImageCount(): Int {
         return repo.findAll().count()
+    }
+
+    @GetMapping("/get/cleanup")
+    fun cleanup(): ResponseEntity<String> {
+        // collect all used image ids and entry image ids in a list
+        val usedImageIds = tiernamentRepo.findAll().map { it.imageId }
+        val entryImageIds = tiernamentRepo.findAll().map { it.entries }.flatten().map { it.imageId }
+        val userAvatars = userRepo.findAll().map { it.avatarId }
+        val allImageIds = usedImageIds + entryImageIds + userAvatars
+
+        // delete all images that are not in the list
+        var count = 0
+        repo.findAll().forEach {
+            if (!allImageIds.contains(it.imageId)) {
+                gridFSBucket.delete(ObjectId(it.imageId))
+                repo.delete(it)
+                count++
+            }
+        }
+        return ResponseEntity.ok("Deleted $count images.")
     }
 
     @GetMapping("/get/{id}", produces = [MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE])
