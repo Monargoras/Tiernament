@@ -2,14 +2,14 @@ import React from 'react';
 import { useAppSelector } from '../../redux/hooks';
 import { Box, Button, IconButton, Grid, Paper, TextField, Typography, Tooltip, Divider, Badge } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { createPostImageRequest } from '../../apiRequests/imageRequests';
+import { createDeleteImageRequest, createPostImageRequest, getImageLink } from '../../apiRequests/imageRequests';
 import ErrorSnackbar from '../../components/general/ErrorSnackbar';
 import { Add, AddAPhoto, DeleteForever, Edit, Help } from '@mui/icons-material';
 import TiernamentCard from '../../components/tiernament/TiernamentCard';
 import { TiernamentDTO, TiernamentEntryType, TiernamentType } from '../../util/types';
 import CustomAvatar from '../general/CustomAvatar';
 import { v4 as uuidv4 } from 'uuid';
-import { createTiernamentRequest } from '../../apiRequests/tiernamentRequests';
+import { createDeleteTiernamentRequest, createPatchTiernamentRequest, createTiernamentRequest } from '../../apiRequests/tiernamentRequests';
 import { useNavigate } from 'react-router-dom';
 
 interface EditorProps {
@@ -25,13 +25,36 @@ export default function Editor(props: EditorProps) {
   const [tiernamentName, setTiernamentName] = React.useState(props.tiernament?.name || '')
   const [tiernamentDescription, setTiernamentDescription] = React.useState(props.tiernament?.description || '')
   const [errorMessage, setErrorMessage] = React.useState('')
-  const [coverImage, setCoverImage] = React.useState<{image: File, url: string} | undefined>(undefined)
+  const [coverImage, setCoverImage] = React.useState<{image: File | undefined, url: string} | undefined>(undefined)
   const [entries, setEntries] = React.useState<TiernamentEntryType[]>(props.tiernament?.entries || [])
-  const [entryImages, setEntryImages] = React.useState<{[key: string]: {image: File, url: string}}>({})
+  const [entryImages, setEntryImages] = React.useState<{[key: string]: {image: File | undefined, url: string}}>({})
   const [entryName, setEntryName] = React.useState('')
   const [nameError, setNameError] = React.useState(false)
   const [descriptionError, setDescriptionError] = React.useState(false)
   const [entryError, setEntryError] = React.useState(false)
+  const [changedImageIds, setChangedImageIds] = React.useState<string[]>([])
+
+  React.useEffect(() => {
+    if(props.tiernament) {
+      // get cover image file from saved imageId
+      if(props.tiernament.imageId) {
+        setCoverImage({image: undefined, url: getImageLink(props.tiernament.imageId)})
+      }
+      // get entry images from saved imageIds
+      const newEntryImages: {[key: string]: {image: File | undefined, url: string}} = {}
+      const newEntries = [...entries]
+      props.tiernament.entries.forEach(entry => {
+        if(entry.imageId) {
+          const url = getImageLink(entry.imageId)
+          newEntryImages[entry.entryId] = {image: undefined, url: getImageLink(entry.imageId)}
+          const index = newEntries.findIndex(e => e.entryId === entry.entryId)
+          newEntries[index] = {...entry, imageId: url}
+        }
+      })
+      setEntryImages(newEntryImages)
+      setEntries(newEntries)
+    }
+  }, [])
 
   const styles = {
     paper: {
@@ -107,7 +130,7 @@ export default function Editor(props: EditorProps) {
           }
         })
     } else {
-      return ''
+      return props.tiernament?.imageId || ''
     }
   }
 
@@ -137,7 +160,7 @@ export default function Editor(props: EditorProps) {
     return !(tiernamentName.length === 0 || tiernamentDescription.length === 0 || entries.length === 0 || hasEmptyName)
   }
 
-  const handleCreateTiernament = async () => {
+  const handleCreateOrPatchTiernament = async () => {
     if(!validateInput()) {
       return
     }
@@ -148,8 +171,9 @@ export default function Editor(props: EditorProps) {
     const promiseArray: Promise<void | Response>[] = []
     let updatedLinks = 0
     entries.forEach(entry => {
-      if(entryImages[entry.entryId]?.image) {
-        promiseArray.push(createPostImageRequest(entryImages[entry.entryId].image)
+      if(entryImages[entry.entryId] && entryImages[entry.entryId].image !== undefined) {
+        const image = entryImages[entry.entryId].image as File
+        promiseArray.push(createPostImageRequest(image)
           .then((res) => {
             if(res.ok) {
               return res.json().then((data) => {
@@ -169,18 +193,44 @@ export default function Editor(props: EditorProps) {
             }
           })
         )
+      } else if(props.tiernament) {
+        const newEntry = newEntries.find(e => e.entryId === entry.entryId)
+        if(newEntry) {
+          newEntry.imageId = props.tiernament.entries.find(e => e.entryId === entry.entryId)?.imageId || ''
+        }
       }
     })
     await Promise.all(promiseArray)
+
+    // cleanup all images that were changed
+    const promiseArray2: Promise<void | Response>[] = []
+    changedImageIds.forEach(id => {
+      promiseArray2.push(createDeleteImageRequest(id))
+    })
+    await Promise.all(promiseArray2)
+
     const newTiernament: TiernamentDTO = {
       name: tiernamentName,
       description: tiernamentDescription,
       imageId: coverImageId || '',
       entries: newEntries
     }
-    createTiernamentRequest(newTiernament)
-      .then(r => {
-          if (r.ok) {
+    if(props.tiernament === undefined) {
+      createTiernamentRequest(newTiernament)
+        .then(r => {
+            if(r.ok) {
+              r.json().then(() => {
+                if(authState.user) {
+                  navigate(`/profile/${authState.user.name}`)
+                }
+              })
+            }
+          }
+        )
+    } else {
+      createPatchTiernamentRequest(props.tiernament.tiernamentId, newTiernament)
+        .then(r => {
+          if(r.ok) {
             r.json().then(() => {
               if(authState.user) {
                 navigate(`/profile/${authState.user.name}`)
@@ -189,10 +239,15 @@ export default function Editor(props: EditorProps) {
           }
         }
       )
+    }
   }
 
   const handleCoverImageChange = (imageFile: File) => {
     if(imageFile) {
+      // check if previous image was in database and mark for deletion
+      if(props.tiernament && props.tiernament.imageId) {
+        setChangedImageIds([...changedImageIds, props.tiernament.imageId])
+      }
       const imageUrl = URL.createObjectURL(imageFile)
       setCoverImage({image: imageFile, url: imageUrl})
     }
@@ -200,6 +255,13 @@ export default function Editor(props: EditorProps) {
 
   const handleEntryImageChange = (imageFile: File, entryId: string) => {
     if(imageFile) {
+      // check if previous image was in database and mark for deletion
+      if(props.tiernament && props.tiernament.entries) {
+        const entry = props.tiernament.entries.find(e => e.entryId === entryId)
+        if(entry && entry.imageId) {
+          setChangedImageIds([...changedImageIds, entry.imageId])
+        }
+      }
       const imageUrl = URL.createObjectURL(imageFile)
       setEntryImages({...entryImages, [entryId]: {image: imageFile, url: imageUrl}})
       const newEntries = entries.map(entry => {
@@ -255,6 +317,19 @@ export default function Editor(props: EditorProps) {
   const handleDeleteEntry = (entryId: string) => {
     handleRemoveImage(entryId)
     setEntries(entries.filter(entry => entry.entryId !== entryId))
+  }
+
+  const handleDeleteTiernament = () => {
+    if(props.tiernament) {
+      createDeleteTiernamentRequest(props.tiernament.tiernamentId)
+        .then(r => {
+          if(r.ok) {
+            if(authState.user) {
+              navigate(`/profile/${authState.user.name}`)
+            }
+          }
+        })
+    }
   }
 
   return (
@@ -448,10 +523,21 @@ export default function Editor(props: EditorProps) {
           sx={{mt: '10px'}}
           variant={'contained'}
           color={'primary'}
-          onClick={handleCreateTiernament}
+          onClick={handleCreateOrPatchTiernament}
         >
-          {t('createTiernament')}
+          {props.tiernament ? t('editConfirm') : t('createTiernament')}
         </Button>
+        {
+          props.tiernament &&
+          <Button
+            sx={{mt: '10px', ml: '10px'}}
+            variant={'contained'}
+            color={'secondary'}
+            onClick={handleDeleteTiernament}
+          >
+            {t('deleteTiernament')}
+          </Button>
+        }
       </Box>
       <ErrorSnackbar errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>
     </Box>
