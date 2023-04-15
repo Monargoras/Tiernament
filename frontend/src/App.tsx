@@ -113,7 +113,7 @@ export default function App() {
             main: '#16c6e9',
           },
           secondary: {
-            main: '#a216e9',
+            main: '#7e25a6',
           },
           tertiary: palette.augmentColor({
             color: {
