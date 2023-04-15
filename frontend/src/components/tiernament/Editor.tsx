@@ -403,13 +403,6 @@ export default function Editor(props: EditorProps) {
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4} xl={3}>
           <Box sx={styles.flexColumn}>
-            <Typography
-              variant={'h6'}
-              sx={{mb: '5px'}}
-              color={'secondary'}
-            >
-              {t('preview')}
-            </Typography>
             <TiernamentCard
               tiernament={{
                 tiernamentId: '1',
