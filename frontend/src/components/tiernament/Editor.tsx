@@ -157,11 +157,11 @@ export default function Editor(props: EditorProps) {
     if(tiernamentDescription.length === 0) {
       setDescriptionError(true)
     }
-    if(entries.length === 0) {
+    if(entries.length < 8 || entries.length > 32) {
       setEntryError(true)
     }
     const hasEmptyName = validateEntryNames()
-    return !(tiernamentName.length === 0 || tiernamentDescription.length === 0 || entries.length === 0 || hasEmptyName)
+    return !(tiernamentName.length === 0 || tiernamentDescription.length === 0 || entries.length < 8 || entries.length > 32 || hasEmptyName)
   }
 
   const handleCreateOrPatchTiernament = async () => {
